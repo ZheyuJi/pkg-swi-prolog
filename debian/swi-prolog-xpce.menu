@@ -1,0 +1,3 @@
+?package(swi-prolog-xpce):needs="text" section="Apps/Programming"\
+  title="SWI-Prolog (with XPCE)" command="/usr/bin/xpce"
+

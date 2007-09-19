@@ -1,0 +1,2 @@
+?package(swi-prolog):needs="text" section="Apps/Programming"\
+  title="SWI-Prolog" command="/usr/bin/swipl"

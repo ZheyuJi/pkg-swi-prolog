@@ -1,0 +1,246 @@
+#!/usr/bin/make -f
+# debian/rules for SWI Prolog
+
+# This version is for a multibinary package. It also allows you to build any
+# of the binary packages independantly, via binary-<package> targets.
+
+#export DH_VERBOSE=1
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+# Proper autotools handling as per autotools-dev/README.Debian
+export PLARCH ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
+export DEB_HOST_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+export DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+ifeq ($(DEB_BUILD_GNU_TYPE), $(DEB_HOST_GNU_TYPE))
+  CONFFLAGS += --build $(DEB_HOST_GNU_TYPE)
+else
+  CONFFLAGS += --build $(DEB_BUILD_GNU_TYPE) --host $(DEB_HOST_GNU_TYPE)
+endif
+
+# TODO Don't set CFLAGS, build fails
+#ifneq (,$(findstring debug,$(DEB_BUILD_OPTIONS)))
+#  CFLAGS += -g
+#endif
+#ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+#  CFLAGS += -O0
+#else
+#  CFLAGS += -O2
+#endif
+
+
+patch: patch-stamp
+patch-stamp:
+	dpatch apply-all
+	
+
+unpatch:
+	
+	dpatch deapply-all
+	rm -rf debian/patched
+
+build: build-stamp
+build-stamp: patch
+	dh_testdir
+
+	#$(call config_local)
+	./configure $(CONFFLAGS) --with-world \
+		--prefix=/usr '--mandir=$${prefix}/share/man'
+
+	$(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH)
+	#$(call config_upstream)
+
+	touch build-stamp
+
+clean: clean-patched unpatch
+clean-patched:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp
+
+	# These two files disappear after clean, but are present in upstream source;
+	# they may be unimportant, but I want to restore the original state
+	cp packages/xpce/src/h/names.i[hc] debian
+
+	# Commands to clean up after the build process.
+	-$(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH) clean
+	-$(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH) distclean
+
+	mv debian/names.i[hc] packages/xpce/src/h
+	# SWI-Prolog's clean targets are not so clean, after all
+	-rm -f packages/clib/1
+	-rm -f packages/http/config.status
+	-rm -f packages/http/Makefile
+	-rm -f packages/sgml/RDF/config.h
+	-rm -f packages/sgml/sgml
+	-rm -f packages/sgml/dtd2pl
+	-rm -f packages/xpce/CXX/demo/Makefile
+	-rm -f packages/xpce/lib/i386
+	-rm -f packages/xpce/pl/src/Makefile.bin
+	-rm -f packages/xpce/prolog/lib/Makefile
+	-rm -f packages/xpce/prolog/pwboot/Makefile
+	-rm -f packages/xpce/src/xpce-install
+	-rm -f packages/xpce/src/pl/so-interface.o
+	-rm -f packages/xpce/sicstus/src/Makefile
+	-rm -f packages/xpce/Makefile
+	-rm -f packages/xpce/xpce.spec
+	-rm -f packages/clib/maildrop/rfc2045/rfc2045charset.h
+	-rm -f packages/clib/maildrop/rfc2045/stamp-h1
+	-rm -f packages/clib/maildrop/rfc822/stamp-h1
+	-rm -f packages/xpce/src/xpce.sh
+	-rm -f src/pl.sh 
+	-rm -f packages/plld.sh
+	-rm -f packages/pl.sh
+	-rm -f src/pl.sh
+	-rm -f packages/nlp/*.o	
+	-rm -f packages/nlp/*.so
+	-rm -f packages/ssl/*.o
+	-rm -f packages/ssl/*.so
+	-rm -f packages/xpce/man/reference/*.obj
+	-rm -f Makefile
+	-rm -f packages/jpl/src/java/Makefile
+	-rm -f debian/swi-prolog-xpce-builddir swi-prolog.install
+	-rm -f packages/nlp/config.log
+	-rm -f packages/nlp/config.status
+	-rm -f packages/nlp/Makefile
+	-rm -f packages/nlp/config.h
+	-rm -f packages/ssl/config.log
+	-rm -f packages/ssl/config.status
+	-rm -f packages/ssl/Makefile
+	-rm -f packages/ssl/config.h
+	-rm -f packages/clpqr/config.log
+	-rm -f packages/clpqr/config.status
+	-rm -f packages/clpqr/Makefile
+	-rm -f src/config.log
+	-rm -f src/confdefs.h
+	-rm -f src/conftest.c
+	-rm -f src/conftest.s
+
+	dh_clean
+
+
+install: DH_OPTIONS=
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+
+	# Main PROLOG system
+	# XPCE below needs a running prolog to be installed; this can be done
+	# in a temporary installation directory. To get them seperated later,
+	# record the list of files.
+	$(MAKE) prefix=`pwd`/debian/swi-prolog-tmp/usr \
+	        PLBASE=`pwd`/debian/swi-prolog-tmp/usr/lib/swi-prolog \
+		ARCH=$(PLARCH) install-lite
+	cd debian/swi-prolog-tmp && find * -type f > ../swi-prolog.files
+	cd debian/swi-prolog-tmp && find * -type l >> ../swi-prolog.files
+
+	for i in "clib     clib" \
+		 "http     http" \
+		 "semweb   semweb" \
+		 "sgml     sgml" \
+		 "sgml/RDF sgml" \
+		 "table    table" \
+		 "xpce     tmp"; do \
+	    FROM=$$(echo $$i | cut -d" " -f1); TO=$$(echo $$i | cut -d" " -f2); \
+	    $(MAKE) -C packages/$${FROM} \
+	        prefix=`pwd`/debian/swi-prolog-$${TO}/usr \
+		PLBASE=`pwd`/debian/swi-prolog-$${TO}/usr/lib/swi-prolog \
+		PLARCH=$(PLARCH) \
+		PL=`pwd`/src/pl PLEXE=`pwd`/src/pl \
+		install; \
+	done
+
+	# Now seperate XPCE and basic SWI-Prolog
+	dh_movefiles -p swi-prolog --sourcedir=debian/swi-prolog-tmp
+
+	# Change the dir name in manpage from pl-* to swi-prolog
+	# and the executable name from pl to swipl
+	sed -e "s:/pl-[0-9.]*:/swi-prolog:" -e "s:\([^./]\|^\)\<pl\>:\1swipl:g" \
+		-e "s:/usr/bin/pl:/usr/bin/swipl:" -e "s:i386-linux-gnu:<host>:" \
+		debian/swi-prolog/usr/share/man/man1/pl.1 > debian/swi-prolog/usr/share/man/man1/swipl.1
+	rm -f debian/swi-prolog/usr/share/man/man1/pl.1
+	cp debian/swiprolog.bin debian/swi-prolog/usr/bin/swiprolog
+	cp debian/swiprolog.man debian/swi-prolog/usr/share/man/man1/swiprolog.1
+	mv debian/swi-prolog/usr/bin/pl debian/swi-prolog/usr/bin/swipl
+
+	# Remove readline man page, this has no place in SWI Prolog
+	rm -f debian/swi-prolog-tmp/usr/share/man/man3/readline.3
+	
+	#Remove a strange file , fix it later
+	rm -f debian/swi-prolog-xpce/usr/lib/swi-prolog/xpce/prolog/lib/.pwd
+	
+	# Empty directories remain; but since XPCE depends on SWI-Prolog...
+	mv debian/swi-prolog-tmp debian/swi-prolog-xpce
+	# These two links are absolute, but I want them relative
+	cd debian/swi-prolog-xpce/usr/bin && \
+	    rm xpce; ln -s ../lib/swi-prolog/bin/*/xpce .; \
+	    rm xpce-client; ln -s ../lib/swi-prolog/xpce-*/bin/*/xpce-client .
+	
+	# These two man pages are an internal part of the library
+	# they are not compressed, but are nice man pages
+	#cd debian/swi-prolog-xpce/usr/share/man/man1 && \
+	#    ln -s ../../../lib/swi-prolog/xpce-*/man/xpce*.1 .
+	# Remove superfluous copies of the GPL
+	rm -f debian/swi-prolog-xpce/usr/lib/swi-prolog/xpce-*/COPYING
+
+	# Override bogus linda warning about extra licence file
+	mkdir -p debian/swi-prolog/usr/share/linda/overrides
+	# overrides lintian warnings
+	mkdir -p debian/swi-prolog-xpce/usr/share/lintian/overrides
+	cp debian/swi-prolog.linda.override debian/swi-prolog/usr/share/linda/overrides/swi-prolog
+	# Override linda warning about wrongly-placed images
+	# I can't do anything about this at this time
+	# Also override manual-not-compressed (see above)
+	mkdir -p debian/swi-prolog-xpce/usr/share/linda/overrides
+	cp debian/swi-prolog-xpce.linda.override \
+		debian/swi-prolog-xpce/usr/share/linda/overrides/swi-prolog-xpce
+	
+	cp debian/swi-prolog-xpce.lintian.override \
+		debian/swi-prolog-xpce/usr/share/lintian/overrides/swi-prolog-xpce
+
+
+# This single target is used to build all the packages, all at once, or
+# one at a time. So keep in mind: any options passed to commands here will
+# affect _all_ packages. Anything you want to only affect one package
+# should be put in another target, such as the install target.
+binary-common:
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs
+	dh_installchangelogs -pswi-prolog-sgml packages/sgml/ChangeLog
+	dh_installchangelogs -pswi-prolog-xpce packages/xpce/ChangeLog
+	dh_installchangelogs -pswi-prolog-clib packages/clib/ChangeLog
+	dh_installchangelogs -pswi-prolog-table packages/table/ChangeLog
+	dh_installdocs README PORTING
+	dh_installexamples
+	dh_installmenu
+	dh_installman
+	dh_strip
+	dh_link
+	dh_compress
+	dh_fixperms
+	dh_makeshlibs
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+# Build architecture independant packages using the common target.
+binary-indep: build install
+# (Uncomment this next line if you have such packages.)
+#	 $(MAKE) -f debian/rules DH_OPTIONS=-i binary-common
+
+# Build architecture dependent packages using the common target.
+binary-arch: build install
+	$(MAKE) -f debian/rules DH_OPTIONS=-a binary-common
+
+# Any other binary targets build just one binary package at a time.
+binary-%: build install
+	make -f debian/rules binary-common DH_OPTIONS=-p$*
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary-common binary install
+
