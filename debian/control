@@ -2,7 +2,7 @@ Source: swi-prolog
 Section: interpreters
 Priority: optional
 Maintainer: Gerardo Curiel <gcuriel@debianvenezuela.org>
-Build-Depends: debhelper (>= 4.0.0), autotools-dev, dpatch, libncurses5-dev, libreadline5-dev, libgmp3-dev, libjpeg62-dev, libx11-dev, libxpm-dev, libxt-dev ,x-dev
+Build-Depends: debhelper (>= 4.0.0), autotools-dev, dpatch, libncurses5-dev, libreadline5-dev, libgmp3-dev, libjpeg62-dev, libx11-dev, libxpm-dev, libxt-dev, x-dev
 Standards-Version: 3.7.2
 
 Package: swi-prolog
