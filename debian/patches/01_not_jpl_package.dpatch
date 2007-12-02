@@ -1,19 +1,15 @@
 #! /bin/sh /usr/share/dpatch/dpatch-run
 ## 01_not_jpl_package.dpatch by  <javamaniac@localhost.localdomain>
 ##
-## All lines beginning with `## DP:' are a description of the patch.
 ## DP: no jpl package
 
 @DPATCH@
 
---- swi-prolog-5.6.13.orig/packages/configure.in
-+++ swi-prolog-5.6.13/packages/configure.in
-@@ -54,7 +54,7 @@
- 
+--- swi-prolog-5.6.47.orig/packages/configure.in
++++ swi-prolog-5.6.47/packages/configure.in
+@@ -56,4 +56,4 @@
  
  if [ -z "$PKG" ]; then
--  PKG="clib cpp odbc table xpce sgml sgml/RDF semweb http chr clpqr nlp ssl jpl"
-+  PKG="clib cpp odbc table xpce sgml sgml/RDF semweb http chr clpqr nlp ssl "
+-  PKG="clib cpp odbc table xpce sgml sgml/RDF semweb http chr clpqr nlp ssl pldoc plunit jpl zlib"
++  PKG="clib cpp odbc table xpce sgml sgml/RDF semweb http chr clpqr nlp ssl pldoc plunit zlib"
  fi
- 
- configoptions=""
