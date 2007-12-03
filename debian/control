@@ -4,6 +4,8 @@ Priority: optional
 Maintainer: Gerardo Curiel <gcuriel@debianvenezuela.org>
 Build-Depends: debhelper (>= 4.0.0), autotools-dev, dpatch, libncurses5-dev, libreadline5-dev, libgmp3-dev, libjpeg62-dev, libx11-dev, libxpm-dev, libxt-dev, x-dev
 Standards-Version: 3.7.2
+XS-Vcs-Git: git://git.chris-lamb.co.uk/pkg-swi-prolog.git
+XS-Vcs-Browse: http://git.chris-lamb.co.uk/?p=pkg-swi-prolog.git
 Homepage: http://www.swi-prolog.org
 
 Package: swi-prolog
