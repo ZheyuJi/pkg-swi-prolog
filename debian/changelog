@@ -1,6 +1,7 @@
 swi-prolog (5.6.47-1) unstable; urgency=low
 
-  * New upstream version (Closes: #295209, #308325, #425580, #422576)
+  * New upstream version (Closes: #295209, #308325, #425580)
+  * New maintainer (Closes: #422576)
   * Bump Debhelper compatibility to 5
   * debian/rules:
      * Update config.sub and config.guess from autotools-dev
