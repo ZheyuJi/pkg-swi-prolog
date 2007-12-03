@@ -1,14 +1,16 @@
 swi-prolog (5.6.47-1) unstable; urgency=low
 
   * New upstream version (Closes: #295209, #308325, #425580, #422576)
-  * Bump Debhelper compatibility to 5.
-  * Update config.sub and config.guess from autotools-dev
-      (Closes: #408076, #414181)
-  * Use ${binary:Version} instead of ${Source-Version}.
-  * Desist from blindly ignoring "clean" target.
-  * Change ".menu" sections from "Apps/Programming" -> "Development".
-  * Add new Homepage: field
-  * Add XS-Vcs-* fields
+  * Bump Debhelper compatibility to 5
+  * debian/rules:
+     * Update config.sub and config.guess from autotools-dev
+         (Closes: #408076, #414181)
+     * Desist from blindly ignoring "clean" target
+  * debian/control:
+     * Use ${binary:Version} instead of ${Source-Version}
+     * Add new Homepage: field
+     * Add XS-Vcs-* fields
+  * Change ".menu" sections from "Apps/Programming" -> "Development"
   * Documentation:
      * Remove some SGML documentation now missing from upstream
      * Add Sicstus and SWI-Prolog v4.8 -related XPCE documentation
