@@ -9,6 +9,7 @@ swi-prolog (5.6.47-1) unstable; urgency=low
      * Remove some SGML documentation now missing from upstream
      * Add Sicstus and SWI-Prolog v4.8 -related XPCE documentation
   * Change ".menu" sections from "Apps/Programming" -> "Development"
+  * Desist from blindly ignoring "clean" target.
 
  -- Chris Lamb <chris@chris-lamb.co.uk>  Sun, 02 Dec 2007 23:26:00 +0000
 

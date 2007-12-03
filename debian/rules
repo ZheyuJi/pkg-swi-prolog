@@ -44,10 +44,11 @@ clean-patched:
 	cp packages/xpce/src/h/names.i[hc] debian
 
 	# Commands to clean up after the build process.
-	-$(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH) clean
-	-$(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH) distclean
+	-test -r Makefile && $(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH) clean
+	-test -r Makefile && $(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH) distclean
 
 	mv debian/names.i[hc] packages/xpce/src/h
+
 	# SWI-Prolog's clean targets are not so clean, after all
 	-rm -f packages/clib/1
 	-rm -f packages/http/config.status
