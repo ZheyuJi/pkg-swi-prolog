@@ -24,12 +24,10 @@ build: build-stamp
 build-stamp: patch
 	dh_testdir
 
-	#$(call config_local)
 	./configure $(CONFFLAGS) --with-world \
 		--prefix=/usr '--mandir=$${prefix}/share/man'
 
 	$(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH)
-	#$(call config_upstream)
 
 	touch build-stamp
 
@@ -116,8 +114,9 @@ install: build
 
 	# Main PROLOG system
 	# XPCE below needs a running prolog to be installed; this can be done
-	# in a temporary installation directory. To get them seperated later,
-	# record the list of files.
+	# in a temporary installation directory. We generate a list of files
+	# so we can seperate them later.
+
 	$(MAKE) prefix=`pwd`/debian/swi-prolog-tmp/usr \
 	        PLBASE=`pwd`/debian/swi-prolog-tmp/usr/lib/swi-prolog \
 		ARCH=$(PLARCH) install-lite
@@ -161,15 +160,16 @@ install: build
 	
 	# Empty directories remain; but since XPCE depends on SWI-Prolog...
 	mv debian/swi-prolog-tmp debian/swi-prolog-xpce
-	# These two links are absolute, but I want them relative
+	# These two links are absolute, but we want them relative
 	cd debian/swi-prolog-xpce/usr/bin && \
 	    rm xpce; ln -s ../lib/swi-prolog/bin/*/xpce .; \
 	    rm xpce-client; ln -s ../lib/swi-prolog/xpce-*/bin/*/xpce-client .
 	
-	# These two man pages are an internal part of the library
-	# they are not compressed, but are nice man pages
+	# These two man pages are an internal part of the library they are not
+	# compressed, but are nice man pages
 	#cd debian/swi-prolog-xpce/usr/share/man/man1 && \
 	#    ln -s ../../../lib/swi-prolog/xpce-*/man/xpce*.1 .
+
 	# Remove superfluous copies of the GPL
 	rm -f debian/swi-prolog-xpce/usr/lib/swi-prolog/xpce-*/COPYING
 
