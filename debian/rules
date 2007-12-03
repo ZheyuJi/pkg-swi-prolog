@@ -152,10 +152,10 @@ install: build
 	cp debian/swiprolog.man debian/swi-prolog/usr/share/man/man1/swiprolog.1
 	mv debian/swi-prolog/usr/bin/pl debian/swi-prolog/usr/bin/swipl
 
-	# Remove readline man page, this has no place in SWI Prolog
+	# Remove readline manpage (see #178370)
 	rm -f debian/swi-prolog-tmp/usr/share/man/man3/readline.3
 	
-	#Remove a strange file , fix it later
+	# Remove dbuild .pwd file (see #285894)
 	rm -f debian/swi-prolog-xpce/usr/lib/swi-prolog/xpce/prolog/lib/.pwd
 	
 	# Empty directories remain; but since XPCE depends on SWI-Prolog...
