@@ -4,6 +4,7 @@ Priority: optional
 Maintainer: Gerardo Curiel <gcuriel@debianvenezuela.org>
 Build-Depends: debhelper (>= 4.0.0), autotools-dev, dpatch, libncurses5-dev, libreadline5-dev, libgmp3-dev, libjpeg62-dev, libx11-dev, libxpm-dev, libxt-dev, x-dev
 Standards-Version: 3.7.2
+Homepage: http://www.swi-prolog.org
 
 Package: swi-prolog
 Architecture: any
@@ -24,8 +25,6 @@ Description: Prolog interpreter
  built-in predicates and reasonable performance, which makes it possible
  to develop substantial applications in it.  The current version offers
  a module system, garbage collection and an interface to the C language.
- .
-  Homepage: http://www.swi-prolog.org
 
 Package: swi-prolog-clib
 Architecture: any
@@ -33,8 +32,6 @@ Depends: ${shlibs:Depends}, swi-prolog (= ${binary:Version})
 Description: Interface to system library for SWI Prolog
  This library contains SWI-Prolog foreign-libraries to deal with various
  OS-dependent or obscure stuff from SWI-Prolog.
- .
-  Homepage: http://www.swi-prolog.org
 
 Package: swi-prolog-http
 Architecture: any
@@ -43,8 +40,6 @@ Description: Interface to system library for SWI Prolog
  This package provides some Prolog libraries for accessing and
  providing HTTP services.  The services are intended to realise embedded
  servers and form the basis for agent-protocols such as FIPA and SOAP.
- .
-  Homepage: http://www.swi-prolog.org
 
 Package: swi-prolog-semweb
 Architecture: any
@@ -55,8 +50,6 @@ Description: Interface to system library for SWI Prolog
  large sets of triples only limited by available memory.  One million
  triples requires about 80MB memory, so a fully equiped 32-bit machine
  can handle about 40 million triples.
- .
-  Homepage: http://www.swi-prolog.org
 
 Package: swi-prolog-sgml
 Architecture: any
@@ -66,8 +59,6 @@ Description: SGML/XML/HTML parser for SWI Prolog
  data structure.  The high-level interface defined in sgml 
  provides access at the file-level, while the low-level interface defined
  in the foreign module works with Prolog streams.
- .
-  Homepage: http://www.swi-prolog.org
 
 Package: swi-prolog-table
 Architecture: any
@@ -80,8 +71,6 @@ Description: Managing external tables for SWI Prolog
  terms of records and fields, how the information in the file should be 
  mapped onto Prolog data types and what properties the file has to 
  improve the performance of lookup.
- .
-  Homepage: http://www.swi-prolog.org
 
 Package: swi-prolog-xpce
 Architecture: any
@@ -91,6 +80,4 @@ Description: GUI library for SWI Prolog
  Interfaces.  XPCE was designed to be language-independent.  In practice it has 
  gained popularity with Prolog and many useful libraries are now available for 
  Prolog only.  Therefore we will often talk about XPCE/Prolog.
- .
-  Homepage: http://www.swi-prolog.org
 
