@@ -99,6 +99,13 @@ clean-patched:
 
 	dh_clean
 
+	for i in "src/" \
+		"packages/xpce/src/" \
+		"packages/xpce/" \
+		"packages/jpl"; do \
+	    test -r /usr/share/misc/config.sub && cp -f /usr/share/misc/config.sub $$i/config.sub; \
+            test -r /usr/share/misc/config.guess && cp -f /usr/share/misc/config.guess $$i/config.guess; \
+	done
 
 install: DH_OPTIONS=
 install: build
