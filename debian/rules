@@ -188,7 +188,7 @@ binary-common:
 	dh_installchangelogs -pswi-prolog-xpce packages/xpce/ChangeLog
 	dh_installchangelogs -pswi-prolog-clib packages/clib/ChangeLog
 	dh_installchangelogs -pswi-prolog-table packages/table/ChangeLog
-	dh_installdocs README PORTING
+	dh_installdocs
 	dh_installexamples
 	dh_installmenu
 	dh_installman
