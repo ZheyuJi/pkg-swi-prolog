@@ -173,26 +173,13 @@ install: build
 	# Remove superfluous copies of the GPL
 	rm -f debian/swi-prolog-xpce/usr/lib/swi-prolog/xpce-*/COPYING
 
-	# Override bogus linda warning about extra licence file
-	mkdir -p debian/swi-prolog/usr/share/linda/overrides
-	# overrides lintian warnings
-	mkdir -p debian/swi-prolog-xpce/usr/share/lintian/overrides
-	cp debian/swi-prolog.linda.override debian/swi-prolog/usr/share/linda/overrides/swi-prolog
-	# Override linda warning about wrongly-placed images
-	# I can't do anything about this at this time
-	# Also override manual-not-compressed (see above)
-	mkdir -p debian/swi-prolog-xpce/usr/share/linda/overrides
-	cp debian/swi-prolog-xpce.linda.override \
-		debian/swi-prolog-xpce/usr/share/linda/overrides/swi-prolog-xpce
-	
-	cp debian/swi-prolog-xpce.lintian.override \
-		debian/swi-prolog-xpce/usr/share/lintian/overrides/swi-prolog-xpce
+	# Override lintian warnings
+	for i in "swi-prolog" \
+		"swi-prolog-xpce"; do \
+	    mkdir -p debian/$$i/usr/share/lintian/overrides; \
+	    cp debian/$$i.lintian.override debian/$$i/usr/share/lintian/overrides/$$i; \
+	done
 
-
-# This single target is used to build all the packages, all at once, or
-# one at a time. So keep in mind: any options passed to commands here will
-# affect _all_ packages. Anything you want to only affect one package
-# should be put in another target, such as the install target.
 binary-common:
 	dh_testdir
 	dh_testroot
