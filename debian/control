@@ -29,7 +29,7 @@ Description: Prolog interpreter
 
 Package: swi-prolog-clib
 Architecture: any
-Depends: ${shlibs:Depends}, swi-prolog (= ${Source-Version})
+Depends: ${shlibs:Depends}, swi-prolog (= ${binary:Version})
 Description: Interface to system library for SWI Prolog
  This library contains SWI-Prolog foreign-libraries to deal with various
  OS-dependent or obscure stuff from SWI-Prolog.
@@ -38,7 +38,7 @@ Description: Interface to system library for SWI Prolog
 
 Package: swi-prolog-http
 Architecture: any
-Depends: swi-prolog (= ${Source-Version})
+Depends: swi-prolog (= ${binary:Version})
 Description: Interface to system library for SWI Prolog
  This package provides some Prolog libraries for accessing and
  providing HTTP services.  The services are intended to realise embedded
@@ -48,7 +48,7 @@ Description: Interface to system library for SWI Prolog
 
 Package: swi-prolog-semweb
 Architecture: any
-Depends: ${shlibs:Depends}, swi-prolog (= ${Source-Version})
+Depends: ${shlibs:Depends}, swi-prolog (= ${binary:Version})
 Description: Interface to system library for SWI Prolog
  The semweb library provides a Prolog library based on foreign-language
  extensions for storing and manipulating RDF triples.  It can handle quite
@@ -60,7 +60,7 @@ Description: Interface to system library for SWI Prolog
 
 Package: swi-prolog-sgml
 Architecture: any
-Depends: ${shlibs:Depends}, swi-prolog (= ${Source-Version})
+Depends: ${shlibs:Depends}, swi-prolog (= ${binary:Version})
 Description: SGML/XML/HTML parser for SWI Prolog
  This package allows you to parse SGML, XML and HTML data into a Prolog 
  data structure.  The high-level interface defined in sgml 
@@ -71,7 +71,7 @@ Description: SGML/XML/HTML parser for SWI Prolog
 
 Package: swi-prolog-table
 Architecture: any
-Depends: ${shlibs:Depends}, swi-prolog (= ${Source-Version})
+Depends: ${shlibs:Depends}, swi-prolog (= ${binary:Version})
 Description: Managing external tables for SWI Prolog
  This package provides a foreign language extension to SWI-Prolog
  for the manipulation of 'external tables'.  External tables are files 
@@ -85,7 +85,7 @@ Description: Managing external tables for SWI Prolog
 
 Package: swi-prolog-xpce
 Architecture: any
-Depends: ${shlibs:Depends}, swi-prolog (= ${Source-Version})
+Depends: ${shlibs:Depends}, swi-prolog (= ${binary:Version})
 Description: GUI library for SWI Prolog
  XPCE is an object-oriented symbolic programming environment for User 
  Interfaces.  XPCE was designed to be language-independent.  In practice it has 
