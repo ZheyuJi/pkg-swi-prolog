@@ -1,15 +1,7 @@
 #!/usr/bin/make -f
-# debian/rules for SWI Prolog
 
-# This version is for a multibinary package. It also allows you to build any
-# of the binary packages independantly, via binary-<package> targets.
-
-#export DH_VERBOSE=1
-
-# This has to be exported to make some magic below work.
 export DH_OPTIONS
 
-# Proper autotools handling as per autotools-dev/README.Debian
 export PLARCH ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
 export DEB_HOST_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 export DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
@@ -19,21 +11,9 @@ else
   CONFFLAGS += --build $(DEB_BUILD_GNU_TYPE) --host $(DEB_HOST_GNU_TYPE)
 endif
 
-# TODO Don't set CFLAGS, build fails
-#ifneq (,$(findstring debug,$(DEB_BUILD_OPTIONS)))
-#  CFLAGS += -g
-#endif
-#ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
-#  CFLAGS += -O0
-#else
-#  CFLAGS += -O2
-#endif
-
-
 patch: patch-stamp
 patch-stamp:
 	dpatch apply-all
-	
 
 unpatch:
 	
@@ -228,16 +208,11 @@ binary-common:
 	dh_md5sums
 	dh_builddeb
 
-# Build architecture independant packages using the common target.
 binary-indep: build install
-# (Uncomment this next line if you have such packages.)
-#	 $(MAKE) -f debian/rules DH_OPTIONS=-i binary-common
 
-# Build architecture dependent packages using the common target.
 binary-arch: build install
 	$(MAKE) -f debian/rules DH_OPTIONS=-a binary-common
 
-# Any other binary targets build just one binary package at a time.
 binary-%: build install
 	make -f debian/rules binary-common DH_OPTIONS=-p$*
 
