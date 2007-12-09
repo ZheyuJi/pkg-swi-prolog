@@ -180,6 +180,8 @@ install: build
 	    cp debian/$$i.lintian.override debian/$$i/usr/share/lintian/overrides/$$i; \
 	done
 
+	find debian/ -depth -type d -empty -exec rm -rfv {} \;
+
 binary-common:
 	dh_testdir
 	dh_testroot
