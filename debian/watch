@@ -1,0 +1,2 @@
+version=3
+http://www.swi-prolog.org/dl-stable.html .*SWI-Prolog/pl-([\d\-\.]+).tar.gz
