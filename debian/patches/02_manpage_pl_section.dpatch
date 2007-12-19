@@ -1,8 +1,7 @@
-#! /bin/sh /usr/share/dpatch/dpatch-run
-## 02_manpage_pl_section.dpatch by  <javamaniac@localhost.localdomain>
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 02_manpage_pl_section.dpatch by Gerardo Curiel <gcuriel@debianvenezuela.org>.
 ##
-## All lines beginning with `## DP:' are a description of the patch.
-## DP: Change the pl manpage section
+## DP: Change the pl manpage section. The binary is renamed later.
 
 @DPATCH@
 

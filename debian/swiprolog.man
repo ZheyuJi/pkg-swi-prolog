@@ -16,4 +16,3 @@ SWI-Prolog was written by Jan Wielemaker <jan@swi.psy.uva.nl> and others.
 .PP
 This manual page was written by Michael Piefel <piefel@debian.org>,
 for the Debian GNU/Linux system (but may be used by others).
-

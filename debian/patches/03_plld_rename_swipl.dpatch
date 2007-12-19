@@ -11,7 +11,7 @@ diff -urNad pl-5.6.47~/src/plld.c pl-5.6.47/src/plld.c
 @@ -76,9 +76,7 @@
  #else /*__WINDOWS__*/
  #include "pl-incl.h"
- 
+
 -#ifndef PROG_PL
 -#define PROG_PL "pl"
 -#endif
