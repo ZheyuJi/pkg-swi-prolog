@@ -150,7 +150,15 @@ install: build
 	rm -f debian/swi-prolog/usr/share/man/man1/pl.1
 	cp debian/swiprolog.bin debian/swi-prolog/usr/bin/swiprolog
 	cp debian/swiprolog.man debian/swi-prolog/usr/share/man/man1/swiprolog.1
-	mv debian/swi-prolog/usr/bin/pl debian/swi-prolog/usr/bin/swipl
+	
+	# Rework such that /usr/bin/pl is a shell script, not a symlink.
+	# This was breaking things as argv[0] was not intact (see #456261)
+	PL_BINARY=`readlink debian/swi-prolog/usr/bin/pl`; \
+		rm debian/swi-prolog/usr/bin/pl; \
+		echo "#!/bin/sh" > debian/swi-prolog/usr/bin/swipl; \
+		echo "exec /usr/bin/$$PL_BINARY !*" >> debian/swi-prolog/usr/bin/swipl;
+	sed -i -e 's:[a-z]*/\.\./::' debian/swi-prolog/usr/bin/swipl
+	chmod +x /usr/bin/swipl 
 
 	# Remove readline manpage (see #178370)
 	rm -f debian/swi-prolog-tmp/usr/share/man/man3/readline.3

@@ -2,6 +2,8 @@ swi-prolog (5.6.48-1) unstable; urgency=low
 
   * New upstream release.
   * Patch plld.c so it calls 'swipl' instead of 'pl' (Closes: #312523)
+  * Rework main binary such that /usr/bin/swipl is a shell script instead
+      of a symlink (Closes: #456261)
   * Delete empty directories (spotted by lintian)
   * Update Standards-Version: to 3.7.3.
   * Add debian/watch.
