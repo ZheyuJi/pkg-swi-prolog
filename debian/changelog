@@ -1,5 +1,6 @@
-swi-prolog (5.6.47-2) unstable; urgency=low
+swi-prolog (5.6.48-1) unstable; urgency=low
 
+  * New upstream release.
   * Patch plld.c so it calls 'swipl' instead of 'pl' (Closes: #312523)
   * Delete empty directories (spotted by lintian)
   * Update Standards-Version: to 3.7.3.
