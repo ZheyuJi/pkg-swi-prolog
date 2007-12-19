@@ -5,6 +5,7 @@ swi-prolog (5.6.48-1) unstable; urgency=low
   * Rework main binary such that /usr/bin/swipl is a shell script instead
       of a symlink (Closes: #456261)
   * Delete empty directories (spotted by lintian)
+  * Tidy (unfixed) Lintian "image-file-in-usr-lib" overrides.
   * Update Standards-Version: to 3.7.3.
   * Add debian/watch.
 

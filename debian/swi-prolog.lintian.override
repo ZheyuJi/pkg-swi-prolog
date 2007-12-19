@@ -1,10 +1,1 @@
-swi-prolog binary: image-file-in-usr-lib  usr/lib/swi-prolog/doc/Manual/home.gif
-swi-prolog binary: image-file-in-usr-lib  usr/lib/swi-prolog/doc/Manual/index.gif
-swi-prolog binary: image-file-in-usr-lib  usr/lib/swi-prolog/doc/Manual/info.gif
-swi-prolog binary: image-file-in-usr-lib  usr/lib/swi-prolog/doc/Manual/next.gif
-swi-prolog binary: image-file-in-usr-lib  usr/lib/swi-prolog/doc/Manual/prev.gif
-swi-prolog binary: image-file-in-usr-lib  usr/lib/swi-prolog/doc/Manual/profnode.gif
-swi-prolog binary: image-file-in-usr-lib  usr/lib/swi-prolog/doc/Manual/up.gif
-swi-prolog binary: image-file-in-usr-lib  usr/lib/swi-prolog/doc/Manual/xrefchatdep.gif
-swi-prolog binary: image-file-in-usr-lib  usr/lib/swi-prolog/doc/Manual/xrefchatfile.gif
-swi-prolog binary: image-file-in-usr-lib  usr/lib/swi-prolog/doc/Manual/yellow_pages.gif
+swi-prolog: image-file-in-usr-lib
