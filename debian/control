@@ -5,7 +5,7 @@ Maintainer: Chris Lamb <chris@chris-lamb.co.uk>
 Build-Depends: debhelper (>= 5.0.0), autotools-dev, dpatch, libncurses5-dev, libreadline5-dev, libgmp3-dev, libjpeg62-dev, libx11-dev, libxpm-dev, libxt-dev, x-dev, chrpath
 Standards-Version: 3.7.3
 Vcs-Git: git://git.chris-lamb.co.uk/pkg-swi-prolog.git
-Vcs-Browse: http://git.chris-lamb.co.uk/?p=pkg-swi-prolog.git
+Vcs-Browser: http://git.chris-lamb.co.uk/?p=pkg-swi-prolog.git
 Homepage: http://www.swi-prolog.org
 
 Package: swi-prolog
