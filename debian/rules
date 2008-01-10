@@ -158,7 +158,7 @@ install: build
 		echo "#!/bin/sh" > debian/swi-prolog/usr/bin/swipl; \
 		echo "exec /usr/bin/$$PL_BINARY !*" >> debian/swi-prolog/usr/bin/swipl;
 	sed -i -e 's:[a-z]*/\.\./::' debian/swi-prolog/usr/bin/swipl
-	chmod +x /usr/bin/swipl 
+	chmod +x debian/swi-prolog/usr/bin/swipl 
 
 	# Remove readline manpage (see #178370)
 	rm -f debian/swi-prolog-tmp/usr/share/man/man3/readline.3
