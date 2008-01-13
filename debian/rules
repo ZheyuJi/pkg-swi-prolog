@@ -191,7 +191,7 @@ install: build
 	find debian/ -depth -type d -empty -exec rm -rfv {} \;
 
 	# Remove RPATH from pl2xpce.so.
-	chrpath --delete debian/swi-prolog-xpce/usr/lib/swi-prolog/xpce-*/lib/*/pl2xpce.so
+	chrpath --delete debian/swi-prolog-xpce/usr/lib/swi-prolog/xpce-*/lib/*/pl2xpce.so || true
 
 binary-common:
 	dh_testdir
