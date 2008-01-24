@@ -156,7 +156,7 @@ install: build
 	PL_BINARY=`readlink debian/swi-prolog/usr/bin/pl`; \
 		rm debian/swi-prolog/usr/bin/pl; \
 		echo "#!/bin/sh" > debian/swi-prolog/usr/bin/swipl; \
-		echo "exec /usr/bin/$$PL_BINARY !*" >> debian/swi-prolog/usr/bin/swipl;
+		echo "exec /usr/bin/$$PL_BINARY \$$*" >> debian/swi-prolog/usr/bin/swipl;
 	sed -i -e 's:[a-z]*/\.\./::' debian/swi-prolog/usr/bin/swipl
 	chmod +x debian/swi-prolog/usr/bin/swipl 
 
