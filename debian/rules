@@ -15,7 +15,7 @@ endif
 
 CFLAGS=
 # Fix FTBFS on ARM
-ifeq ($(DEB_BUILD_GNU_TYPE),arm)
+ifeq ($(PLARCH),arm)
 	CFLAGS += -O0
 endif
 
