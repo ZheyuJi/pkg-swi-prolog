@@ -1,3 +1,10 @@
+swi-prolog (5.6.49-2) unstable; urgency=low
+
+  * Use DEB_BUILD_ARCH instead of DEB_BUILD_GNU_TYPE for determining when
+    we are building on ARM.
+
+ -- Chris Lamb <chris@chris-lamb.co.uk>  Fri, 25 Jan 2008 22:06:56 +0000
+
 swi-prolog (5.6.49-1) unstable; urgency=low
 
   * New upstream release.
