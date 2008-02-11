@@ -2,11 +2,10 @@
 
 include /usr/share/dpatch/dpatch.make
 
-export DH_OPTIONS
-
 export PLARCH ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
 export DEB_HOST_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 export DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+
 ifeq ($(DEB_BUILD_GNU_TYPE), $(DEB_HOST_GNU_TYPE))
   CONFFLAGS += --build $(DEB_HOST_GNU_TYPE)
 else
@@ -19,9 +18,8 @@ ifeq ($(PLARCH),arm)
 	CFLAGS += -O0
 endif
 
-
-build: build-stamp
-build-stamp: patch
+build: patch build-stamp
+build-stamp:
 	dh_testdir
 
 	CFLAGS="$(CFLAGS)" PL="swipl" ./configure $(CONFFLAGS) --with-world \
@@ -29,97 +27,46 @@ build-stamp: patch
 
 	$(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH)
 
-	touch build-stamp
+	touch $@
 
-clean: clean-patched unpatch
-clean-patched:
+clean: unpatch
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp
 
-	# These two files disappear after clean, but are present in upstream source;
-	# they may be unimportant, but I want to restore the original state
-	cp packages/xpce/src/h/names.i[hc] debian
+	# Upstream's clean targets are too clean
+	mv packages/xpce/src/h/names.i[hc] debian
 
-	# Commands to clean up after the build process.
-	-test -r Makefile && $(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH) clean
-	-test -r Makefile && $(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH) distclean
+	# Upstream's clean targets are not clean enough
+	rm -f packages/xpce/man/reference/index.obj
+	rm -f packages/xpce/lib/amd64
+	rm -f .pkg-config
+
+	[ ! -f Makefile ] || $(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH) clean
+	[ ! -f Makefile ] || $(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH) distclean
 
 	mv debian/names.i[hc] packages/xpce/src/h
-
-	# SWI-Prolog's clean targets are not so clean, after all
-	rm -f packages/clib/1
-	rm -f packages/http/config.status
-	rm -f packages/http/Makefile
-	rm -f packages/sgml/RDF/config.h
-	rm -f packages/sgml/sgml
-	rm -f packages/sgml/dtd2pl
-	rm -f packages/xpce/CXX/demo/Makefile
-	rm -f packages/xpce/lib/i386
-	rm -f packages/xpce/pl/src/Makefile.bin
-	rm -f packages/xpce/prolog/lib/Makefile
-	rm -f packages/xpce/prolog/pwboot/Makefile
-	rm -f packages/xpce/src/xpce-install
-	rm -f packages/xpce/src/pl/so-interface.o
-	rm -f packages/xpce/sicstus/src/Makefile
-	rm -f packages/xpce/Makefile
-	rm -f packages/xpce/xpce.spec
-	rm -f packages/clib/maildrop/rfc2045/rfc2045charset.h
-	rm -f packages/clib/maildrop/rfc2045/stamp-h1
-	rm -f packages/clib/maildrop/rfc822/stamp-h1
-	rm -f packages/xpce/src/xpce.sh
-	rm -f src/pl.sh 
-	rm -f packages/plld.sh
-	rm -f packages/pl.sh
-	rm -f src/pl.sh
-	rm -f packages/nlp/*.o	
-	rm -f packages/nlp/*.so
-	rm -f packages/ssl/*.o
-	rm -f packages/ssl/*.so
-	rm -f packages/xpce/man/reference/*.obj
-	rm -f Makefile
-	rm -f packages/jpl/src/java/Makefile
-	rm -f debian/swi-prolog-xpce-builddir swi-prolog.install
-	rm -f packages/nlp/config.log
-	rm -f packages/nlp/config.status
-	rm -f packages/nlp/Makefile
-	rm -f packages/nlp/config.h
-	rm -f packages/ssl/config.log
-	rm -f packages/ssl/config.status
-	rm -f packages/ssl/Makefile
-	rm -f packages/ssl/config.h
-	rm -f packages/clpqr/config.log
-	rm -f packages/clpqr/config.status
-	rm -f packages/clpqr/Makefile
-	rm -f src/config.log
-	rm -f src/confdefs.h
-	rm -f src/conftest.c
-	rm -f src/conftest.s
-
 	dh_clean
 
-	for i in "src/" \
-		"packages/xpce/src/" \
-		"packages/xpce/" \
-		"packages/jpl"; do \
-	    test -r /usr/share/misc/config.sub && cp -f /usr/share/misc/config.sub $$i/config.sub; \
-            test -r /usr/share/misc/config.guess && cp -f /usr/share/misc/config.guess $$i/config.guess; \
+	for DIR in src/ packages/xpce/src/ packages/xpce/ packages/jpl; do \
+		cp -f /usr/share/misc/config.sub $$DIR/config.sub; \
+ 		cp -f /usr/share/misc/config.guess $$DIR/config.guess; \
 	done
 
-install: DH_OPTIONS=
+install:
 install: build
 	dh_testdir
 	dh_testroot
 	dh_clean -k
 
-	# Main PROLOG system
-	# XPCE below needs a running prolog to be installed; this can be done
+	# XPCE below needs a working SWI-Prolog to be installed; this is done
 	# in a temporary installation directory. We generate a list of files
 	# so we can seperate them later.
 
 	$(MAKE) prefix=`pwd`/debian/swi-prolog-tmp/usr \
-	        PLBASE=`pwd`/debian/swi-prolog-tmp/usr/lib/swi-prolog \
+		PLBASE=`pwd`/debian/swi-prolog-tmp/usr/lib/swi-prolog \
 		ARCH=$(PLARCH) install-lite
+
 	cd debian/swi-prolog-tmp && find * -type f > ../swi-prolog.files
 	cd debian/swi-prolog-tmp && find * -type l >> ../swi-prolog.files
 
@@ -130,16 +77,17 @@ install: build
 		 "sgml/RDF sgml" \
 		 "table    table" \
 		 "xpce     tmp"; do \
-	    FROM=$$(echo $$i | cut -d" " -f1); TO=$$(echo $$i | cut -d" " -f2); \
-	    $(MAKE) -C packages/$${FROM} \
-	        prefix=`pwd`/debian/swi-prolog-$${TO}/usr \
-		PLBASE=`pwd`/debian/swi-prolog-$${TO}/usr/lib/swi-prolog \
-		PLARCH=$(PLARCH) \
-		PL=`pwd`/src/pl PLEXE=`pwd`/src/pl \
-		install; \
+		FROM=$$(echo $$i | cut -d " " -f1); \
+		TO=$$(echo $$i | cut -d " " -f2); \
+		$(MAKE) -C packages/$$FROM \
+			prefix=`pwd`/debian/swi-prolog-$$TO/usr \
+			PLBASE=`pwd`/debian/swi-prolog-$$TO/usr/lib/swi-prolog \
+			PLARCH=$(PLARCH) \
+			PL=`pwd`/src/pl PLEXE=`pwd`/src/pl \
+			install; \
 	done
 
-	# Now seperate XPCE and basic SWI-Prolog
+	# Seperate XPCE and basic SWI-Prolog
 	dh_movefiles -p swi-prolog --sourcedir=debian/swi-prolog-tmp
 
 	# Add legacy 'swiprolog' binary
@@ -149,23 +97,24 @@ install: build
 	# Remove dbuild .pwd file (see #285894)
 	rm -f debian/swi-prolog-xpce/usr/lib/swi-prolog/xpce/prolog/lib/.pwd
 	
-	# Empty directories remain; but since XPCE depends on SWI-Prolog...
+	# Empty directories remain, but XPCE depends on SWI-Prolog
 	mv debian/swi-prolog-tmp debian/swi-prolog-xpce
+
 	# These two links are absolute, but we want them relative
 	cd debian/swi-prolog-xpce/usr/bin && \
-	    rm xpce; ln -s ../lib/swi-prolog/bin/*/xpce .; \
-	    rm xpce-client; ln -s ../lib/swi-prolog/xpce-*/bin/*/xpce-client .
+		rm xpce; ln -s ../lib/swi-prolog/bin/*/xpce .; \
+		rm xpce-client; ln -s ../lib/swi-prolog/xpce-*/bin/*/xpce-client .
 	
 	# Remove superfluous copies of the GPL
 	rm -f debian/swi-prolog-xpce/usr/lib/swi-prolog/xpce-*/COPYING
 
 	# Override lintian warnings
-	for i in "swi-prolog" \
-		"swi-prolog-xpce"; do \
-	    mkdir -p debian/$$i/usr/share/lintian/overrides; \
-	    cp debian/$$i.lintian.override debian/$$i/usr/share/lintian/overrides/$$i; \
+	for PKG in swi-prolog swi-prolog-xpce; do \
+		mkdir -p debian/$$PKG/usr/share/lintian/overrides; \
+		cp debian/$$PKG.lintian.override debian/$$PKG/usr/share/lintian/overrides/$$PKG; \
 	done
 
+	# Remove empty directories
 	find debian/ -depth -type d -empty -exec rm -rfv {} \;
 
 	# Remove RPATH from pl2xpce.so.
@@ -180,7 +129,6 @@ binary-common:
 	dh_installchangelogs -pswi-prolog-clib packages/clib/ChangeLog
 	dh_installchangelogs -pswi-prolog-table packages/table/ChangeLog
 	dh_installdocs
-	dh_installexamples
 	dh_installmenu
 	dh_installman
 	dh_strip
@@ -203,5 +151,4 @@ binary-%: build install
 	make -f debian/rules binary-common DH_OPTIONS=-p$*
 
 binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary-common binary install
-
+.PHONY: build clean binary-indep binary-arch binary-common binary install patch unpatch
