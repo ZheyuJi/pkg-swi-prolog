@@ -156,11 +156,6 @@ install: build
 	    rm xpce; ln -s ../lib/swi-prolog/bin/*/xpce .; \
 	    rm xpce-client; ln -s ../lib/swi-prolog/xpce-*/bin/*/xpce-client .
 	
-	# These two man pages are an internal part of the library they are not
-	# compressed, but are nice man pages
-	#cd debian/swi-prolog-xpce/usr/share/man/man1 && \
-	#    ln -s ../../../lib/swi-prolog/xpce-*/man/xpce*.1 .
-
 	# Remove superfluous copies of the GPL
 	rm -f debian/swi-prolog-xpce/usr/lib/swi-prolog/xpce-*/COPYING
 
