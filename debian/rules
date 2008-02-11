@@ -24,7 +24,7 @@ build: build-stamp
 build-stamp: patch
 	dh_testdir
 
-	CFLAGS="$(CFLAGS)" ./configure $(CONFFLAGS) --with-world \
+	CFLAGS="$(CFLAGS)" PL="swipl" ./configure $(CONFFLAGS) --with-world \
 		--prefix=/usr '--mandir=$${prefix}/share/man'
 
 	$(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH)
@@ -142,23 +142,9 @@ install: build
 	# Now seperate XPCE and basic SWI-Prolog
 	dh_movefiles -p swi-prolog --sourcedir=debian/swi-prolog-tmp
 
-	# Change the dir name in manpage from pl-* to swi-prolog
-	# and the executable name from pl to swipl
-	sed -e "s:/pl-[0-9.]*:/swi-prolog:" -e "s:\([^./]\|^\)\<pl\>:\1swipl:g" \
-		-e "s:/usr/bin/pl:/usr/bin/swipl:" -e "s:i386-linux-gnu:<host>:" \
-		debian/swi-prolog/usr/share/man/man1/pl.1 > debian/swi-prolog/usr/share/man/man1/swipl.1
-	rm -f debian/swi-prolog/usr/share/man/man1/pl.1
+	# Add legacy 'swiprolog' binary
 	cp debian/swiprolog.bin debian/swi-prolog/usr/bin/swiprolog
 	cp debian/swiprolog.man debian/swi-prolog/usr/share/man/man1/swiprolog.1
-	
-	# Rework such that /usr/bin/pl is a shell script, not a symlink.
-	# This was breaking things as argv[0] was not intact (see #456261)
-	PL_BINARY=`readlink debian/swi-prolog/usr/bin/pl`; \
-		rm debian/swi-prolog/usr/bin/pl; \
-		echo "#!/bin/sh" > debian/swi-prolog/usr/bin/swipl; \
-		echo "exec /usr/bin/$$PL_BINARY \$$*" >> debian/swi-prolog/usr/bin/swipl;
-	sed -i -e 's:[a-z]*/\.\./::' debian/swi-prolog/usr/bin/swipl
-	chmod +x debian/swi-prolog/usr/bin/swipl 
 
 	# Remove readline manpage (see #178370)
 	rm -f debian/swi-prolog-tmp/usr/share/man/man3/readline.3
