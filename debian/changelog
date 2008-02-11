@@ -5,6 +5,8 @@ swi-prolog (5.6.50) unstable; urgency=low
     by my fix to #456261 which was preventing scripts to use a shebang line
     pointing to swipl. Passing the environment variable PL to configure sets
     the target binary name in a far more less brittle manner. (Closes: #462646)
+  * Remove deprecated swiprolog binary and associated manpage. This name was
+    deprecated in 2001 and does not support scripting.
   * Add missing ${shlibs:Depends} to swi-prolog-http.
   * Cleanup debian/rules.
 

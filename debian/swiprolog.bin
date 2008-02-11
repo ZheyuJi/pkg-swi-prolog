@@ -1,5 +1,0 @@
-#!/bin/sh
-echo "The binary name \`swiprolog' is deprecated in favour of \`swipl'."
-echo "Please use the new name instead."
-echo
-swipl $*
