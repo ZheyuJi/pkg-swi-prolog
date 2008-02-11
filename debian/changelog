@@ -1,3 +1,9 @@
+swi-prolog (5.6.50) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Chris Lamb <chris@chris-lamb.co.uk>  Mon, 11 Feb 2008 09:45:02 +0000
+
 swi-prolog (5.6.49-2) unstable; urgency=low
 
   * Use DEB_BUILD_ARCH instead of DEB_BUILD_GNU_TYPE for determining when
