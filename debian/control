@@ -37,7 +37,7 @@ Description: Interface to system library for SWI Prolog
 
 Package: swi-prolog-http
 Architecture: any
-Depends: swi-prolog (= ${binary:Version}), ${misc:Depends}
+Depends: ${shlibs:Depends}, swi-prolog (= ${binary:Version}), ${misc:Depends}
 Description: Interface to system library for SWI Prolog
  This package provides some Prolog libraries for accessing and
  providing HTTP services.  The services are intended to realise embedded
