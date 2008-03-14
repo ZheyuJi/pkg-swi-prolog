@@ -10,7 +10,7 @@ Homepage: http://www.swi-prolog.org
 
 Package: swi-prolog
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, libgmp3-dev, libreadline5-dev
 Suggests: swi-prolog-doc, prolog-el
 Description: ISO/Edinburgh-style Prolog interpreter
  SWI-Prolog is a fast and powerful ISO/Edinburgh-style Prolog compiler with a

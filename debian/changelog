@@ -3,6 +3,8 @@ swi-prolog (5.6.52-1) unstable; urgency=low
   * New upstream release.
 
   * debian/control:
+    - Add libgmp3-dev and libreadline5-dev as swi-prolog binary dependencies
+      for plld utility (Closes: #470899)
     - Completely rewrite crufty short and long descriptions of all packages
     - Remove swi-prolog-xpce from swi-prolog Recommends:
     - Move swi-prolog-doc from swi-prolog Recommends: to Suggests:
