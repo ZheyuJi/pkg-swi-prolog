@@ -12,72 +12,150 @@ Package: swi-prolog
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Suggests: swi-prolog-doc, prolog-el
-Description: Prolog interpreter
- ISO/Edinburgh-style Prolog compiler.  Compliant with Part 1 of the ISO standard
- for Prolog.  Covers all traditional Edinburgh Prolog features and shares many
- features with Quintus and SICStus Prolog, including a compatible module system.
- Very fast compiler, garbage collection (also on atoms), fast and powerful C/C++
- interface, autoloading, GNU-readline interface.
+Description: ISO/Edinburgh-style Prolog interpreter
+ SWI-Prolog is a fast and powerful ISO/Edinburgh-style Prolog compiler with a
+ rich set of built-in predicates. It offers a fast, robust and small
+ environment which enables substantial applications to be developed with it.
  .
- SWI-Prolog has been designed and implemented such that it can easily be
- modified for experiments with logic programming and the relation
- between logic programming and other programming paradigms (such as the
- object oriented XPCE environment).  SWI-Prolog has a rich set of
- built-in predicates and reasonable performance, which makes it possible
- to develop substantial applications in it.  The current version offers
- a module system, garbage collection and an interface to the C language.
+ SWI-Prolog additionally offers:
+ .
+  * A powerful module system
+  * Garbage collection
+  * Unicode character set handling
+  * Unbounted integer and rational number arithmetic
+  * Multithreading support
+  * A powerful C/C++ interface
+  * GNU Readline interface
 
 Package: swi-prolog-clib
 Architecture: any
 Depends: ${shlibs:Depends}, swi-prolog (= ${binary:Version}), ${misc:Depends}
-Description: Interface to system library for SWI Prolog
- This library contains SWI-Prolog foreign-libraries to deal with various
- OS-dependent or obscure stuff from SWI-Prolog.
+Description: SWI-Prolog interface to system libraries
+ SWI-Prolog is a fast and powerful ISO/Edinburgh-style Prolog compiler with a
+ rich set of built-in predicates. It offers a fast, robust and small
+ environment which enables substantial applications to be developed with it.
+ .
+ SWI-Prolog additionally offers:
+ .
+  * A powerful module system
+  * Garbage collection
+  * Unicode character set handling
+  * Unbounted integer and rational number arithmetic
+  * Multithreading support
+  * A powerful C/C++ interface
+  * GNU Readline interface
+ .
+ This library proves SWI-Prolog foreign libraries to cater for various
+ OS-dependent and/or obscure features of SWI-Prolog.
 
 Package: swi-prolog-http
 Architecture: any
 Depends: ${shlibs:Depends}, swi-prolog (= ${binary:Version}), ${misc:Depends}
-Description: Interface to system library for SWI Prolog
- This package provides some Prolog libraries for accessing and
- providing HTTP services.  The services are intended to realise embedded
- servers and form the basis for agent-protocols such as FIPA and SOAP.
+Description: HTTP libraries for SWI-Prolog
+ SWI-Prolog is a fast and powerful ISO/Edinburgh-style Prolog compiler with a
+ rich set of built-in predicates. It offers a fast, robust and small
+ environment which enables substantial applications to be developed with it.
+ .
+ SWI-Prolog additionally offers:
+ .
+  * A powerful module system
+  * Garbage collection
+  * Unicode character set handling
+  * Unbounted integer and rational number arithmetic
+  * Multithreading support
+  * A powerful C/C++ interface
+  * GNU Readline interface
+ .
+ This package provides libraries for accessing and providing services over
+ HTTP, intended to realise embedded servers and form the basis of protocols
+ such as FIPA and SOAP.
 
 Package: swi-prolog-semweb
 Architecture: any
 Depends: ${shlibs:Depends}, swi-prolog (= ${binary:Version}), ${misc:Depends}
-Description: Interface to system library for SWI Prolog
- The semweb library provides a Prolog library based on foreign-language
- extensions for storing and manipulating RDF triples.  It can handle quite
- large sets of triples only limited by available memory.  One million
- triples requires about 80MB memory, so a fully equiped 32-bit machine
- can handle about 40 million triples.
+Description: SWI-Prolog library for manipulating RDF triples
+ SWI-Prolog is a fast and powerful ISO/Edinburgh-style Prolog compiler with a
+ rich set of built-in predicates. It offers a fast, robust and small
+ environment which enables substantial applications to be developed with it.
+ .
+ SWI-Prolog additionally offers:
+ .
+  * A powerful module system
+  * Garbage collection
+  * Unicode character set handling
+  * Unbounted integer and rational number arithmetic
+  * Multithreading support
+  * A powerful C/C++ interface
+  * GNU Readline interface
+ .
+ This package provides libraries based on extensions for storing and
+ manipulating RDF triples. It can handle very large sets of and is limited only
+ by available memory. One million triples requires about 80MB memory.
 
 Package: swi-prolog-sgml
 Architecture: any
 Depends: ${shlibs:Depends}, swi-prolog (= ${binary:Version}), ${misc:Depends}
-Description: SGML/XML/HTML parser for SWI Prolog
- This package allows you to parse SGML, XML and HTML data into a Prolog 
- data structure.  The high-level interface defined in sgml 
- provides access at the file-level, while the low-level interface defined
- in the foreign module works with Prolog streams.
+Description: SGML/XML/HTML parser for SWI-Prolog
+ SWI-Prolog is a fast and powerful ISO/Edinburgh-style Prolog compiler with a
+ rich set of built-in predicates. It offers a fast, robust and small
+ environment which enables substantial applications to be developed with it.
+ .
+ SWI-Prolog additionally offers:
+ .
+  * A powerful module system
+  * Garbage collection
+  * Unicode character set handling
+  * Unbounted integer and rational number arithmetic
+  * Multithreading support
+  * A powerful C/C++ interface
+  * GNU Readline interface
+ .
+ This package provides libraries to parse SGML, XML and HTML data into Prolog
+ data structures. The high-level interface defined in SGML provides access at
+ the file level, while the low-level interface defined in a foreign module
+ works with Prolog streams.
 
 Package: swi-prolog-table
 Architecture: any
 Depends: ${shlibs:Depends}, swi-prolog (= ${binary:Version}), ${misc:Depends}
-Description: Managing external tables for SWI Prolog
- This package provides a foreign language extension to SWI-Prolog
- for the manipulation of 'external tables'.  External tables are files 
- using a textual representation of records separated into fields.  The 
- package allows for a flexible definition of the format of the file in 
- terms of records and fields, how the information in the file should be 
- mapped onto Prolog data types and what properties the file has to 
- improve the performance of lookup.
+Description: External table library for SWI-Prolog
+ SWI-Prolog is a fast and powerful ISO/Edinburgh-style Prolog compiler with a
+ rich set of built-in predicates. It offers a fast, robust and small
+ environment which enables substantial applications to be developed with it.
+ .
+ SWI-Prolog additionally offers:
+ .
+  * A powerful module system
+  * Garbage collection
+  * Unicode character set handling
+  * Unbounted integer and rational number arithmetic
+  * Multithreading support
+  * A powerful C/C++ interface
+  * GNU Readline interface
+ .
+ This package provides a foreign language extension to manipulate of external
+ tables, a textual representation of records separated into fields. It allows
+ for a flexible definition of the format of the file and how the information in
+ the file should be mapped onto Prolog data types.
 
 Package: swi-prolog-xpce
 Architecture: any
 Depends: ${shlibs:Depends}, swi-prolog (= ${binary:Version}), ${misc:Depends}
-Description: GUI library for SWI Prolog
- XPCE is an object-oriented symbolic programming environment for User 
- Interfaces.  XPCE was designed to be language-independent.  In practice it has 
- gained popularity with Prolog and many useful libraries are now available for 
- Prolog only.  Therefore we will often talk about XPCE/Prolog.
+Description: User interface library for SWI-Prolog
+ SWI-Prolog is a fast and powerful ISO/Edinburgh-style Prolog compiler with a
+ rich set of built-in predicates. It offers a fast, robust and small
+ environment which enables substantial applications to be developed with it.
+ .
+ SWI-Prolog additionally offers:
+ .
+  * A powerful module system
+  * Garbage collection
+  * Unicode character set handling
+  * Unbounted integer and rational number arithmetic
+  * Multithreading support
+  * A powerful C/C++ interface
+  * GNU Readline interface
+ .
+ XPCE is an object-oriented symbolic programming environment for user
+ interfaces. Although XPCE was designed to be language-independent, it has
+ gained popularity most with Prolog.
