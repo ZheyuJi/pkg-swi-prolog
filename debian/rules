@@ -22,6 +22,11 @@ build: patch build-stamp
 build-stamp:
 	dh_testdir
 
+	for DIR in src/ packages/xpce/src/ packages/xpce/ packages/jpl; do \
+		cp -f /usr/share/misc/config.sub $$DIR/config.sub; \
+		cp -f /usr/share/misc/config.guess $$DIR/config.guess; \
+	done
+
 	CFLAGS="$(CFLAGS)" PL="swipl" ./configure $(CONFFLAGS) --with-world \
 		--prefix=/usr '--mandir=$${prefix}/share/man'
 
@@ -47,11 +52,6 @@ clean: unpatch
 
 	mv debian/names.i[hc] packages/xpce/src/h
 	dh_clean
-
-	for DIR in src/ packages/xpce/src/ packages/xpce/ packages/jpl; do \
-		cp -f /usr/share/misc/config.sub $$DIR/config.sub; \
- 		cp -f /usr/share/misc/config.guess $$DIR/config.guess; \
-	done
 
 install:
 install: build
