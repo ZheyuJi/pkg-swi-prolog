@@ -76,6 +76,7 @@ install: build
 		 "sgml     sgml" \
 		 "sgml/RDF sgml" \
 		 "table    table" \
+		 "odbc     odbc" \
 		 "xpce     tmp"; do \
 		FROM=$$(echo $$i | cut -d " " -f1); \
 		TO=$$(echo $$i | cut -d " " -f2); \
@@ -125,6 +126,7 @@ binary-common:
 	dh_installchangelogs -pswi-prolog-xpce packages/xpce/ChangeLog
 	dh_installchangelogs -pswi-prolog-clib packages/clib/ChangeLog
 	dh_installchangelogs -pswi-prolog-table packages/table/ChangeLog
+	dh_installchangelogs -pswi-prolog-odbc packages/odbc/ChangeLog
 	dh_installdocs
 	dh_installmenu
 	dh_installman
