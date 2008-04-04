@@ -79,6 +79,7 @@ install: build
 		 "xpce     tmp"; do \
 		FROM=$$(echo $$i | cut -d " " -f1); \
 		TO=$$(echo $$i | cut -d " " -f2); \
+		mkdir -p `pwd`/debian/swi-prolog-$$TO/usr/lib/swi-prolog/library; \
 		$(MAKE) -C packages/$$FROM \
 			prefix=`pwd`/debian/swi-prolog-$$TO/usr \
 			PLBASE=`pwd`/debian/swi-prolog-$$TO/usr/lib/swi-prolog \
