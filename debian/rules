@@ -84,7 +84,7 @@ install: build
 			prefix=`pwd`/debian/swi-prolog-$$TO/usr \
 			PLBASE=`pwd`/debian/swi-prolog-$$TO/usr/lib/swi-prolog \
 			PLARCH=$(PLARCH) \
-			PL=`pwd`/src/pl PLEXE=`pwd`/src/pl \
+			PL=`pwd`/src/swipl PLEXE=`pwd`/src/swipl \
 			install; \
 	done
 
