@@ -45,7 +45,7 @@ Description: SWI-Prolog interface to system libraries
   * A powerful C/C++ interface
   * GNU Readline interface
  .
- This library proves SWI-Prolog foreign libraries to cater for various
+ This library provides SWI-Prolog foreign libraries to cater for various
  OS-dependent and/or obscure features of SWI-Prolog.
 
 Package: swi-prolog-http
