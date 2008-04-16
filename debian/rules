@@ -3,8 +3,10 @@
 include /usr/share/dpatch/dpatch.make
 
 export PLARCH ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
+export ARCH ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
 export DEB_HOST_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 export DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+
 
 ifeq ($(DEB_BUILD_GNU_TYPE), $(DEB_HOST_GNU_TYPE))
   CONFFLAGS += --build $(DEB_HOST_GNU_TYPE)
@@ -26,6 +28,14 @@ build-stamp:
 		cp -f /usr/share/misc/config.sub $$DIR/config.sub; \
 		cp -f /usr/share/misc/config.guess $$DIR/config.guess; \
 	done
+
+	# Build shared object first
+	CFLAGS="$(CFLAGS)" ./configure $(CONFFLAGS) --enable-shared \
+		--prefix=/usr '--mandir=$${prefix}/share/man'
+	$(MAKE)
+	$(MAKE) prefix=`pwd`/debian/swi-prolog-shared/usr install-lite
+	$(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH) clean
+	$(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH) distclean
 
 	CFLAGS="$(CFLAGS)" PL="swipl" ./configure $(CONFFLAGS) --with-world \
 		--prefix=/usr '--mandir=$${prefix}/share/man'
@@ -49,6 +59,8 @@ clean: unpatch
 
 	[ ! -f Makefile ] || $(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH) clean
 	[ ! -f Makefile ] || $(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH) distclean
+
+	rm -rf debian/swi-prolog-shared
 
 	mv debian/names.i[hc] packages/xpce/src/h
 	dh_clean
@@ -92,6 +104,10 @@ install: build
 	# Seperate XPCE and basic SWI-Prolog
 	dh_movefiles -p swi-prolog --sourcedir=debian/swi-prolog-tmp
 
+	# Install standalone shared library
+	cp -r debian/swi-prolog-shared/usr/lib/pl-*/lib/*/libpl.so* \
+		debian/swi-prolog/usr/lib/
+
 	# Remove dbuild .pwd file (see #285894)
 	rm -f debian/swi-prolog-xpce/usr/lib/swi-prolog/xpce/prolog/lib/.pwd
 	
@@ -115,8 +131,9 @@ install: build
 	# Remove empty directories
 	find debian/ -depth -type d -empty -exec rm -rfv {} \;
 
-	# Remove RPATH from pl2xpce.so.
+	# Remove RPATH from pl2xpce.so and libpl.so
 	chrpath --delete debian/swi-prolog-xpce/usr/lib/swi-prolog/xpce-*/lib/*/pl2xpce.so || true
+	chrpath --delete debian/swi-prolog/usr/lib/libpl.so || true
 
 binary-common:
 	dh_testdir

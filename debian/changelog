@@ -1,7 +1,14 @@
+swi-prolog (5.6.53-2) unstable; urgency=low
+
+  * Fix spelling typo in swi-prolog-clib package description.
+  * Build standalone shared library for use in foreign function interfaces
+    such as SWIG. (Closes: #152811)
+
+ -- Chris Lamb <chris@chris-lamb.co.uk>  Thu, 17 Apr 2008 00:01:08 +0100
+
 swi-prolog (5.6.53-1) unstable; urgency=low
 
   * New upstream release.
-  * Fix spelling typo in swi-prolog-clib package description.
 
  -- Chris Lamb <chris@chris-lamb.co.uk>  Tue, 15 Apr 2008 16:22:08 +0100
 
