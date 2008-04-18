@@ -11,5 +11,5 @@ swi-prolog: image-file-in-usr-lib
 # to split it as package that links against it will have to require the
 # package anyway for the Standard Library. We therefore override the various
 # warnings regarding this somewhat ugly situation.
-swi-prolog: non-dev-pkg-with-shlib-symlink usr/lib/libpl.so.5.6.53 usr/lib/libpl.so
-swi-prolog: package-name-doesnt-match-sonames libpl5.6.53
+swi-prolog: non-dev-pkg-with-shlib-symlink
+swi-prolog: package-name-doesnt-match-sonames
