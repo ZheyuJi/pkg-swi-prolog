@@ -1,11 +1,11 @@
 This package was debianized by Michael Piefel <piefel@debian.org> on
 Tue, 05 Feb 2002 11:03:37 +0100.
 
-It was downloaded from <http://www.swi-prolog.org/>
+It was downloaded from <http://www.swi-prolog.org/>.
 
 Copyright:
 
-    Copyright (C) 1985-2004  University of Amsterdam
+    Copyright (C) 1985-2004 University of Amsterdam
 
     SWI-Prolog/XPCE and all our packages are now licensed according to the
     LGPL for the C-parts and GPL + exception to allow linking into non-GPL
