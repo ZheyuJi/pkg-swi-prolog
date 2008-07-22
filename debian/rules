@@ -14,10 +14,11 @@ else
   CONFFLAGS += --build $(DEB_BUILD_GNU_TYPE) --host $(DEB_HOST_GNU_TYPE)
 endif
 
-CFLAGS=
-# Fix FTBFS on ARM
+export CFLAGS=
+
+# Fix FTBFS on arm
 ifeq ($(PLARCH),arm)
-	CFLAGS += -O0
+export COFLAGS=-O0
 endif
 
 build: patch build-stamp
@@ -30,15 +31,15 @@ build-stamp:
 	done
 
 	# Build shared object first
-	CFLAGS="$(CFLAGS)" ./configure $(CONFFLAGS) --enable-shared \
+	./configure $(CONFFLAGS) --enable-shared \
 		--prefix=/usr '--mandir=$${prefix}/share/man'
 	$(MAKE)
 	$(MAKE) prefix=`pwd`/debian/swi-prolog-shared/usr install-lite
 	$(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH) clean
 	$(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH) distclean
 
-	CFLAGS="$(CFLAGS)" PL="swipl" ./configure $(CONFFLAGS) --with-world \
-		--prefix=/usr '--mandir=$${prefix}/share/man'
+	./configure $(CONFFLAGS) --with-world \
+		--prefix=/usr '--mandir=$${prefix}/share/man' PL="swipl"
 
 	$(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH)
 
