@@ -2,7 +2,7 @@ swi-prolog for DEBIAN
 ---------------------
 
 The main binary is named `swiprolog' instead of usual `pl' because of conflict
-with tendra and name space polution.
+with tendra and name space pollution.
 
  -- Milan Zamazal <pdm@debian.org>
 
