@@ -34,7 +34,7 @@ build-stamp:
 	./configure $(CONFFLAGS) --enable-shared \
 		--prefix=/usr '--mandir=$${prefix}/share/man'
 	$(MAKE)
-	$(MAKE) prefix=`pwd`/debian/swi-prolog-shared/usr install-lite
+	$(MAKE) prefix=$(CURDIR)/debian/swi-prolog-shared/usr install-lite
 	$(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH) clean
 	$(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH) distclean
 
@@ -76,8 +76,8 @@ install: build
 	# in a temporary installation directory. We generate a list of files
 	# so we can seperate them later.
 
-	$(MAKE) prefix=`pwd`/debian/swi-prolog-tmp/usr \
-		PLBASE=`pwd`/debian/swi-prolog-tmp/usr/lib/swi-prolog \
+	$(MAKE) prefix=$(CURDIR)/debian/swi-prolog-tmp/usr \
+		PLBASE=$(CURDIR)/debian/swi-prolog-tmp/usr/lib/swi-prolog \
 		ARCH=$(PLARCH) install-lite
 
 	cd debian/swi-prolog-tmp && find * -type f > ../swi-prolog.files
@@ -93,12 +93,12 @@ install: build
 		 "xpce     tmp"; do \
 		FROM=$$(echo $$i | cut -d " " -f1); \
 		TO=$$(echo $$i | cut -d " " -f2); \
-		mkdir -p `pwd`/debian/swi-prolog-$$TO/usr/lib/swi-prolog/library; \
+		mkdir -p $(CURDIR)/debian/swi-prolog-$$TO/usr/lib/swi-prolog/library; \
 		$(MAKE) -C packages/$$FROM \
-			prefix=`pwd`/debian/swi-prolog-$$TO/usr \
-			PLBASE=`pwd`/debian/swi-prolog-$$TO/usr/lib/swi-prolog \
+			prefix=$(CURDIR)/debian/swi-prolog-$$TO/usr \
+			PLBASE=$(CURDIR)/debian/swi-prolog-$$TO/usr/lib/swi-prolog \
 			PLARCH=$(PLARCH) \
-			PL=`pwd`/src/swipl PLEXE=`pwd`/src/swipl \
+			PL=$(CURDIR)/src/swipl PLEXE=$(CURDIR)/src/swipl \
 			install; \
 	done
 

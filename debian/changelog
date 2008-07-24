@@ -6,6 +6,7 @@ swi-prolog (5.6.58-1) unstable; urgency=low
     - Should fix FTBFS on arm as -O0 is passed properly (introduced in
       5.6.49-1).
   * Fix typo ("polution" -> "pollution") in README.Debian.
+  * Replace calls to `pwd` in debian/rules with $(CURDIR).
 
  -- Chris Lamb <chris@chris-lamb.co.uk>  Tue, 22 Jul 2008 21:34:25 +0100
 
