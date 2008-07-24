@@ -80,8 +80,8 @@ install: build
 		PLBASE=$(CURDIR)/debian/swi-prolog-tmp/usr/lib/swi-prolog \
 		ARCH=$(PLARCH) install-lite
 
-	cd debian/swi-prolog-tmp && find * -type f > ../swi-prolog.files
-	cd debian/swi-prolog-tmp && find * -type l >> ../swi-prolog.files
+	cd debian/swi-prolog-tmp && find * -type f > ../swi-prolog.install
+	cd debian/swi-prolog-tmp && find * -type l >> ../swi-prolog.install
 
 	for i in "clib     clib" \
 		 "http     http" \
@@ -103,7 +103,7 @@ install: build
 	done
 
 	# Seperate XPCE and basic SWI-Prolog
-	dh_movefiles -p swi-prolog --sourcedir=debian/swi-prolog-tmp
+	dh_install -p swi-prolog --sourcedir=debian/swi-prolog-tmp
 
 	# Install standalone shared library
 	cp -r debian/swi-prolog-shared/usr/lib/pl-*/lib/*/libpl.so* \
