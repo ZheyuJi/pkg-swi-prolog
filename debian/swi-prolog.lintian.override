@@ -13,3 +13,4 @@ swi-prolog: image-file-in-usr-lib
 # warnings regarding this somewhat ugly situation.
 swi-prolog: non-dev-pkg-with-shlib-symlink
 swi-prolog: package-name-doesnt-match-sonames
+swi-prolog: no-symbols-control-file
