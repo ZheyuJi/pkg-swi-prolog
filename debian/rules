@@ -105,6 +105,10 @@ install: build
 	# Seperate XPCE and basic SWI-Prolog
 	dh_install -p swi-prolog --sourcedir=debian/swi-prolog-tmp
 
+	# Remove the basic SWI-Prolog installation from the XPCE install dir
+	xargs --arg-file=debian/swi-prolog.install --delimiter='\n' -I{} \
+		rm -v debian/swi-prolog-tmp/{}
+
 	# Install standalone shared library
 	cp -r debian/swi-prolog-shared/usr/lib/pl-*/lib/*/libpl.so* \
 		debian/swi-prolog/usr/lib/

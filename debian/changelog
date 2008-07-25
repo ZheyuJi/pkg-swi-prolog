@@ -1,5 +1,10 @@
 swi-prolog (5.6.58-2) unstable; urgency=low
 
+  * Fix regression when moving from dh_movefiles to dh_install. dh_install
+    only copies the specifies files whilst dh_movefiles moves them - this was
+    resulting in the contents of the binary "swi-prolog" package being
+    duplicated inside "swi-prolog-xpce", causing file conflicts at
+    installation. (Closes: #492364)
   * Build-Depend on debhelper (>= 5) instead of (>= 5.0.0).
   * Actually remove dbuild ".pwd" file - was not being deleted since
     5.6.47-1 or so.
