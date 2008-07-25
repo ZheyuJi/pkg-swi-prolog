@@ -1,3 +1,9 @@
+swi-prolog (5.6.58-2) unstable; urgency=low
+
+  * Build-Depend on debhelper (>= 5) instead of (>= 5.0.0).
+
+ -- Chris Lamb <chris@chris-lamb.co.uk>  Fri, 25 Jul 2008 22:59:28 +0100
+
 swi-prolog (5.6.58-1) unstable; urgency=low
 
   * New upstream release.
