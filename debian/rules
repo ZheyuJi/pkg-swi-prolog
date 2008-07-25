@@ -110,7 +110,7 @@ install: build
 		debian/swi-prolog/usr/lib/
 
 	# Remove dbuild .pwd file (see #285894)
-	rm -f debian/swi-prolog-xpce/usr/lib/swi-prolog/xpce/prolog/lib/.pwd
+	rm debian/swi-prolog-tmp/usr/lib/swi-prolog/xpce/prolog/lib/.pwd
 	
 	# Empty directories remain, but XPCE depends on SWI-Prolog
 	mv debian/swi-prolog-tmp debian/swi-prolog-xpce
