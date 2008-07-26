@@ -1,0 +1,47 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 04_fix_hyphens_being_used_as_minus_signs_in_manpages.dpatch
+## by Chris Lamb <chris@chris-lamb.co.uk>
+##
+## DP: Fix hyphens being used as minus signs in the pl(1) and plld(1) manpages.
+## DP: Sent upstream: Wed, 23 Jul 2008.
+
+@DPATCH@
+
+diff --git a/src/pl.1.in b/src/pl.1.in
+--- a/src/pl.1.in
++++ b/src/pl.1.in
+@@ -126,7 +126,7 @@ Sets the argument stack size to
+ .I size.
+ The default is 1 Mbytes.  The argument-size determines the maximum
+ term-nesting of terms that can be compiled and executed.  Both the compiler
+-and virtual machine use `last-argument optimisation', so -for example- intptr_t
++and virtual machine use `last-argument optimisation', so\(hyfor example\(hyintptr_t
+ lists do not require the argument stack. See also the
+ .B \-L
+ option.
+@@ -369,7 +369,7 @@ SWI-Prolog kernel parts written in Prolog.  The startup file
+ the command from the directory @prefix@/lib/@PL@-@PLVERSION@:
+ .RS
+ .TP
+-bin/@ARCH@/@PL@ -O -o boot32.prc -b boot/init.pl
++bin/@ARCH@/@PL@ \-O \-o boot32.prc \-b boot/init.pl
+ .RE
+ .TP
+ .I @prefix@/lib/@PL@-@PLVERSION@/doc/packages
+diff --git a/src/plld.1 b/src/plld.1
+--- a/src/plld.1
++++ b/src/plld.1
+@@ -177,8 +177,8 @@ default, the runtime directory for the current architecture is passed.
+ .TP
+ .BI \-g|-I*|-D*|-U*|-O*|-W*
+ Passed to the compiler as c-flags.  By default, the SWI-Prolog include
+-directory is passed as additional include directory.  The following -D
+-flags are added by plld: -D__SWI_PROLOG__ and -D__SWI_EMBEDDED__.
++directory is passed as additional include directory.  The following \-D
++flags are added by plld: \-D__SWI_PROLOG__ and \-D__SWI_EMBEDDED__.
+ .TP
+ .BI \-pl-options*
+ Specify additional options for
+-- 
+1.5.6.3
+
