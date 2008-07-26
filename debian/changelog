@@ -5,8 +5,8 @@ swi-prolog (5.6.58-2) unstable; urgency=low
     resulting in the contents of the binary "swi-prolog" package being
     duplicated inside "swi-prolog-xpce", causing file conflicts at
     installation. (Closes: #492364)
-  * Add 03_revert_chr_translate.dpatch to revert commit a2cc8caa17243 from
-    upstream, a likely cause of the recent FTBFS on arm and armel.
+  * Don't build the CHR package on arm and armel to prevent FTBFS on these
+    archictures.
   * Add 04_fix_hyphens_being_used_as_minus_signs_in_manpages.dpatch to fix
     hyphen issues in manpages.
   * Build-Depend on debhelper (>= 5) instead of (>= 5.0.0).
