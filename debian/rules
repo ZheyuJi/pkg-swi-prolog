@@ -38,14 +38,8 @@ build-stamp:
 	$(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH) clean
 	$(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH) distclean
 
-# Don't build chr on arm and armel
-ifneq (,$(findstring arm,$(ARCH)))
-	./configure $(CONFFLAGS) --with-world --without-chr \
-		--prefix=/usr '--mandir=$${prefix}/share/man' PL="swipl"
-else
 	./configure $(CONFFLAGS) --with-world \
 		--prefix=/usr '--mandir=$${prefix}/share/man' PL="swipl"
-endif
 
 	$(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH)
 
