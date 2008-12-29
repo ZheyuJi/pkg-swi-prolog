@@ -1,6 +1,8 @@
 swi-prolog (5.6.63-1) unstable; urgency=low
 
   * New upstream release.
+  * Don't play Hanoi in clean target anymore with some (required) files that
+    upstream was cleaning - change merged upstream.
 
  -- Chris Lamb <lamby@debian.org>  Mon, 29 Dec 2008 22:07:04 +0000
 

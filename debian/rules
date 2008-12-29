@@ -50,9 +50,6 @@ clean: unpatch
 	dh_testroot
 	rm -f build-stamp
 
-	# Upstream's clean targets are too clean
-	mv packages/xpce/src/h/names.i[hc] debian
-
 	# Upstream's clean targets are not clean enough
 	rm -f packages/xpce/man/reference/index.obj
 	rm -f packages/xpce/lib/amd64
@@ -63,7 +60,6 @@ clean: unpatch
 
 	rm -rf debian/swi-prolog-shared
 
-	mv debian/names.i[hc] packages/xpce/src/h
 	dh_clean
 
 install:
