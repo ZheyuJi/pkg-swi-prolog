@@ -151,7 +151,8 @@ binary-common:
 	dh_installmenu
 	dh_installman
 	dh_strip
-	dh_link usr/lib/swi-prolog/lib/jpl.jar usr/share/java/jpl.jar
+	dh_link
+	dh_link -pswi-prolog-jpl usr/lib/swi-prolog/lib/jpl.jar usr/share/java/jpl.jar
 	dh_compress
 	dh_fixperms
 	dh_makeshlibs
