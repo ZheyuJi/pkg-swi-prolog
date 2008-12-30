@@ -2,7 +2,7 @@ Source: swi-prolog
 Section: interpreters
 Priority: optional
 Maintainer: Chris Lamb <lamby@debian.org>
-Build-Depends: debhelper (>= 5), autotools-dev, dpatch, libncurses5-dev, libreadline5-dev, libgmp3-dev, libjpeg62-dev, libx11-dev, libxpm-dev, libxt-dev, x11proto-core-dev, chrpath, unixodbc-dev
+Build-Depends: debhelper (>= 5), autotools-dev, dpatch, libncurses5-dev, libreadline5-dev, libgmp3-dev, libjpeg62-dev, libx11-dev, libxpm-dev, libxt-dev, x11proto-core-dev, chrpath, unixodbc-dev, openjdk-6-jdk
 Standards-Version: 3.8.0
 Vcs-Git: git://git.chris-lamb.co.uk/pkg-swi-prolog.git
 Vcs-Browser: http://git.chris-lamb.co.uk/?p=pkg-swi-prolog.git
@@ -47,6 +47,27 @@ Description: SWI-Prolog interface to system libraries
  .
  This library provides SWI-Prolog foreign libraries to cater for various
  OS-dependent and/or obscure features of SWI-Prolog.
+
+Package: swi-prolog-jpl
+Architecture: any
+Depends: ${shlibs:Depends}, swi-prolog (= ${binary:Version}), ${misc:Depends}, openjdk-6-jre-headless | java2-runtime
+Description: Bidirectional interface between SWI-Prolog and Java
+ SWI-Prolog is a fast and powerful ISO/Edinburgh-style Prolog compiler with a
+ rich set of built-in predicates. It offers a fast, robust and small
+ environment which enables substantial applications to be developed with it.
+ .
+ SWI-Prolog additionally offers:
+ .
+  * A powerful module system
+  * Garbage collection
+  * Unicode character set handling
+  * Unbounted integer and rational number arithmetic
+  * Multithreading support
+  * A powerful C/C++ interface
+  * GNU Readline interface
+ .
+ This library provides JPL, a bidirectional interface between SWI-Prolog and
+ the Java 2 runtime.
 
 Package: swi-prolog-http
 Architecture: any

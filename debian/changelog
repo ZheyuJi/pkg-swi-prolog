@@ -1,6 +1,11 @@
 swi-prolog (5.6.63-1) unstable; urgency=low
 
   * New upstream release.
+  * Build the JPL (bidirectional Java interface) library in the swi-prolog-jpl
+    binary package now that OpenJDK is in main. (Closes: #449437)
+    - Remove 01_not_jpl_package.dpatch
+    - Add Build-Depends on openjdk-6-jdk
+    - Add convenience symlink from /usr/share/java/jpl.jar
   * Don't play Hanoi in clean target anymore with some (required) files that
     upstream was cleaning - change merged upstream.
   * New maintainer email address.

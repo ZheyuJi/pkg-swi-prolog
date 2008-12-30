@@ -14,7 +14,7 @@ else
   CONFFLAGS += --build $(DEB_BUILD_GNU_TYPE) --host $(DEB_HOST_GNU_TYPE)
 endif
 
-export CFLAGS=
+export CFLAGS=-fPIC
 
 # Don't optimise on arm
 ifeq ($(PLARCH),arm)
@@ -41,7 +41,7 @@ build-stamp:
 	./configure $(CONFFLAGS) --with-world \
 		--prefix=/usr '--mandir=$${prefix}/share/man' PL="swipl"
 
-	$(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH)
+	$(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH) 
 
 	touch $@
 
@@ -80,6 +80,7 @@ install: build
 	cd debian/swi-prolog-tmp && find * -type l >> ../swi-prolog.install
 
 	for i in "clib     clib" \
+		 "jpl      jpl" \
 		 "http     http" \
 		 "semweb   semweb" \
 		 "sgml     sgml" \
@@ -145,11 +146,12 @@ binary-common:
 	dh_installchangelogs -pswi-prolog-clib packages/clib/ChangeLog
 	dh_installchangelogs -pswi-prolog-table packages/table/ChangeLog
 	dh_installchangelogs -pswi-prolog-odbc packages/odbc/ChangeLog
+	dh_installchangelogs -pswi-prolog-jpl packages/jpl/ChangeLog
 	dh_installdocs
 	dh_installmenu
 	dh_installman
 	dh_strip
-	dh_link
+	dh_link usr/lib/swi-prolog/lib/jpl.jar usr/share/java/jpl.jar
 	dh_compress
 	dh_fixperms
 	dh_makeshlibs
