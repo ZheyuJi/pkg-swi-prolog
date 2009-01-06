@@ -1,3 +1,20 @@
+swi-prolog (5.6.63-2) unstable; urgency=low
+
+  * Fix FTBFS on architectures other than i386 and amd64 (Closes: #510409)
+    - Add 05_fix_java_lib_paths.dpatch to fix Java include directory for
+      architectures that have OpenJDK but the Autoconf fragment is new enough
+      to cater for it.
+    - Don't Build-Depend on openjdk-6-jre on arm and hppa.
+    - Expand "Architecture: any" and remove arm and hppa.
+    - Move from calling ``dh_* -a'' to ``dh_* -s'' where appropriate.
+    - Conditionally call various debhelper commands that reference
+      swi-prolog-jpl where that architecture does not apply.
+
+    Many thanks to Peter Green <plugwash@p10link.net> who provided both
+    analysis and patches for this issue.
+
+ -- Chris Lamb <lamby@debian.org>  Tue, 06 Jan 2009 22:57:07 +0000
+
 swi-prolog (5.6.63-1) unstable; urgency=low
 
   * New upstream release.

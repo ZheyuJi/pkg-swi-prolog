@@ -1,2 +1,3 @@
 02_manpage_pl_section
 04_fix_hyphens_being_used_as_minus_signs_in_manpages
+05_fix_java_lib_paths.dpatch

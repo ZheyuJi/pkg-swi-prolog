@@ -14,12 +14,21 @@ else
   CONFFLAGS += --build $(DEB_BUILD_GNU_TYPE) --host $(DEB_HOST_GNU_TYPE)
 endif
 
+CONFFLAGS += --with-world
+
 export CFLAGS=-fPIC
 
-# Don't optimise on arm
+# Don't optimise or build GPL on arm (old ABI)
 ifeq ($(PLARCH),arm)
-export COFLAGS=-O0
+    export COFLAGS=-O0
+    CONFFLAGS += --without-jpl
 endif
+
+# Don't build JPL on hppa
+ifeq ($(PLARCH),hppa)
+    CONFFLAGS += --without-jpl
+endif
+
 
 build: patch build-stamp
 build-stamp:
@@ -38,7 +47,7 @@ build-stamp:
 	$(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH) clean
 	$(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH) distclean
 
-	./configure $(CONFFLAGS) --with-world \
+	./configure $(CONFFLAGS)  \
 		--prefix=/usr '--mandir=$${prefix}/share/man' PL="swipl"
 
 	$(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH) 
@@ -64,8 +73,8 @@ clean: unpatch
 
 install:
 install: build
-	dh_testdir
-	dh_testroot
+	dh_testdir -s
+	dh_testroot -s
 	dh_clean -k
 
 	# XPCE below needs a working SWI-Prolog to be installed; this is done
@@ -146,13 +155,21 @@ binary-common:
 	dh_installchangelogs -pswi-prolog-clib packages/clib/ChangeLog
 	dh_installchangelogs -pswi-prolog-table packages/table/ChangeLog
 	dh_installchangelogs -pswi-prolog-odbc packages/odbc/ChangeLog
+ifneq ($(PLARCH),arm)
+ifneq ($(PLARCH),hpppa)
 	dh_installchangelogs -pswi-prolog-jpl packages/jpl/ChangeLog
+endif
+endif
 	dh_installdocs
 	dh_installmenu
 	dh_installman
 	dh_strip
 	dh_link
+ifneq ($(PLARCH),arm)
+ifneq ($(PLARCH),hpppa)
 	dh_link -pswi-prolog-jpl usr/lib/swi-prolog/lib/jpl.jar usr/share/java/jpl.jar
+endif
+endif
 	dh_compress
 	dh_fixperms
 	dh_makeshlibs
@@ -165,7 +182,7 @@ binary-common:
 binary-indep: build install
 
 binary-arch: build install
-	$(MAKE) -f debian/rules DH_OPTIONS=-a binary-common
+	$(MAKE) -f debian/rules DH_OPTIONS=-s binary-common
 
 binary-%: build install
 	make -f debian/rules binary-common DH_OPTIONS=-p$*
