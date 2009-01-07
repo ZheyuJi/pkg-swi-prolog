@@ -12,6 +12,7 @@ swi-prolog (5.6.63-2) unstable; urgency=low
 
     Many thanks to Peter Green <plugwash@p10link.net> who provided both
     analysis and patches for this issue.
+  * Fix FTBFS twice in a row.
 
  -- Chris Lamb <lamby@debian.org>  Tue, 06 Jan 2009 22:57:07 +0000
 

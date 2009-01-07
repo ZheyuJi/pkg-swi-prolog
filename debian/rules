@@ -62,10 +62,17 @@ clean: unpatch
 	# Upstream's clean targets are not clean enough
 	rm -f packages/xpce/man/reference/index.obj
 	rm -f packages/xpce/lib/amd64
+	rm -f packages/xpce/src/find_names
 	rm -f .pkg-config
+	rm -f src/defatom
+	rm -f src/mkvmi
+	rm -f packages/xpce/src/find_names
 
 	[ ! -f Makefile ] || $(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH) clean
 	[ ! -f Makefile ] || $(MAKE) ARCH=$(PLARCH) PLARCH=$(PLARCH) distclean
+	[ ! -f packages/jpl/Makefile ] || $(MAKE) -C packages/jpl distclean
+	find packages/jpl/examples/java -name '*.class' -delete
+	find packages/jpl/src/java -name '*.class' -delete
 
 	rm -rf debian/swi-prolog-shared
 
