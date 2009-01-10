@@ -1,3 +1,11 @@
+swi-prolog (5.6.63-3) unstable; urgency=low
+
+  * Add call to autoconf to ensure the changes in 05_fix_java_lib_paths.dpatch
+    are actually applied to the JPL source. Thanks again to Peter Green
+    <plugwash@p10link.net>. (Closes: #510409)
+
+ -- Chris Lamb <lamby@debian.org>  Sat, 10 Jan 2009 01:26:48 +0000
+
 swi-prolog (5.6.63-2) unstable; urgency=low
 
   * Fix FTBFS on architectures other than i386 and amd64 (Closes: #510409)

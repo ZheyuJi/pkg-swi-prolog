@@ -39,6 +39,9 @@ build-stamp:
 		cp -f /usr/share/misc/config.guess $$DIR/config.guess; \
 	done
 
+	# Ensure changes in 05_fix_java_lib_paths.dpatch are reflected in configure.
+	cd packages/jpl && autoconf -v
+
 	# Build shared object first
 	./configure $(CONFFLAGS) --enable-shared \
 		--prefix=/usr '--mandir=$${prefix}/share/man'
