@@ -1,6 +1,7 @@
 swi-prolog (5.6.64-1) UNRELEASED; urgency=low
 
   * New upstream release.
+  * Fix debian/watch file.
 
  -- Chris Lamb <lamby@debian.org>  Sun, 22 Feb 2009 00:22:59 +0000
 
