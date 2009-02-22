@@ -3,6 +3,8 @@ swi-prolog (5.6.64-1) UNRELEASED; urgency=low
   * New upstream release.
   * Fix debian/watch file.
   * Drop 05_fix_java_lib_paths patch - applied upstream.
+  * Refer to `/usr/share/common-licenses/GPL-2' in debian/copyright instead of
+    just `GPL'.
 
  -- Chris Lamb <lamby@debian.org>  Sun, 22 Feb 2009 00:22:59 +0000
 
