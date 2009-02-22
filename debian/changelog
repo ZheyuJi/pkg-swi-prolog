@@ -1,4 +1,4 @@
-swi-prolog (5.6.64-1) UNRELEASED; urgency=low
+swi-prolog (5.6.64-1) unstable; urgency=low
 
   * New upstream release.
   * Fix debian/watch file.
@@ -7,7 +7,7 @@ swi-prolog (5.6.64-1) UNRELEASED; urgency=low
     just `GPL'.
   * Update Git repository URLs.
 
- -- Chris Lamb <lamby@debian.org>  Sun, 22 Feb 2009 00:22:59 +0000
+ -- Chris Lamb <lamby@debian.org>  Sun, 22 Feb 2009 02:17:41 +0000
 
 swi-prolog (5.6.63-3) unstable; urgency=low
 
