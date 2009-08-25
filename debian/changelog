@@ -1,9 +1,9 @@
-swi-prolog (5.6.64-3) UNRELEASED; urgency=low
+swi-prolog (5.6.64-3) unstable; urgency=low
 
   * Include CHR library in swi-prolog package. (Closes: #541183)
   * Bump Standards-Version to 3.8.3.
 
- -- Chris Lamb <lamby@debian.org>  Tue, 25 Aug 2009 03:06:14 +0100
+ -- Chris Lamb <lamby@debian.org>  Tue, 25 Aug 2009 03:55:20 +0100
 
 swi-prolog (5.6.64-2) unstable; urgency=low
 
