@@ -1,3 +1,9 @@
+swi-prolog (5.6.64-3) UNRELEASED; urgency=low
+
+  * Bump Standards-Version to 3.8.3.
+
+ -- Chris Lamb <lamby@debian.org>  Tue, 25 Aug 2009 03:06:14 +0100
+
 swi-prolog (5.6.64-2) unstable; urgency=low
 
   * Add Build-Depends on libxft-dev, libxext-dev, libice-dev, libjpeg62-dev,
