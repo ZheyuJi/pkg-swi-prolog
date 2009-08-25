@@ -98,21 +98,23 @@ install: build
 	cd debian/swi-prolog-tmp && find * -type f > ../swi-prolog.install
 	cd debian/swi-prolog-tmp && find * -type l >> ../swi-prolog.install
 
-	for i in "clib     clib" \
-		 "jpl      jpl" \
-		 "http     http" \
-		 "semweb   semweb" \
-		 "sgml     sgml" \
-		 "sgml/RDF sgml" \
-		 "table    table" \
-		 "odbc     odbc" \
-		 "xpce     tmp"; do \
+	for i in "clib     swi-prolog-clib"   \
+		 "jpl      swi-prolog-jpl"    \
+		 "http     swi-prolog-http"   \
+		 "semweb   swi-prolog-semweb" \
+		 "sgml     swi-prolog-sgml"   \
+		 "sgml/RDF swi-prolog-sgml"   \
+		 "table    swi-prolog-table"  \
+		 "odbc     swi-prolog-odbc"   \
+		 "xpce     swi-prolog-tmp"    \
+		 "chr      swi-prolog"        \
+		               ; do \
 		FROM=$$(echo $$i | cut -d " " -f1); \
 		TO=$$(echo $$i | cut -d " " -f2); \
-		mkdir -p $(CURDIR)/debian/swi-prolog-$$TO/usr/lib/swi-prolog/library; \
+		mkdir -p $(CURDIR)/debian/$$TO/usr/lib/swi-prolog/library; \
 		$(MAKE) -C packages/$$FROM \
-			prefix=$(CURDIR)/debian/swi-prolog-$$TO/usr \
-			PLBASE=$(CURDIR)/debian/swi-prolog-$$TO/usr/lib/swi-prolog \
+			prefix=$(CURDIR)/debian/$$TO/usr \
+			PLBASE=$(CURDIR)/debian/$$TO/usr/lib/swi-prolog \
 			PLARCH=$(PLARCH) \
 			PL=$(CURDIR)/src/swipl PLEXE=$(CURDIR)/src/swipl \
 			install; \
