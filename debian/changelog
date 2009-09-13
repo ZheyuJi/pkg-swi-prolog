@@ -1,3 +1,9 @@
+swi-prolog (5.6.64-4) UNRELEASED; urgency=low
+
+  * Replace libreadline5-dev dependencies with libreadline-dev.
+
+ -- Chris Lamb <lamby@debian.org>  Sun, 13 Sep 2009 21:40:32 +0100
+
 swi-prolog (5.6.64-3) unstable; urgency=low
 
   * Include CHR library in swi-prolog package. (Closes: #541183)
