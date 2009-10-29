@@ -1,4 +1,4 @@
-swi-prolog (5.8.0-1) UNRELEASED; urgency=low
+swi-prolog (5.8.0-1) unstable; urgency=low
 
   * New upstream release.
     - Local copy of strndup renamed to my_strndup. (Closes: #552847)
@@ -7,7 +7,7 @@ swi-prolog (5.8.0-1) UNRELEASED; urgency=low
     debian/swi-prolog-jpl.links instead of specifying it in debian/rules
     to ensure it ends up in the right package. (Closes: #549628)
 
- -- Chris Lamb <lamby@debian.org>  Thu, 29 Oct 2009 18:11:06 +0000
+ -- Chris Lamb <lamby@debian.org>  Thu, 29 Oct 2009 19:17:06 +0000
 
 swi-prolog (5.6.64-3) unstable; urgency=low
 
