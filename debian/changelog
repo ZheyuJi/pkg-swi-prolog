@@ -3,6 +3,9 @@ swi-prolog (5.8.0-1) UNRELEASED; urgency=low
   * New upstream release.
     - Local copy of strndup renamed to my_strndup. (Closes: #552847)
   * Replace libreadline5-dev dependencies with libreadline-dev.
+  * Fix bad jpl.jar symlink in "main" swi-prolog package by using
+    debian/swi-prolog-jpl.links instead of specifying it in debian/rules
+    to ensure it ends up in the right package. (Closes: #549628)
 
  -- Chris Lamb <lamby@debian.org>  Thu, 29 Oct 2009 18:11:06 +0000
 

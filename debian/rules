@@ -177,11 +177,6 @@ endif
 	dh_installman
 	dh_strip
 	dh_link
-ifneq ($(PLARCH),arm)
-ifneq ($(PLARCH),hpppa)
-	dh_link -pswi-prolog-jpl usr/lib/swi-prolog/lib/jpl.jar usr/share/java/jpl.jar
-endif
-endif
 	dh_compress
 	dh_fixperms
 	dh_makeshlibs
