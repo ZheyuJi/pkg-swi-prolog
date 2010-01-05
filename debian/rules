@@ -99,7 +99,7 @@ install: build
 	cd debian/swi-prolog-tmp && find * -type l >> ../swi-prolog.install
 
 	for i in "clib     swi-prolog-clib"   \
-		 "jpl      swi-prolog-jpl"    \
+		 "jpl      swi-prolog-java"    \
 		 "http     swi-prolog-http"   \
 		 "semweb   swi-prolog-semweb" \
 		 "sgml     swi-prolog-sgml"   \
@@ -169,7 +169,7 @@ binary-common:
 	dh_installchangelogs -pswi-prolog-odbc packages/odbc/ChangeLog
 ifneq ($(PLARCH),arm)
 ifneq ($(PLARCH),hpppa)
-	dh_installchangelogs -pswi-prolog-jpl packages/jpl/ChangeLog
+	dh_installchangelogs -pswi-prolog-java packages/jpl/ChangeLog
 endif
 endif
 	dh_installdocs

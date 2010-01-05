@@ -48,7 +48,7 @@ Description: SWI-Prolog interface to system libraries
  This library provides SWI-Prolog foreign libraries to cater for various
  OS-dependent and/or obscure features of SWI-Prolog.
 
-Package: swi-prolog-jpl
+Package: swi-prolog-java
 Architecture: alpha amd64 armel i386 ia64 mips mipsel powerpc s390 sparc
 Depends: ${shlibs:Depends}, swi-prolog (= ${binary:Version}), ${misc:Depends}, openjdk-6-jre-headless | java2-runtime
 Description: Bidirectional interface between SWI-Prolog and Java
