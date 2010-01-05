@@ -135,18 +135,18 @@ install: build
 	rm debian/swi-prolog-tmp/usr/lib/swi-prolog/xpce/prolog/lib/.pwd
 	
 	# Empty directories remain, but XPCE depends on SWI-Prolog
-	mv debian/swi-prolog-tmp debian/swi-prolog-xpce
+	mv debian/swi-prolog-tmp debian/swi-prolog-x
 
 	# These two links are absolute, but we want them relative
-	cd debian/swi-prolog-xpce/usr/bin && \
+	cd debian/swi-prolog-x/usr/bin && \
 		rm xpce; ln -s ../lib/swi-prolog/bin/*/xpce .; \
 		rm xpce-client; ln -s ../lib/swi-prolog/xpce-*/bin/*/xpce-client .
 	
 	# Remove superfluous copies of the GPL
-	rm -f debian/swi-prolog-xpce/usr/lib/swi-prolog/xpce-*/COPYING
+	rm -f debian/swi-prolog-x/usr/lib/swi-prolog/xpce-*/COPYING
 
 	# Override lintian warnings
-	for PKG in swi-prolog swi-prolog-xpce; do \
+	for PKG in swi-prolog swi-prolog-x; do \
 		mkdir -p debian/$$PKG/usr/share/lintian/overrides; \
 		cp debian/$$PKG.lintian.override debian/$$PKG/usr/share/lintian/overrides/$$PKG; \
 	done
@@ -155,7 +155,7 @@ install: build
 	find debian/ -depth -type d -empty -exec rm -rfv {} \;
 
 	# Remove RPATH from pl2xpce.so and libpl.so
-	chrpath --delete debian/swi-prolog-xpce/usr/lib/swi-prolog/xpce-*/lib/*/pl2xpce.so || true
+	chrpath --delete debian/swi-prolog-x/usr/lib/swi-prolog/xpce-*/lib/*/pl2xpce.so || true
 	chrpath --delete debian/swi-prolog/usr/lib/libpl.so || true
 
 binary-common:
@@ -163,7 +163,7 @@ binary-common:
 	dh_testroot
 	dh_installchangelogs
 	dh_installchangelogs -pswi-prolog-sgml packages/sgml/ChangeLog
-	dh_installchangelogs -pswi-prolog-xpce packages/xpce/ChangeLog
+	dh_installchangelogs -pswi-prolog-x packages/xpce/ChangeLog
 	dh_installchangelogs -pswi-prolog-clib packages/clib/ChangeLog
 	dh_installchangelogs -pswi-prolog-table packages/table/ChangeLog
 	dh_installchangelogs -pswi-prolog-odbc packages/odbc/ChangeLog

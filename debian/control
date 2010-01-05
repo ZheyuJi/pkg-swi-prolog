@@ -180,9 +180,10 @@ Description: ODBC library for SWI-Prolog
  This package provides a foreign language extension to ODBC, a standard for
  interfacing with database systems.
 
-Package: swi-prolog-xpce
+Package: swi-prolog-x
 Architecture: any
 Depends: ${shlibs:Depends}, swi-prolog (= ${binary:Version}), ${misc:Depends}
+Replaces: swi-prolog-xpce
 Description: User interface library for SWI-Prolog
  SWI-Prolog is a fast and powerful ISO/Edinburgh-style Prolog compiler with a
  rich set of built-in predicates. It offers a fast, robust and small
