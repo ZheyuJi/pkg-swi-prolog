@@ -1,4 +1,4 @@
-swi-prolog: image-file-in-usr-lib
+swi-prolog-nox: image-file-in-usr-lib
 
 # Upstream provides shared-library support purely as a convenience
 # for the rare user who requires some foreign function interface with
@@ -11,6 +11,6 @@ swi-prolog: image-file-in-usr-lib
 # to split it as package that links against it will have to require the
 # package anyway for the Standard Library. We therefore override the various
 # warnings regarding this somewhat ugly situation.
-swi-prolog: non-dev-pkg-with-shlib-symlink
-swi-prolog: package-name-doesnt-match-sonames
-swi-prolog: no-symbols-control-file
+swi-prolog-nox: non-dev-pkg-with-shlib-symlink
+swi-prolog-nox: package-name-doesnt-match-sonames
+swi-prolog-nox: no-symbols-control-file

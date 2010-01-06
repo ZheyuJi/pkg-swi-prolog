@@ -95,19 +95,19 @@ install: build
 		PLBASE=$(CURDIR)/debian/swi-prolog-tmp/usr/lib/swi-prolog \
 		ARCH=$(PLARCH) install-lite
 
-	cd debian/swi-prolog-tmp && find * -type f > ../swi-prolog.install
-	cd debian/swi-prolog-tmp && find * -type l >> ../swi-prolog.install
+	cd debian/swi-prolog-tmp && find * -type f > ../swi-prolog-nox.install
+	cd debian/swi-prolog-tmp && find * -type l >> ../swi-prolog-nox.install
 
-	for i in "clib     swi-prolog-clib"   \
+	for i in "clib     swi-prolog-nox"   \
 		 "jpl      swi-prolog-java"    \
-		 "http     swi-prolog-http"   \
-		 "semweb   swi-prolog-semweb" \
-		 "sgml     swi-prolog-sgml"   \
-		 "sgml/RDF swi-prolog-sgml"   \
-		 "table    swi-prolog-table"  \
+		 "http     swi-prolog-nox"   \
+		 "semweb   swi-prolog-nox" \
+		 "sgml     swi-prolog-nox"   \
+		 "sgml/RDF swi-prolog-nox"   \
+		 "table    swi-prolog-nox"  \
 		 "odbc     swi-prolog-odbc"   \
 		 "xpce     swi-prolog-tmp"    \
-		 "chr      swi-prolog"        \
+		 "chr      swi-prolog-nox"    \
 		               ; do \
 		FROM=$$(echo $$i | cut -d " " -f1); \
 		TO=$$(echo $$i | cut -d " " -f2); \
@@ -121,15 +121,15 @@ install: build
 	done
 
 	# Seperate XPCE and basic SWI-Prolog
-	dh_install -p swi-prolog --sourcedir=debian/swi-prolog-tmp
+	dh_install -p swi-prolog-nox --sourcedir=debian/swi-prolog-tmp
 
 	# Remove the basic SWI-Prolog installation from the XPCE install dir
-	xargs --arg-file=debian/swi-prolog.install --delimiter='\n' -I{} \
+	xargs --arg-file=debian/swi-prolog-nox.install --delimiter='\n' -I{} \
 		rm -v debian/swi-prolog-tmp/{}
 
 	# Install standalone shared library
 	cp -r debian/swi-prolog-shared/usr/lib/pl-*/lib/*/libpl.so* \
-		debian/swi-prolog/usr/lib/
+		debian/swi-prolog-nox/usr/lib/
 
 	# Remove dbuild .pwd file (see #285894)
 	rm debian/swi-prolog-tmp/usr/lib/swi-prolog/xpce/prolog/lib/.pwd
@@ -146,7 +146,7 @@ install: build
 	rm -f debian/swi-prolog-x/usr/lib/swi-prolog/xpce-*/COPYING
 
 	# Override lintian warnings
-	for PKG in swi-prolog swi-prolog-x; do \
+	for PKG in swi-prolog-nox swi-prolog-x; do \
 		mkdir -p debian/$$PKG/usr/share/lintian/overrides; \
 		cp debian/$$PKG.lintian.override debian/$$PKG/usr/share/lintian/overrides/$$PKG; \
 	done
@@ -156,16 +156,13 @@ install: build
 
 	# Remove RPATH from pl2xpce.so and libpl.so
 	chrpath --delete debian/swi-prolog-x/usr/lib/swi-prolog/xpce-*/lib/*/pl2xpce.so || true
-	chrpath --delete debian/swi-prolog/usr/lib/libpl.so || true
+	chrpath --delete debian/swi-prolog-nox/usr/lib/libpl.so || true
 
 binary-common:
 	dh_testdir
 	dh_testroot
 	dh_installchangelogs
-	dh_installchangelogs -pswi-prolog-sgml packages/sgml/ChangeLog
 	dh_installchangelogs -pswi-prolog-x packages/xpce/ChangeLog
-	dh_installchangelogs -pswi-prolog-clib packages/clib/ChangeLog
-	dh_installchangelogs -pswi-prolog-table packages/table/ChangeLog
 	dh_installchangelogs -pswi-prolog-odbc packages/odbc/ChangeLog
 ifneq ($(PLARCH),arm)
 ifneq ($(PLARCH),hpppa)

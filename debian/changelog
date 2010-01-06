@@ -4,6 +4,11 @@ swi-prolog (5.8.2-1) UNRELEASED; urgency=low
   * Re-arrange binary packages at upstream's request:
     - Rename -xpce to -x
     - Rename -jpl to -java
+    - Rename "swi-prolog" to -nox and merge -clib, -http, -semweb, -sgml
+      and -table into it
+    - The "swi-prolog-odbc" package remains unchanged
+    - A new "swi-prolog" package depends on both "swi-prolog-nox" and
+      "swi-prolog-x"
 
  -- Chris Lamb <lamby@debian.org>  Tue, 05 Jan 2010 21:54:06 +0000
 
