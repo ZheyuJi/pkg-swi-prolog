@@ -6,7 +6,7 @@ export PLARCH ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
 export ARCH ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
 export DEB_HOST_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 export DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
-
+export DEB_HOST_ARCH_OS   ?= $(shell dpkg-architecture -qDEB_HOST_ARCH_OS)
 
 ifeq ($(DEB_BUILD_GNU_TYPE), $(DEB_HOST_GNU_TYPE))
   CONFFLAGS += --build $(DEB_HOST_GNU_TYPE)
@@ -29,6 +29,10 @@ ifeq ($(PLARCH),hppa)
     CONFFLAGS += --without-jpl
 endif
 
+# Don't build JPL on GNU/kFreeBSD
+ifeq ($(DEB_HOST_ARCH_OS),kfreebsd)
+    CONFFLAGS += --without-jpl
+endif
 
 build: patch build-stamp
 build-stamp:
