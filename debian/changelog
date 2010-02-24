@@ -1,4 +1,4 @@
-swi-prolog (5.8.2-2) UNRELEASED; urgency=low
+swi-prolog (5.8.2-2) unstable; urgency=low
 
   * Drop duplicate libjpeg62-dev, libxpm-dev and libxt-dev Build-Depends.
   * Replace libjpeg62-dev Build-Dependency with libjpeg-dev.
@@ -7,7 +7,7 @@ swi-prolog (5.8.2-2) UNRELEASED; urgency=low
   * Switch to dpkg-source 3.0 (quilt) format
   * Bump Standards-Version to 3.8.4.
 
- -- Chris Lamb <lamby@debian.org>  Wed, 24 Feb 2010 21:35:35 +0000
+ -- Chris Lamb <lamby@debian.org>  Wed, 24 Feb 2010 22:08:03 +0000
 
 swi-prolog (5.8.2-1) unstable; urgency=low
 
