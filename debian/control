@@ -3,7 +3,7 @@ Section: interpreters
 Priority: optional
 Maintainer: Chris Lamb <lamby@debian.org>
 Build-Depends: debhelper (>= 5), autoconf, autotools-dev, libncurses5-dev, libreadline-dev, libgmp3-dev, libjpeg-dev, libx11-dev, libxpm-dev, libxt-dev, x11proto-core-dev, chrpath, unixodbc-dev, openjdk-6-jdk [alpha amd64 armel i386 ia64 mips mipsel powerpc s390 sparc], libxft-dev, libxext-dev, libice-dev, libxinerama-dev
-Standards-Version: 3.8.3
+Standards-Version: 3.8.4
 Vcs-Git: git://git.chris-lamb.co.uk/debian/pkg-swi-prolog.git
 Vcs-Browser: http://git.chris-lamb.co.uk/?p=debian/pkg-swi-prolog.git
 Homepage: http://www.swi-prolog.org
