@@ -2,8 +2,8 @@ swi-prolog (5.8.2-2) UNRELEASED; urgency=low
 
   * Drop duplicate libjpeg62-dev, libxpm-dev and libxt-dev Build-Depends.
   * Replace libjpeg62-dev Build-Dependency with libjpeg-dev.
-  * Fix FTBFS on GNU/kFreeBSD. Thanks to Petr Salinger <Petr.Salinger@seznam.cz>.
-    (Closes: #571078)
+  * Fix FTBFS on GNU/kFreeBSD. Thanks to Petr Salinger
+    <Petr.Salinger@seznam.cz>. (Closes: #571078)
   * Switch to dpkg-source 3.0 (quilt) format
   * Bump Standards-Version to 3.8.4.
 
