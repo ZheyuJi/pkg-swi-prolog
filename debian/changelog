@@ -1,6 +1,8 @@
 swi-prolog (5.10.0-1) UNRELEASED; urgency=low
 
   * New upstream release. (Closes: #587994)
+  * Update package index after installing -nox which was resulting in
+    incomplete installations after upgrading from lenny. (Closes: #585870)
 
  -- Chris Lamb <lamby@debian.org>  Fri, 09 Jul 2010 16:42:25 +0100
 
