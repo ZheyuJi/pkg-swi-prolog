@@ -1,3 +1,9 @@
+swi-prolog (5.10.0-1) UNRELEASED; urgency=low
+
+  * New upstream release. (Closes: #587994)
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 09 Jul 2010 16:42:25 +0100
+
 swi-prolog (5.8.2-2) unstable; urgency=low
 
   * Drop duplicate libjpeg62-dev, libxpm-dev and libxt-dev Build-Depends.
