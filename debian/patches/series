@@ -1,1 +1,1 @@
-04_fix_hyphens_being_used_as_minus_signs_in_manpages.diff -p1
+01_chrpath_not_fatal.diff

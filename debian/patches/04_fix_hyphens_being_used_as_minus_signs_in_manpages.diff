@@ -7,9 +7,9 @@
 
 @DPATCH@
 
-diff --git a/src/pl.1.in b/src/pl.1.in
---- a/src/pl.1.in
-+++ b/src/pl.1.in
+diff --git a/src/swipl.1.in b/src/swipl.1.in
+--- a/src/swipl.1.in
++++ b/src/swipl.1.in
 @@ -126,7 +126,7 @@ Sets the argument stack size to
  .I size.
  The default is 1 Mbytes.  The argument-size determines the maximum
@@ -28,20 +28,3 @@ diff --git a/src/pl.1.in b/src/pl.1.in
  .RE
  .TP
  .I @prefix@/lib/@PL@-@PLVERSION@/doc/packages
-diff --git a/src/plld.1 b/src/plld.1
---- a/src/plld.1
-+++ b/src/plld.1
-@@ -177,8 +177,8 @@ default, the runtime directory for the current architecture is passed.
- .TP
- .BI \-g|-I*|-D*|-U*|-O*|-W*
- Passed to the compiler as c-flags.  By default, the SWI-Prolog include
--directory is passed as additional include directory.  The following -D
--flags are added by plld: -D__SWI_PROLOG__ and -D__SWI_EMBEDDED__.
-+directory is passed as additional include directory.  The following \-D
-+flags are added by plld: \-D__SWI_PROLOG__ and \-D__SWI_EMBEDDED__.
- .TP
- .BI \-pl-options*
- Specify additional options for
--- 
-1.5.6.3
-
