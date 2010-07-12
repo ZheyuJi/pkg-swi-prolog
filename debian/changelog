@@ -1,4 +1,4 @@
-swi-prolog (5.10.0-1) UNRELEASED; urgency=low
+swi-prolog (5.10.0-1) unstable; urgency=low
 
   * New upstream release. (Closes: #587994)
   * Update package index after installing -nox which was resulting in
@@ -8,7 +8,7 @@ swi-prolog (5.10.0-1) UNRELEASED; urgency=low
   * Remove reference to xpce.1 manpage (removed upstream).
   * libpl.so => libswipl.so.
 
- -- Chris Lamb <lamby@debian.org>  Fri, 09 Jul 2010 16:42:25 +0100
+ -- Chris Lamb <lamby@debian.org>  Mon, 12 Jul 2010 16:43:29 +0100
 
 swi-prolog (5.8.2-2) unstable; urgency=low
 
