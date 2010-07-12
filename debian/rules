@@ -130,7 +130,7 @@ install: build
 		rm -v debian/swi-prolog-tmp/{}
 
 	# Install standalone shared library
-	cp -r debian/swi-prolog-shared/usr/lib/pl-*/lib/*/libpl.so* \
+	cp -r debian/swi-prolog-shared/usr/lib/swipl-*/lib/*/libswipl.so* \
 		debian/swi-prolog-nox/usr/lib/
 
 	# Remove dbuild .pwd file (see #285894)
@@ -156,9 +156,9 @@ install: build
 	# Remove empty directories
 	find debian/ -depth -type d -empty -exec rm -rfv {} \;
 
-	# Remove RPATH from pl2xpce.so and libpl.so
+	# Remove RPATH from pl2xpce.so and libswipl.so
 	chrpath --delete debian/swi-prolog-x/usr/lib/swi-prolog/xpce-*/lib/*/pl2xpce.so || true
-	chrpath --delete debian/swi-prolog-nox/usr/lib/libpl.so || true
+	chrpath --delete debian/swi-prolog-nox/usr/lib/libswipl.so || true
 
 binary-common:
 	dh_testdir
