@@ -1,3 +1,9 @@
+swi-prolog (5.10.1-1) UNRELEASED; urgency=low
+
+  * New upstream release.
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 02 Aug 2010 04:59:25 +0100
+
 swi-prolog (5.10.0-1) unstable; urgency=low
 
   * New upstream release. (Closes: #587994)
