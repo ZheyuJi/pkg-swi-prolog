@@ -31,7 +31,7 @@ Package: swi-prolog-nox
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, libgmp3-dev, libreadline-dev
 Replaces: swi-prolog-clib, swi-prolog-http, swi-prolog-semweb, swi-prolog-sgml, swi-prolog-table
-Conflicts: swi-prolog (<< 5.8.2-1)
+Breaks: swi-prolog (<< 5.8.2-1)
 Suggests: swi-prolog-doc, prolog-el
 Description: ISO/Edinburgh-style Prolog interpreter (without X support)
  SWI-Prolog is a fast and powerful ISO/Edinburgh-style Prolog compiler with a
