@@ -1,11 +1,11 @@
-swi-prolog (5.10.1-1) UNRELEASED; urgency=low
+swi-prolog (5.10.1-1) unstable; urgency=low
 
   * New upstream release.
   * Remove 01_chrpath_not_fatal.diff patch; applied upstream.
   * Bump Standards-Version to 3.9.1.
   * Prefer Breaks: over versioned Conflicts:.
 
- -- Chris Lamb <lamby@debian.org>  Mon, 02 Aug 2010 04:59:25 +0100
+ -- Chris Lamb <lamby@debian.org>  Mon, 02 Aug 2010 06:01:30 +0100
 
 swi-prolog (5.10.0-1) unstable; urgency=low
 
