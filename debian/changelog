@@ -2,6 +2,7 @@ swi-prolog (5.10.2-1) UNRELEASED; urgency=low
 
   * New upstream version.
   * Update Vcs-{Git,Browser}.
+  * Change libgmp3-dev dependency to libgmp-dev.
 
  -- Chris Lamb <lamby@debian.org>  Sun, 20 Mar 2011 05:32:59 +0000
 
