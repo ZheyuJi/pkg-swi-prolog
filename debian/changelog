@@ -1,9 +1,9 @@
-swi-prolog (5.10.4-1) UNRELEASED; urgency=low
+swi-prolog (5.10.4-1) unstable; urgency=low
 
   * New upstream release.
   * Bump Standards-Version to 3.9.2.
 
- -- Chris Lamb <lamby@debian.org>  Sun, 19 Jun 2011 13:54:31 +0100
+ -- Chris Lamb <lamby@debian.org>  Sun, 19 Jun 2011 14:04:49 +0100
 
 swi-prolog (5.10.2-1) unstable; urgency=low
 
