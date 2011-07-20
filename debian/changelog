@@ -1,3 +1,12 @@
+swi-prolog (5.10.4-1.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Fix FTBFS on mipsel (Closes: #634257)
+  * New patch:
+    - swi-prolog-mipsel-FTBFS.diff
+
+ -- Євгеній Мещеряков <eugen@debian.org>  Wed, 20 Jul 2011 19:49:20 +0200
+
 swi-prolog (5.10.4-1) unstable; urgency=low
 
   * New upstream release.
