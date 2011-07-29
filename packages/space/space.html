@@ -1,0 +1,1096 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>SWI-Prolog Spatial Indexing</TITLE><STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+dt.multidef
+{ background-color: #c8ffc7;
+}
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #202020;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text { display: none; }
+sup.fn span {display: none;}
+sup:hover span
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+
+<P>
+<DIV class="title">SWI-Prolog Spatial Indexing</DIV>
+<DIV class="author">Willem Robert van Hage <BR>
+VU University Amsterdam <BR>
+The Netherlands <BR>
+E-mail: <A class="url" href="mailto:wrvhage@few.vu.nl">wrvhage@few.vu.nl</A></DIV>
+<DIV class="abstract">
+<DIV class="abstract-title">Abstract</DIV> SWI-Prolog interface to 
+Spatial Index and GEOS libraries, providing spatial indexing of URI's. 
+Supports import and export to GML, KML, and RDF with GeoRSS Simple, 
+GeoRSS GML, and W3C WGS84 vocabulary properties.<BR>
+<BR>
+<B>Nota bene</B> that the spatialindex and GEOS C++ libraries have to be 
+installed separately for this module to work.
+</DIV>
+
+<H1><A NAME="document-contents">Table of Contents</A></H1>
+
+<DIV class="toc">
+<DIV class="toc-h2"><A class="sec" href="#sec:1"><SPAN class="sec-nr">1</SPAN> <SPAN class="sec-title">Introduction</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="#sec:2"><SPAN class="sec-nr">2</SPAN> <SPAN class="sec-title">Shapes 
+as Prolog Terms</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="#sec:3"><SPAN class="sec-nr">3</SPAN> <SPAN class="sec-title">Adding, 
+Removing, and Bulkloading Shapes</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="#sec:4"><SPAN class="sec-nr">4</SPAN> <SPAN class="sec-title">Query 
+types</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="#sec:5"><SPAN class="sec-nr">5</SPAN> <SPAN class="sec-title">Importing 
+and Exporting Shapes</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="#sec:6"><SPAN class="sec-nr">6</SPAN> <SPAN class="sec-title">Integration 
+of Space and Semantics</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="#sec:7"><SPAN class="sec-nr">7</SPAN> <SPAN class="sec-title">Architecture</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="#sec:7.1"><SPAN class="sec-nr">7.1</SPAN> <SPAN class="sec-title">Incremental 
+Search and Non-determinism</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="#sec:8"><SPAN class="sec-nr">8</SPAN> <SPAN class="sec-title">Documentation</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="#sec:8.1"><SPAN class="sec-nr">8.1</SPAN> <SPAN class="sec-title">library(space/space): 
+Core spatial database</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="#sec:8.2"><SPAN class="sec-nr">8.2</SPAN> <SPAN class="sec-title">library(space/georss)</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="#sec:8.3"><SPAN class="sec-nr">8.3</SPAN> <SPAN class="sec-title">library(space/wgs84)</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="#sec:8.4"><SPAN class="sec-nr">8.4</SPAN> <SPAN class="sec-title">library(space/freebase)</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="#sec:8.5"><SPAN class="sec-nr">8.5</SPAN> <SPAN class="sec-title">library(space/dbpedia)</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="#sec:8.6"><SPAN class="sec-nr">8.6</SPAN> <SPAN class="sec-title">library(space/wkt)</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="#sec:8.7"><SPAN class="sec-nr">8.7</SPAN> <SPAN class="sec-title">library(space/kml)</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="#sec:8.8"><SPAN class="sec-nr">8.8</SPAN> <SPAN class="sec-title">library(space/gml)</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="#sec:9"><SPAN class="sec-nr">9</SPAN> <SPAN class="sec-title">space_web_loader.pl</SPAN></A></DIV>
+</DIV>
+
+<P>
+
+<H2><A NAME="sec:1"><SPAN class="sec-nr">1</SPAN> <SPAN class="sec-title">Introduction</SPAN></A></H2>
+
+The Space package&nbsp;<CITE><A class="cite" href="#vanHage:2009">[1]</A></CITE> 
+provides spatial indexing for SWI-Prolog. It is based on
+<A class="url" href="http://geos.refractions.net/">Geometry Engine Open 
+Source</A> and the <A class="url" href="http://trac.gispython.org/spatialindex/">Spatial 
+Index Library</A>.
+
+<H2><A NAME="sec:2"><SPAN class="sec-nr">2</SPAN> <SPAN class="sec-title">Shapes 
+as Prolog Terms</SPAN></A></H2>
+
+The central objects of the Space package are pairs, <VAR>&lt; u, s &gt;</VAR> 
+of a URI, <VAR>u</VAR>, and its associated shape, <VAR>s</VAR>. The URIs 
+are linked to the shapes with the <A NAME="idx:urishape2:1"></A><A class="pred" href="#uri_shape/2">uri_shape/2</A> 
+predicate. We will support all OpenGIS Simple Features, points, 
+linestrings, polygons (with <VAR>&gt;= 0</VAR> holes), multi-points, 
+multi-polygons, and geometry collections; and some utility shapes like 
+box and circle regions.<SUP class="fn">1<SPAN class="fn-text">The 
+current version of the Space package, 0.1.2 , only supports points, 
+linestrings, and polygons (with holes) and box regions. Development on 
+the other (multi-)shape types is underway.</SPAN></SUP>
+
+<P>Both the URIs and the shapes are represented as Prolog terms. This 
+makes them first-class Prolog citizens, which allows the construction 
+and transformation of shapes using regular Prolog clauses, or Definite 
+Clause Grammars (DCGs). We support input from locations encoded in RDF 
+with the <A class="url" href="http://www.w3.org/2003/01/geo/">W3C WGS84 
+vocabulary</A> and with the <A class="url" href="http://georss.org">GeoRSS</A> 
+Simple properties and the GeoRSS <CODE>where</CODE> property leading to 
+an XML literal consisting of a GML element. The <A NAME="idx:urishape2:2"></A><A class="pred" href="#uri_shape/2">uri_shape/2</A> 
+predicate searches for URI-Shape pairs in SWI-Prolog's RDF triple store. 
+It matches URIs to Shapes by using WGS84 and GeoRSS properties. For 
+example, a URI <VAR>u</VAR> is associated with the shape <VAR>s=</VAR><CODE>point(</CODE><VAR>lat,long</VAR><CODE>)</CODE> 
+if the triple store contains the triples: <VAR>&lt; u,</VAR> <CODE>wgs84_pos:lat</CODE> <VAR>, 
+lat &gt;</VAR> and <VAR>&lt; u,</VAR> <CODE>wgs84_pos:long</CODE> <VAR>, 
+long &gt;</VAR>; or when it contains one of the following triples:<BR>
+<VAR>&lt; u,</VAR> <CODE>georss:point</CODE><VAR>,</VAR><CODE>"</CODE><VAR>lat</VAR> <VAR>long</VAR><CODE>"</CODE><VAR>&gt;</VAR> 
+or <VAR>&lt; u,</VAR> <CODE>georss:where</CODE><VAR>,</VAR><CODE>"&lt;gml:Point&gt;</CODE><CODE>&lt;gml:pos&gt;</CODE> <VAR>lat</VAR> <VAR>long</VAR><BR>
+<CODE>&lt;/gml:pos&gt;</CODE><CODE>&lt;/gml:Point&gt;"</CODE><VAR>&gt;</VAR>. 
+The XML literal containing the GML description of the geometric shape is 
+parsed with a DCG that can also be used to generate GML from Prolog 
+shape terms.
+
+<PRE class="code">
+?- shape(point(52.3325,4.8673)),
+   shape(box(point(52.3324,4.8621),point(52.3348,4.8684))),
+   shape(
+   polygon([[point(52.3632,4.981)|_],    % the outer shell of the polygon
+            [point(52.3631,4.9815)|_] |_ % any number of holes 0..*
+           ])).
+true.
+%% uri_shape(?URI, ?Shape) is nondet.
+?- uri_shape('http://www.example.org/myoffice', Shape).  % read from RDF
+Shape = point(52.3325,4.8673).
+</PRE>
+
+<H2><A NAME="sec:3"><SPAN class="sec-nr">3</SPAN> <SPAN class="sec-title">Adding, 
+Removing, and Bulkloading Shapes</SPAN></A></H2>
+
+The spatial index can be modified in two ways: By inserting or 
+retracting single URI-shape pairs respectively using the <A NAME="idx:spaceassert3:3"></A><A class="pred" href="#space_assert/3">space_assert/3</A>, 
+or the <A NAME="idx:spaceretract3:4"></A><A class="pred" href="#space_retract/3">space_retract/3</A> 
+predicate; or by loading many pairs at once using the <A NAME="idx:spacebulkload3:5"></A><SPAN class="pred-ext">space_bulkload/3</SPAN> 
+predicate or its parameterless counterpart <A NAME="idx:spaceindexall0:6"></A><A class="pred" href="#space_index_all/0">space_index_all/0</A> 
+which simply loads all the shapes it can find with the <A NAME="idx:urishape2:7"></A><A class="pred" href="#uri_shape/2">uri_shape/2</A> 
+predicate into the default index. The former method is best for small 
+manipulations of indices, while the latter method is best for the 
+loading of large numbers of URI-shape pairs into an index. The Space 
+package can deal with multiple indices to make it possible to divide 
+sets of features. Indices are identified with a name handle, which can 
+be any Prolog atom.<SUP class="fn">2<SPAN class="fn-text">Every 
+predicate in the Space package that must be given an index handle also 
+has an abbreviated version without the index handle argument which 
+automatically uses the default index.</SPAN></SUP> The actual indexing 
+of the shapes is performed using lazy evaluation. Assertions and 
+retractions are put on a queue that belongs to an index. The queue is 
+committed to the index whenever a query is performed, or when a 
+different kind of modification is called for (<I>i.e.</I> when the queue 
+contains assertions and a retraction is requested or vice versa).
+
+<PRE class="code">
+?- space_assert(ex:myoffice, point(52.3325,4.8673), demo_index).  % only adds it to the 'demo_index' queue
+true.
+?- space_contains(box(point(52.3324,4.8621), point(52.3348,4.8684)),
+                  Cont, demo_index).
+% uses 'demo_index', so triggers a call to space_index('demo_index').
+Cont = 'http://www.example.org/myoffice' .    % first instantiation, etc.
+</PRE>
+
+<PRE class="code">
+?- space_bulkload(space, uri_shape, demo_index).
+true.
+</PRE>
+
+<PRE class="code">
+% If the KML Geometry elements have an ID attribute,
+% you can load them from a file, e.g. 'office.kml', like this:
+?- space_bulkload(kml_file_uri_shape('office.kml'), 'demo_index').
+% Added 12 URI-Shape pairs to demo_index 
+true.
+
+% You can insert the same objects one by one like this:
+?- forall( kml_file_uri_shape('office.kml', Uri, Shape),
+           space_assert(Uri, Shape, 'demo_index') ).
+true.
+</PRE>
+
+<H2><A NAME="sec:4"><SPAN class="sec-nr">4</SPAN> <SPAN class="sec-title">Query 
+types</SPAN></A></H2>
+
+We chose three basic spatial query types as our basic building blocks: <EM>containment</EM>, <EM>intersection</EM>, 
+and <EM>nearest neighbor</EM>. These three query types are implemented 
+as pure Prolog predicates, respectively <A NAME="idx:spacecontains3:8"></A><A class="pred" href="#space_contains/3">space_contains/3</A>, <A NAME="idx:spaceintersects3:9"></A><A class="pred" href="#space_intersects/3">space_intersects/3</A>, 
+and <A NAME="idx:spacenearest3:10"></A><A class="pred" href="#space_nearest/3">space_nearest/3</A>. 
+These predicates work completely analogously, taking an index handle and 
+a query shape to retrieve the URI of a shape matching the query, which 
+is bound to the second argument. Any successive calls to the predicate 
+try to re-instantiate the second argument with a different matching URI. 
+The results of containment and intersection queries are instantiated in 
+no particular order, while the nearest neighbor results are instantiated 
+in order of increasing distance to the query shape. The <A NAME="idx:spacenearestbounded4:11"></A><SPAN class="pred-ext">space_nearest_bounded/4</SPAN> 
+predicate is a containment query based on
+<A NAME="idx:spacenearest3:12"></A><A class="pred" href="#space_nearest/3">space_nearest/3</A>, 
+which returns objects within a certain range of the query shape in order 
+of increasing distance.
+
+<PRE class="code">
+?- space_nearest(point(52.3325,4.8673), N, 'demo_index').
+N = 'http://sws.geonames.org/2759113/' ;      % retry, ask for more
+N = 'http://sws.geonames.org/2752058/' ;      % retry
+N = 'http://sws.geonames.org/2754074/' .      % cut, satisfied
+</PRE>
+
+<H2><A NAME="sec:5"><SPAN class="sec-nr">5</SPAN> <SPAN class="sec-title">Importing 
+and Exporting Shapes</SPAN></A></H2>
+
+Besides supporting input from RDF we support input and output for other 
+standards, like<A class="url" href="http://www.opengeospatial.org/standards/gml">GML</A>, <A class="url" href="http://code.google.com/apis/kml/">KML</A> 
+and <A class="url" href="http://en.wikipedia.org/wiki/Well-known_text">WKT</A>. 
+All shapes can be converted from and to these standards with the <A NAME="idx:gmlshape2:13"></A><A class="pred" href="#gml_shape/2">gml_shape/2</A>, <A NAME="idx:kmlshape2:14"></A><A class="pred" href="#kml_shape/2">kml_shape/2</A>, 
+and <A NAME="idx:wktshape2:15"></A><A class="pred" href="#wkt_shape/2">wkt_shape/2</A> 
+predicates.
+
+<PRE class="code">
+% Convert a WKT shape into GML and KML}
+?- wkt_shape('POINT ( 52.3325 4.8673 )', Shape),  % instantiate from WKT
+   gml_shape(GML, Shape),
+   kml_shape(KML, Shape).
+Shape = point(52.3325, 4.8673),
+GML = '&lt;gml:Point&gt;&lt;gml:pos&gt;52.3325 4.8673&lt;/gml:pos&gt;&lt;/gml:Point&gt;',
+KML = '&lt;Point&gt;&lt;coordinates&gt;4.8673,52.3325&lt;/coordinates&gt;&lt;/Point&gt;' .
+</PRE>
+
+<H2><A NAME="sec:6"><SPAN class="sec-nr">6</SPAN> <SPAN class="sec-title">Integration 
+of Space and Semantics</SPAN></A></H2>
+
+The non-deterministic implementation of the queries makes them behave 
+like a lazy stream of solutions. This allows tight integration with 
+other types of reasoning, like RDF(S) and OWL reasoning or other Prolog 
+rules. An example of combined RDF and spatial reasoning is shown below.
+
+<PRE class="code">
+% Finds nearest railway stations in the province Utrecht (in GeoNames)
+?- uri_shape(ex:myoffice, Office),
+   rdf(Utrecht, geo:name, literal('Provincie Utrecht')),
+   space_nearest(Office, Near),
+   % 'S' stands for a spot, like a building, 'RSTN' for railway station
+   rdf(Near, geo:featureCode, geo:'S.RSTN'),
+   % 'Near' connected to 'Utrecht' by transitive 'parentFeature'
+   rdf_reachable(Near, geo:parentFeature, Utrecht),
+   rdf(Near, geo:name, literal(Name)),  % fetch name of 'Near'
+   uri_shape(Near, Station),  % fetch shape of station
+   % compute actual distance in km}
+   space_distance_greatcircle(Office, Station, Distance, km).
+Utrecht = 'http://sws.geonames.org/2745909/',  % first instantiation
+Near = 'http://sws.geonames.org/6639765/',
+Name = 'Station Abcoude' ,
+Station = point(52.2761, 4.97904),
+Distance = 9.85408 ;                           % etc.
+Utrecht = 'http://sws.geonames.org/2745909/',  % second instantiation
+Near = 'http://sws.geonames.org/6639764/',
+Name = 'Station Breukelen' ,
+Station = point(52.17, 4.9906),
+Distance = 19.9199 .                           % etc.
+</PRE>
+
+<P>Integration of multiple spatial queries can be done in the same way. 
+Since the queries return URIs an intermediate URI-Shape predicate is 
+necessary to get a shape that can be used as a query. An example is 
+shown below.
+
+<PRE class="code">
+% Find features inside nearby polygons.
+?- uri_shape(ex:myoffice, Office),
+   space_nearest(Office, NearURI),
+   uri_shape(NearURI, NearShape),  % look up the shape of the URI 'Near'
+   NearShape = polygon(_),  % assert that it must be a polygon}
+   space_contains(NearShape, Contained).
+</PRE>
+
+<H2><A NAME="sec:7"><SPAN class="sec-nr">7</SPAN> <SPAN class="sec-title">Architecture</SPAN></A></H2>
+
+<A NAME="sec:architecture"></A> The Space package consists of C++ and 
+Prolog code. The main component is the Prolog module space.pl. All 
+parsing and generation of input and output formats is done in Prolog. 
+All index manipulation is done through the foreign language interface 
+(FLI) from Prolog to C++. The <A NAME="idx:spacebulkload3:16"></A><SPAN class="pred-ext">space_bulkload/3</SPAN> 
+predicate also communicates back across the FLI from C++ to Prolog, 
+allowing the indexing functions to ask for candidates to index from the 
+Prolog database, for example, by calling the <A NAME="idx:urishape2:17"></A><A class="pred" href="#uri_shape/2">uri_shape/2</A> 
+predicate.
+
+<H3><A NAME="sec:7.1"><SPAN class="sec-nr">7.1</SPAN> <SPAN class="sec-title">Incremental 
+Search and Non-determinism</SPAN></A></H3>
+
+The three search operations provided by the Space package all yield 
+their results incrementally, <I>i.e.</I> one at a time. Prolog 
+predicates actually do not have return values, but instantiate 
+parameters. Multiple return values are returned by subsequently 
+instantiating the same variable, so the first call to a predicate can 
+make different variable instantiations than the second call. This 
+standard support of non-deterministic behavior makes it easy to write 
+incremental algorithms in Prolog.
+
+<P>Internally, the search operations are handled by C++ functions that 
+work on an R*-tree index from the Spatial Index Library <CITE><A class="cite" href="#Hadjieleftheriou:2005rz">[2]</A></CITE>. 
+The C++ functions are accessed with the SWI-Prolog foreign language 
+interface. To implement non-deterministic behavior the query functions 
+have to store their state between successive calls and Prolog has to be 
+aware which state is relevant to every call.
+
+<P>Every search query creates an instance of a 
+SpatialIndex::IQueryStrategy class (the 
+IncrementalNearestNeighborStrategy class for INN queries, the 
+IncrementalRangeQuery for containment and intersection queries). This 
+class contains the search algorithm, accesses the R*-tree index, and 
+stores the current state of the algorithm. For containment and 
+intersection queries the results can be returned in any particular order 
+so implementing non-deterministic behavior simply involves storing a 
+pointer to a node in the R*-tree and returning every subsequent matching 
+object. For nearest neighbor queries keeping state is slightly more 
+complicated, because it is necessary to keep a priority queue of 
+candidate results at all times to guarantee that the results are 
+returned in order of increasing proximity.
+
+<P>The Spatial Index library does not include an incremental nearest 
+neighbor, so we implemented an adaptation of the algorithm described in <CITE><A class="cite" href="#Hjaltason:1999zi">[3]</A></CITE> 
+as an IQueryStrategy. The original algorithm emits results, for example, 
+with a callback function, without breaking from the search loop that 
+finds all matches. Our adaptation breaks the search loop at every 
+matching object and stores a handle to the state (including the priority 
+queue) so that it can restart the search loop where it left off. This 
+makes it possible to tie the query strategy into the non-deterministic 
+foreign language interface of SWI-Prolog with very little time overhead. 
+A pointer to the IQueryStrategy instance is stored on the Prolog stack, 
+so that every successive call to the procedure knows with which query to 
+continue.
+
+<P>An alternative implementation would be to take the exact IncNearest 
+algorithm described in <CITE><A class="cite" href="#Hjaltason:1999zi">[3]</A></CITE> 
+and to emit the results into a queue. The Prolog stack would then 
+contain a pointer to the queue. Every successive call would dequeue a 
+result from the queue. This strategy is less time efficient, because of 
+two reasons. It does not halt after each match, so it is less efficient 
+when looking for few results. It requires two separate processes to run. 
+One to find results, the other to poll the queue. This means there is 
+some process management and communication overhead.
+
+<H2><A NAME="sec:8"><SPAN class="sec-nr">8</SPAN> <SPAN class="sec-title">Documentation</SPAN></A></H2>
+
+<H3><A NAME="sec:8.1"><SPAN class="sec-nr">8.1</SPAN> <SPAN class="sec-title">library(space/space): 
+Core spatial database</SPAN></A></H3>
+
+<P><A NAME="sec:space"></A>
+
+<DL class="latex">
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="set_space/1"><STRONG>set_space</STRONG>(<VAR>+Option</VAR>)</A></DT>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="set_space/2"><STRONG>set_space</STRONG>(<VAR>+IndexName, 
++Option</VAR>)</A></DT>
+<DD class="defbody">
+This predicate can be used to change the options of a spatial index (or 
+de default index for <A class="pred" href="#set_space/1">set_space/1</A>). 
+Some options, like rtree_storage(S) where S is disk or memory only have 
+effect after clearing or bulkloading. Others, take effect immediately on 
+a running index. More documentation will be provided in the near future.</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="space_assert/3"><STRONG>space_assert</STRONG>(<VAR>+URI, 
++Shape, +IndexName</VAR>)</A></DT>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="space_assert/2"><STRONG>space_assert</STRONG>(<VAR>+URI, 
++Shape</VAR>)</A></DT>
+<DD class="defbody">
+Insert <VAR>URI</VAR> with associated <VAR>Shape</VAR> in the queue to 
+be inserted into the index with name <VAR>IndexName</VAR> or the default 
+index. Indexing happens lazily at the next call of a query or manually 
+by calling <A class="pred" href="#space_index/1">space_index/1</A>.</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="space_retract/3"><STRONG>space_retract</STRONG>(<VAR>+URI, 
++Shape, +IndexName</VAR>)</A></DT>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="space_retract/2"><STRONG>space_retract</STRONG>(<VAR>+URI, 
++Shape</VAR>)</A></DT>
+<DD class="defbody">
+Insert <VAR>URI</VAR> with associated <VAR>Shape</VAR> in the queue to 
+be removed into the index with name <VAR>IndexName</VAR> or the default 
+index. Indexing happens lazily at the next call of a query or manually 
+by calling <A class="pred" href="#space_index/1">space_index/1</A>.</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="space_index/1"><STRONG>space_index</STRONG>(<VAR>+IndexName</VAR>)</A></DT>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="space_index/0"><STRONG>space_index</STRONG></A></DT>
+<DD class="defbody">
+Processes all asserts or retracts in the space queue for index
+<VAR>IndexName</VAR> or the default index if no index is specified.</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="space_clear/1"><STRONG>space_clear</STRONG>(<VAR>+IndexName</VAR>)</A></DT>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="space_clear/0"><STRONG>space_clear</STRONG></A></DT>
+<DD class="defbody">
+Clears index <VAR>IndexName</VAR> or the default index if no index is 
+specified, removing all of its contents.</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="space_bulkload/2"><STRONG>space_bulkload</STRONG>(<VAR>:Closure, 
++IndexName</VAR>)</A></DT>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="space_bulkload/1"><STRONG>space_bulkload</STRONG>(<VAR>:Closure</VAR>)</A></DT>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="space_bulkload/0"><STRONG>space_bulkload</STRONG></A></DT>
+<DD class="defbody">
+Fast loading of many Shapes into the index <VAR>IndexName</VAR>.
+<VAR>Closure</VAR> is called with two additional arguments: URI and 
+Shape, that finds candidate URI-Shape pairs to index in the index <VAR>IndexName</VAR>.
+
+<P><A class="pred" href="#space_bulkload/0">space_bulkload/0</A> 
+defaults to <A class="pred" href="#uri_shape/2">uri_shape/2</A> for :<VAR>Closure</VAR>.
+
+<DL>
+<DT><B>See also</B><DD> the <A class="pred" href="#uri_shape/2">uri_shape/2</A> 
+predicate for an example of a suitable functor.
+</DL>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="space_contains/3"><STRONG>space_contains</STRONG>(<VAR>+Query, 
+?Cont, +IndexName</VAR>)</A></DT>
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="space_contains/2"><STRONG>space_contains</STRONG>(<VAR>+Query, 
+?Cont</VAR>)</A></DT>
+<DD class="defbody">
+Containment query. Unifies <VAR>Cont</VAR> with shapes contained in
+<VAR>Query</VAR> Shape (or shape of <VAR>Query</VAR> URI) according to 
+index
+<VAR>IndexName</VAR> or the default index.</DD>
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="space_intersects/3"><STRONG>space_intersects</STRONG>(<VAR>+Query, 
+?Inter, +IndexName</VAR>)</A></DT>
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="space_intersects/2"><STRONG>space_intersects</STRONG>(<VAR>+Query, 
+?Inter</VAR>)</A></DT>
+<DD class="defbody">
+Intersection query. Unifies <VAR>Inter</VAR> with shapes intersecting 
+with
+<VAR>Query</VAR> Shape (or Shape of <VAR>Query</VAR> URI) according to 
+index <VAR>IndexName</VAR> or the default index. (intersection subsumes 
+containment)</DD>
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="space_nearest/3"><STRONG>space_nearest</STRONG>(<VAR>+Query, 
+-Near, +IndexName</VAR>)</A></DT>
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="space_nearest/2"><STRONG>space_nearest</STRONG>(<VAR>+Query, 
+-Near</VAR>)</A></DT>
+<DD class="defbody">
+Incremental Nearest-Neighbor query. Unifies <VAR>Near</VAR> with shapes 
+in order of increasing distance to <VAR>Query</VAR> Shape (or Shape of <VAR>Query</VAR> 
+URI) according to index <VAR>IndexName</VAR> or the default index.</DD>
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="uri_shape/2"><STRONG>uri_shape</STRONG>(<VAR>?URI, 
+?Shape</VAR>)</A></DT>
+<DD class="defbody">
+Finds pairs of URIs and their corresponding Shapes based on WGS84 RDF 
+properties (e.g. wgs84:lat), GeoRSS Simple properties (e.g. 
+georss:polygon), and GeoRSS GML properties (e.g. georss:where).
+
+<P><A class="pred" href="#uri_shape/2">uri_shape/2</A> is a dynamic 
+predicate, which means it can be extended. If you use <A class="pred" href="#uri_shape/2">uri_shape/2</A> 
+in this way, the <VAR>URI</VAR> argument has to be a canonical <VAR>URI</VAR>, 
+not a QName.</DD>
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="uri_shape/3"><STRONG>uri_shape</STRONG>(<VAR>?URI, 
+?Shape, +Source</VAR>)</A></DT>
+<DD class="defbody">
+Finds pairs of URIs and their corresponding Shapes using
+<A class="pred" href="#uri_shape/2">uri_shape/2</A> from RDF that was 
+loaded from a given <VAR>Source</VAR>.</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="space_index_all/1"><STRONG>space_index_all</STRONG>(<VAR>+IndexName</VAR>)</A></DT>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="space_index_all/0"><STRONG>space_index_all</STRONG></A></DT>
+<DD class="defbody">
+Loads all URI-Shape pairs found with <A class="pred" href="#uri_shape/2">uri_shape/2</A> 
+into index <VAR>IndexName</VAR> or the default index name.</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="shape/1"><STRONG>shape</STRONG>(<VAR>+Shape</VAR>)</A></DT>
+<DD class="defbody">
+Checks whether <VAR>Shape</VAR> is a valid supported shape.</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="space_distance/3"><STRONG>space_distance</STRONG>(<VAR>+Point1, 
++Point2, -Distance</VAR>)</A></DT>
+<DD class="defbody">
+Calculates the distance between <VAR>Point1</VAR> and <VAR>Point2</VAR> 
+by default using pythagorean distance.
+
+<DL>
+<DT><B>See also</B><DD>
+<A class="pred" href="#space_distance_greatcircle/4">space_distance_greatcircle/4</A> 
+for great circle distance.
+</DL>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="space_distance_greatcircle/3"><STRONG>space_distance_greatcircle</STRONG>(<VAR>+Point1, 
++Point2, -Dist</VAR>)</A></DT>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="space_distance_greatcircle/4"><STRONG>space_distance_greatcircle</STRONG>(<VAR>+Point1, 
++Point2, -Dist, +Unit</VAR>)</A></DT>
+<DD class="defbody">
+Calculates great circle distance between <VAR>Point1</VAR> and <VAR>Point2</VAR> 
+in the specified <VAR>Unit</VAR>, which can take as a value km 
+(kilometers) or nm (nautical miles). By default, nautical miles are 
+used.
+</DD>
+</DL>
+
+<H3><A NAME="sec:8.2"><SPAN class="sec-nr">8.2</SPAN> <SPAN class="sec-title">library(space/georss)</SPAN></A></H3>
+
+<P><A NAME="sec:georss"></A>
+
+<DL class="latex">
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="georss_candidate/2"><STRONG>georss_candidate</STRONG>(<VAR>?URI, 
+?Shape</VAR>)</A></DT>
+<DD class="defbody">
+Finds <VAR>URI</VAR>-<VAR>Shape</VAR> pairs by searching for RDF triples 
+that link <VAR>URI</VAR> to a <VAR>Shape</VAR> with GeoRSS RDF 
+properties (e.g. georss:where, georss:line, georss:polygon). Both GeoRSS 
+Simple and GML are supported.</DD>
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="georss_candidate/3"><STRONG>georss_candidate</STRONG>(<VAR>?URI, 
+?Shape, +Source</VAR>)</A></DT>
+<DD class="defbody">
+Finds <VAR>URI</VAR>-<VAR>Shape</VAR> pairs using <A class="pred" href="#georss_candidate/2">georss_candidate/2</A> 
+in RDF that was loaded from a certain <VAR>Source</VAR>.</DD>
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="georss_simple_candidate/2"><STRONG>georss_simple_candidate</STRONG>(<VAR>?URI, 
+?Shape</VAR>)</A></DT>
+<DD class="defbody">
+Finds <VAR>URI</VAR>-<VAR>Shape</VAR> pairs by searching for GeoRSS 
+Simple properties (e.g. georss:point, georss:line, georss:polygon) in 
+the RDF database.</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="georss_uri_shape_triple/5"><STRONG>georss_uri_shape_triple</STRONG>(<VAR>+URI, 
++Shape, -Subject, -Predicate, -Object</VAR>)</A></DT>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="georss_uri_shape_triple/5"><STRONG>georss_uri_shape_triple</STRONG>(<VAR>-URI, 
+-Shape, +Subject, +Predicate, +Object</VAR>)</A></DT>
+<DD class="defbody">
+Converts between a <VAR>URI</VAR>-<VAR>Shape</VAR> pair and its GeoRSS 
+simple RDF triple form.</DD>
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="georss_gml_candidate/2"><STRONG>georss_gml_candidate</STRONG>(<VAR>?URI, 
+?Shape</VAR>)</A></DT>
+<DD class="defbody">
+Finds <VAR>URI</VAR>-<VAR>Shape</VAR> pairs by searching for GeoRSS GML 
+properties (i.e. georss:where) in the RDF database. Uses <A class="pred" href="#gml_shape/2">gml_shape/2</A> 
+to parse the XMLLiteral representing the GML shape.
+</DD>
+</DL>
+
+<H3><A NAME="sec:8.3"><SPAN class="sec-nr">8.3</SPAN> <SPAN class="sec-title">library(space/wgs84)</SPAN></A></H3>
+
+<P><A NAME="sec:wgs84"></A>
+
+<DL class="latex">
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="wgs84_candidate/2"><STRONG>wgs84_candidate</STRONG>(<VAR>?URI, 
+?Point</VAR>)</A></DT>
+<DD class="defbody">
+Finds <VAR>URI</VAR>-Shape pairs of RDF resources that are place-tagged 
+with W3C WGS84 properties (i.e. lat, long, alt).
+<VAR>Point</VAR> = point(?Lat,?Long) ; <VAR>Point</VAR> = 
+point(?Lat,?Long,?Alt).</DD>
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="wgs84_candidate/3"><STRONG>wgs84_candidate</STRONG>(<VAR>?URI, 
+?Point, +Source</VAR>)</A></DT>
+<DD class="defbody">
+Finds <VAR>URI</VAR>-Shape pairs of RDF resources that are place-tagged 
+with W3C WGS84 properties (i.e. lat, long, alt). From RDF that was 
+loaded from a certain <VAR>Source</VAR>.</DD>
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="lat/2"><STRONG>lat</STRONG>(<VAR>?URI, 
+?Lat</VAR>)</A></DT>
+<DD class="defbody">
+Finds the WGS84 latitude of resource <VAR>URI</VAR> (and vice versa) 
+using the rdf_db index. <VAR>Lat</VAR> is a number.</DD>
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="long/2"><STRONG>long</STRONG>(<VAR>?URI, 
+?Long</VAR>)</A></DT>
+<DD class="defbody">
+Finds the WGS84 longitude of resource <VAR>URI</VAR> (and vice versa) 
+using the rdf_db index. <VAR>Long</VAR> is a number.</DD>
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="alt/2"><STRONG>alt</STRONG>(<VAR>?URI, 
+?Alt</VAR>)</A></DT>
+<DD class="defbody">
+Finds the WGS84 altitude of resource <VAR>URI</VAR> (and vice versa) 
+using the rdf_db index. <VAR>Alt</VAR> is a number.</DD>
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="coordinates/3"><STRONG>coordinates</STRONG>(<VAR>?URI, 
+?Lat, ?Long</VAR>)</A></DT>
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="coordinates/4"><STRONG>coordinates</STRONG>(<VAR>?URI, 
+?Lat, ?Long, ?Alt</VAR>)</A></DT>
+<DD class="defbody">
+Finds the WGS84 latitude, longitude and possibly altitude of resource <VAR>URI</VAR> 
+(and vice versa) using the rdf_db index.
+<VAR>Lat</VAR>, <VAR>Long</VAR>, and <VAR>Alt</VAR> are numbers.
+</DD>
+</DL>
+
+<H3><A NAME="sec:8.4"><SPAN class="sec-nr">8.4</SPAN> <SPAN class="sec-title">library(space/freebase)</SPAN></A></H3>
+
+<P><A NAME="sec:freebase"></A>
+
+<DL class="latex">
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="freebase_candidate/2"><STRONG>freebase_candidate</STRONG>(<VAR>?URI, 
+?Point</VAR>)</A></DT>
+<DD class="defbody">
+Finds <VAR>URI</VAR>-Shape pairs of RDF resource that are place-tagged 
+with Freebase's location.location.geoposition notation that capture 
+WGS84 latitude/longitude positions.</DD>
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="freebase_candidate/3"><STRONG>freebase_candidate</STRONG>(<VAR>?URI, 
+?Point, ?Source</VAR>)</A></DT>
+<DD class="defbody">
+Finds <VAR>URI</VAR>-Shape pairs of RDF resource that are place-tagged 
+with Freebase's location.location.geoposition notation that capture 
+WGS84 latitude/longitude positions. From RDF that was loaded from a 
+certain <VAR>Source</VAR>.
+</DD>
+</DL>
+
+<H3><A NAME="sec:8.5"><SPAN class="sec-nr">8.5</SPAN> <SPAN class="sec-title">library(space/dbpedia)</SPAN></A></H3>
+
+<P><A NAME="sec:dbpedia"></A>
+
+<DL class="latex">
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="dbpedia_candidate/2"><STRONG>dbpedia_candidate</STRONG>(<VAR>?URI, 
+?Point</VAR>)</A></DT>
+<DD class="defbody">
+Finds <VAR>URI</VAR>-Shape pairs of RDF resource that are place-tagged 
+with DBpedia's coordinatenProperty notation that capture WGS84 
+latitude/longitude positions.</DD>
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="dbpedia_candidate/3"><STRONG>dbpedia_candidate</STRONG>(<VAR>?URI, 
+?Point, ?Source</VAR>)</A></DT>
+<DD class="defbody">
+Finds <VAR>URI</VAR>-Shape pairs of RDF resource that are place-tagged 
+with DBpedia's coordinatenProperty notation that capture WGS84 
+latitude/longitude positions. From RDF that was loaded from a certain <VAR>Source</VAR>.
+</DD>
+</DL>
+
+<H3><A NAME="sec:8.6"><SPAN class="sec-nr">8.6</SPAN> <SPAN class="sec-title">library(space/wkt)</SPAN></A></H3>
+
+<P><A NAME="sec:wkt"></A>
+
+<DL class="latex">
+<DT class="pubdef"><span class="pred-tag">[semidet]</span><A NAME="wkt_shape/2"><STRONG>wkt_shape</STRONG>(<VAR>?WKT, 
+?Shape</VAR>)</A></DT>
+<DD class="defbody">
+Converts between the <VAR>WKT</VAR> serialization of a <VAR>Shape</VAR> 
+and its native Prolog term representation.
+</DD>
+</DL>
+
+<H3><A NAME="sec:8.7"><SPAN class="sec-nr">8.7</SPAN> <SPAN class="sec-title">library(space/kml)</SPAN></A></H3>
+
+<P><A NAME="sec:kml"></A>
+
+<DL class="latex">
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="kml_file_to_georss/1"><STRONG>kml_file_to_georss</STRONG>(<VAR>+KMLfile</VAR>)</A></DT>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="kml_file_to_georss/2"><STRONG>kml_file_to_georss</STRONG>(<VAR>+KMLfile, 
++RDFfile</VAR>)</A></DT>
+<DD class="defbody">
+Converts the contents of an KML file into GeoRSS RDF in the RDF database 
+of Prolog. The Geometries are converted to GeoRSS properties and values. 
+Documents, Folders, etc. are ignored. MultiGeometry objects are expanded 
+into separate simple Geometries. Geometries with an XML ID are assigned 
+that ID as URI, other Geometries are assigned a RDF blank node. The 
+kml:name and kml:description are translated to RDF properties.</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="georss_to_kml_file/1"><STRONG>georss_to_kml_file</STRONG>(<VAR>+KMLfile</VAR>)</A></DT>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="georss_to_kml_file/2"><STRONG>georss_to_kml_file</STRONG>(<VAR>+KMLfile, 
++Options</VAR>)</A></DT>
+<DD class="defbody">
+Converts the contents of the RDF database of Prolog into a KML file 
+without style information and without Folders. kml:name and 
+kml:description properties in the RDF database are converted to their 
+KML counterparts.
+<VAR>Options</VAR> can be used to pass Document level options, for 
+example, the name of the dataset. <VAR>Options</VAR> can also include a 
+graph(Graph) option to specify which RDF named graph should be converted 
+to KML.</DD>
+<DT class="pubdef"><span class="pred-tag">[semidet]</span><A NAME="kml_shape/2"><STRONG>kml_shape</STRONG>(<VAR>?Stream, 
+?Shape</VAR>)</A></DT>
+<DT class="pubdef"><span class="pred-tag">[semidet]</span><A NAME="kml_shape/4"><STRONG>kml_shape</STRONG>(<VAR>?Stream, 
+?Shape, ?Attributes, ?Content</VAR>)</A></DT>
+<DD class="defbody">
+Converts between the KML serialization of a shape and its internal 
+Prolog term representation.
+<VAR>Attributes</VAR> and <VAR>Content</VAR> can hold additional 
+attributes and XML content elements of the KML, like ID, name, or 
+styleUrl.</DD>
+<DT class="pubdef"><span class="pred-tag">[semidet]</span><A NAME="kml_uri_shape/3"><STRONG>kml_uri_shape</STRONG>(<VAR>?KML, 
+?URI, ?Shape</VAR>)</A></DT>
+<DD class="defbody">
+Converts between the <VAR>KML</VAR> serialization of a <VAR>URI</VAR>-shape 
+pair and its internal Prolog term representation. It is assumed the <VAR>KML</VAR> 
+Geometry element has a ID attribute specifying the <VAR>URI</VAR> of the 
+shape. e.g.
+
+<PRE class="code">
+&lt;PointID="http://example.org/point1"&gt;&lt;coordinates&gt;52.37,4.89&lt;/coordinates&gt;&lt;/Point&gt;
+</PRE>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[semidet]</span><A NAME="kml_file_shape/2"><STRONG>kml_file_shape</STRONG>(<VAR>+File, 
+?Shape</VAR>)</A></DT>
+<DT class="pubdef"><span class="pred-tag">[semidet]</span><A NAME="kml_file_shape/4"><STRONG>kml_file_shape</STRONG>(<VAR>+File, 
+?Shape, ?Attributes, ?Content</VAR>)</A></DT>
+<DD class="defbody">
+Reads shapes from a KML file using <A class="pred" href="#kml_shape/2">kml_shape/2</A>.
+<A class="pred" href="#kml_file_shape/4">kml_file_shape/4</A> also reads 
+extra attributes and elements of the KML Geometry. e.g. <VAR>&lt;</VAR>Point 
+targetId="NCName"<CODE>&gt;&lt;</CODE>extrude<VAR>&gt;</VAR>0<VAR>&lt;</VAR>/extrude<VAR>&gt;</VAR>...<VAR>&lt;</VAR>/Point<VAR>&gt;</VAR> 
+will, besides parsing the Point, also instantiate <VAR>Content</VAR> 
+with [extrude(0)] and <VAR>Attributes</VAR> with [targetId('NCName')].</DD>
+<DT class="pubdef"><span class="pred-tag">[semidet]</span><A NAME="kml_file_uri_shape/3"><STRONG>kml_file_uri_shape</STRONG>(<VAR>+File, 
+?URI, ?Shape</VAR>)</A></DT>
+<DD class="defbody">
+Reads <VAR>URI</VAR>-shape pairs from <VAR>File</VAR> using <SPAN class="pred-ext">kml_uri_shape/2</SPAN>.</DD>
+<DT class="pubdef"><span class="pred-tag">[semidet]</span><A NAME="kml_save_header/2"><STRONG>kml_save_header</STRONG>(<VAR>+Stream, 
++Options</VAR>)</A></DT>
+<DD class="defbody">
+Outputs a KML header to <VAR>Stream</VAR>. This can be followed by calls 
+to <A class="pred" href="#kml_save_shape/3">kml_save_shape/3</A> and
+<A class="pred" href="#kml_save_footer/1">kml_save_footer/1</A>.
+
+<P><VAR>Options</VAR> is an option list that can contain the option 
+name(Name) specifying the Name of the document.
+
+<DL>
+<DT><B>To be done</B><DD> options to configure optional entities, like 
+styles
+</DL>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[semidet]</span><A NAME="kml_save_shape/3"><STRONG>kml_save_shape</STRONG>(<VAR>+Stream, 
++Shape, +Options</VAR>)</A></DT>
+<DD class="defbody">
+Outputs a KML serialization of <VAR>Shape</VAR> to <VAR>Stream</VAR>. 
+This can be preceded by a call to <A class="pred" href="#kml_save_header/2">kml_save_header/2</A> 
+and followed by more calls to <A class="pred" href="#kml_save_shape/3">kml_save_shape/3</A> 
+and a call to
+<A class="pred" href="#kml_save_footer/1">kml_save_footer/1</A>.
+
+<P><VAR>Options</VAR> is an option list that can contain the option 
+attr(+List) or content(+List) that can be used to add additional 
+attributes or xml element content to a shape. This can be used to 
+specify things like the ID or name.
+
+<P>Layout elements, like Placemark and Folder, have their own separate 
+extra attributes to supply additional attributes and content. These can 
+contain the special terms geom_attributes and geom_content that pass 
+their content to the shape contained by the Placemark. For example, 
+rendering a Placemark with the ID "placemark12" of an extruded Point 
+shape with its URI as name of the Placemark and as ID of the shape and 
+an additional styleUrl works as follows:
+
+<PRE class="code">
+kml_save_shape(Stream,
+               placemark(point(53.0,3.9),
+                         [ id(placemark12),
+                           geom_attributes([ id(URI) ])
+                         ],
+                         [ name(URI),styleUrl(URI),
+                           geom_content([ extrude(1) ])
+                         ]),
+               []).
+</PRE>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="kml_save_footer/1"><STRONG>kml_save_footer</STRONG>(<VAR>+Stream</VAR>)</A></DT>
+<DD class="defbody">
+Outputs a KML footer to stream <VAR>Stream</VAR>. This can be preceded 
+by calls to <A class="pred" href="#kml_save_header/2">kml_save_header/2</A> 
+and
+<A class="pred" href="#kml_save_shape/3">kml_save_shape/3</A>.
+</DD>
+</DL>
+
+<H3><A NAME="sec:8.8"><SPAN class="sec-nr">8.8</SPAN> <SPAN class="sec-title">library(space/gml)</SPAN></A></H3>
+
+<P><A NAME="sec:gml"></A>
+
+<DL class="latex">
+<DT class="pubdef"><span class="pred-tag">[semidet]</span><A NAME="gml_shape/2"><STRONG>gml_shape</STRONG>(<VAR>?GML, 
+?Shape</VAR>)</A></DT>
+<DD class="defbody">
+Converts between the <VAR>GML</VAR> serialization of a shape and its 
+internal Prolog term representation.
+</DD>
+</DL>
+
+<H2><A NAME="sec:9"><SPAN class="sec-nr">9</SPAN> <SPAN class="sec-title">space_web_loader.pl</SPAN></A></H2>
+
+<P><A NAME="sec:spacewebloader"></A>
+
+<DL class="latex">
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="space_load_url/1"><STRONG>space_load_url</STRONG>(<VAR>+URL</VAR>)</A></DT>
+<DD class="defbody">
+Retrieve RDF over HTTP from a <VAR>URL</VAR>, load it in the rdf_db and 
+index all URI-Shape pairs that can be found in it into the default 
+index.</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="space_load_url/2"><STRONG>space_load_url</STRONG>(<VAR>+URL, 
++Options</VAR>)</A></DT>
+<DD class="defbody">
+Load using <A class="pred" href="#space_load_url/1">space_load_url/1</A>, 
+given extra options.
+
+<DL class="latex">
+<DT><STRONG>index</STRONG>(<VAR>+IndexName</VAR>)</DT>
+<DD class="defbody">
+Index the URI-Shape pairs into index named IndexName.
+</DD>
+<DT><STRONG>graph</STRONG>(<VAR>+Graph</VAR>)</DT>
+<DD class="defbody">
+Store the URI-Shape pairs in the named graph Graph. The pairs are 
+recorded as uri_shape(URI,Shape,Graph).
+</DD>
+</DL>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="space_unload_url/1"><STRONG>space_unload_url</STRONG>(<VAR>+URL</VAR>)</A></DT>
+<DD class="defbody">
+Unload the RDF that was fetched from <VAR>URL</VAR> and remove all 
+URI-Shape pairs that are contained in it from the default index.</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="space_unload_url/2"><STRONG>space_unload_url</STRONG>(<VAR>+URL, 
++Options</VAR>)</A></DT>
+<DD class="defbody">
+Unload the RDF that was fetched from <VAR>URL</VAR> and remove all 
+URI-Shape pairs that are contained in it. Accepts extra options:
+
+<DL class="latex">
+<DT><STRONG>index</STRONG>(<VAR>+IndexName</VAR>)</DT>
+<DD class="defbody">
+Remove from the index named IndexName.
+</DD>
+<DT><STRONG>graph</STRONG>(<VAR>+Graph</VAR>)</DT>
+<DD class="defbody">
+Remove the URI-Shape pairs from the named graph Graph.
+</DD>
+</DL>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="space_crawl_url/1"><STRONG>space_crawl_url</STRONG>(<VAR>+URL</VAR>)</A></DT>
+<DD class="defbody">
+Retrieve RDF over HTTP from a <VAR>URL</VAR>, load it in the rdf_db and 
+index all URI-Shape pairs that can be found in it into the default 
+index. Also attempt to resolve all URIs that appear as object in a 
+link_property statement downloaded from the <VAR>URL</VAR>. Retrieve 
+these URIs and process them in the same way. Iterate this process until 
+there are no new links that have not already been crawled.</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="space_crawl_url/2"><STRONG>space_crawl_url</STRONG>(<VAR>+URL, 
++Options</VAR>)</A></DT>
+<DD class="defbody">
+Crawl using <A class="pred" href="#space_crawl_url/1">space_crawl_url/1</A>, 
+with additional options.
+
+<DL class="latex">
+<DT><STRONG>index</STRONG>(<VAR>+IndexName</VAR>)</DT>
+<DD class="defbody">
+Index the URI-Shape pairs into index named IndexName.
+</DD>
+<DT><STRONG>graph</STRONG>(<VAR>+Graph</VAR>)</DT>
+<DD class="defbody">
+Store the URI-Shape pairs in the named graph Graph. The pairs are 
+recorded as uri_shape(URI,Shape,Graph).
+</DD>
+</DL>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="space_uncrawl_url/1"><STRONG>space_uncrawl_url</STRONG>(<VAR>+URL</VAR>)</A></DT>
+<DD class="defbody">
+Unload the RDF that was fetched from <VAR>URL</VAR> and remove all 
+URI-Shape pairs that are contained in it from the default index. Also 
+unload all data that were crawled by iteratively resolving the URIs 
+linked to with a link_property.</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="space_uncrawl_url/2"><STRONG>space_uncrawl_url</STRONG>(<VAR>+URL, 
++IndexName</VAR>)</A></DT>
+<DD class="defbody">
+Unload using <A class="pred" href="#space_uncrawl_url/1">space_uncrawl_url/1</A>, 
+but remove the URI-Shape pairs from the index named <VAR>IndexName</VAR>.
+
+<DL class="latex">
+<DT><STRONG>index</STRONG>(<VAR>+IndexName</VAR>)</DT>
+<DD class="defbody">
+Remove the URI-Shape pairs from index named <VAR>IndexName</VAR>.
+</DD>
+<DT><STRONG>graph</STRONG>(<VAR>+Graph</VAR>)</DT>
+<DD class="defbody">
+Remove the URI-Shape pairs from the named graph Graph.
+</DD>
+</DL>
+
+</DD>
+</DL>
+
+<H2>Bibliography</H2>
+
+<DL class="bib">
+<DT class="bib"><A NAME="vanHage:2009"><STRONG>[1]</STRONG></A><DD class="bib">
+Willem Robert van Hage, Jan Wielemaker and Guus Schreiber. The Space 
+package: Tight Integration Between Space and Semantics.
+<EM>Proceedings of the 8th International Semantic Web Conference 
+Workshop: TerraCognita 2009.</EM></DD>
+<DT class="bib"><A NAME="Hadjieleftheriou:2005rz"><STRONG>[2]</STRONG></A><DD class="bib">
+Marios Hadjieleftheriou, Erik Hoel, and Vassilis&nbsp;J. Tsotras. Sail: 
+A spatial index library for efficient application integration.
+<EM>Geoinformatica</EM>, 9(4), 2005.</DD>
+<DT class="bib"><A NAME="Hjaltason:1999zi"><STRONG>[3]</STRONG></A><DD class="bib">
+G&iacute;sli&nbsp;R. Hjaltason and Hanan Samet. Distance browsing in 
+spatial databases.
+<EM>ACM Transactions on Database Systems (TODS)</EM>, 24(2):265--318, 
+1999.
+
+<P></DD>
+</DL>
+
+<H1><A NAME="document-index">Index</A></H1>
+
+<DL>
+<DT><STRONG>A</STRONG>
+<DT><A class="idx" href="#alt/2">alt/2</A>
+<DT><STRONG>C</STRONG>
+<DT><A class="idx" href="#coordinates/3">coordinates/3</A>
+<DT><A class="idx" href="#coordinates/4">coordinates/4</A>
+<DT><STRONG>D</STRONG>
+<DT><A class="idx" href="#dbpedia_candidate/2">dbpedia_candidate/2</A>
+<DT><A class="idx" href="#dbpedia_candidate/3">dbpedia_candidate/3</A>
+<DT><STRONG>F</STRONG>
+<DT><A class="idx" href="#freebase_candidate/2">freebase_candidate/2</A>
+<DT><A class="idx" href="#freebase_candidate/3">freebase_candidate/3</A>
+<DT><STRONG>G</STRONG>
+<DT><A class="idx" href="#georss_candidate/2">georss_candidate/2</A>
+<DT><A class="idx" href="#georss_candidate/3">georss_candidate/3</A>
+<DT><A class="idx" href="#georss_gml_candidate/2">georss_gml_candidate/2</A>
+<DT><A class="idx" href="#georss_simple_candidate/2">georss_simple_candidate/2</A>
+<DT><A class="idx" href="#georss_to_kml_file/1">georss_to_kml_file/1</A>
+<DT><A class="idx" href="#georss_to_kml_file/2">georss_to_kml_file/2</A>
+<DT><A class="idx" href="#georss_uri_shape_triple/5">georss_uri_shape_triple/5</A>
+<DT><A class="idx" href="#gml_shape/2">gml_shape/2</A></DT>
+<DD>
+<A class="idx" href="#idx:gmlshape2:13">5</A></DD>
+<DT><STRONG>K</STRONG>
+<DT><A class="idx" href="#kml_file_shape/2">kml_file_shape/2</A>
+<DT><A class="idx" href="#kml_file_shape/4">kml_file_shape/4</A>
+<DT><A class="idx" href="#kml_file_to_georss/1">kml_file_to_georss/1</A>
+<DT><A class="idx" href="#kml_file_to_georss/2">kml_file_to_georss/2</A>
+<DT><A class="idx" href="#kml_file_uri_shape/3">kml_file_uri_shape/3</A>
+<DT><A class="idx" href="#kml_save_footer/1">kml_save_footer/1</A>
+<DT><A class="idx" href="#kml_save_header/2">kml_save_header/2</A>
+<DT><A class="idx" href="#kml_save_shape/3">kml_save_shape/3</A>
+<DT><A class="idx" href="#kml_shape/2">kml_shape/2</A></DT>
+<DD>
+<A class="idx" href="#idx:kmlshape2:14">5</A></DD>
+<DT><A class="idx" href="#kml_shape/4">kml_shape/4</A>
+<DT><A class="idx" href="#kml_uri_shape/3">kml_uri_shape/3</A>
+<DT><STRONG>L</STRONG>
+<DT><A class="idx" href="#lat/2">lat/2</A>
+<DT><A class="idx" href="#long/2">long/2</A>
+<DT><STRONG>S</STRONG>
+<DT><A class="idx" href="#set_space/1">set_space/1</A>
+<DT><A class="idx" href="#set_space/2">set_space/2</A>
+<DT><A class="idx" href="#shape/1">shape/1</A>
+<DT><A class="idx" href="#space_assert/2">space_assert/2</A>
+<DT><A class="idx" href="#space_assert/3">space_assert/3</A></DT>
+<DD>
+<A class="idx" href="#idx:spaceassert3:3">3</A></DD>
+<DT><A class="idx" href="#space_bulkload/0">space_bulkload/0</A>
+<DT><A class="idx" href="#space_bulkload/1">space_bulkload/1</A>
+<DT><A class="idx" href="#space_bulkload/2">space_bulkload/2</A>
+<DT>space_bulkload/3</DT>
+<DD>
+<A class="idx" href="#idx:spacebulkload3:5">3</A> <A class="idx" href="#idx:spacebulkload3:16">7</A></DD>
+<DT><A class="idx" href="#space_clear/0">space_clear/0</A>
+<DT><A class="idx" href="#space_clear/1">space_clear/1</A>
+<DT><A class="idx" href="#space_contains/2">space_contains/2</A>
+<DT><A class="idx" href="#space_contains/3">space_contains/3</A></DT>
+<DD>
+<A class="idx" href="#idx:spacecontains3:8">4</A></DD>
+<DT><A class="idx" href="#space_crawl_url/1">space_crawl_url/1</A>
+<DT><A class="idx" href="#space_crawl_url/2">space_crawl_url/2</A>
+<DT><A class="idx" href="#space_distance/3">space_distance/3</A>
+<DT><A class="idx" href="#space_distance_greatcircle/3">space_distance_greatcircle/3</A>
+<DT><A class="idx" href="#space_distance_greatcircle/4">space_distance_greatcircle/4</A>
+<DT><A class="idx" href="#space_index/0">space_index/0</A>
+<DT><A class="idx" href="#space_index/1">space_index/1</A>
+<DT><A class="idx" href="#space_index_all/0">space_index_all/0</A></DT>
+<DD>
+<A class="idx" href="#idx:spaceindexall0:6">3</A></DD>
+<DT><A class="idx" href="#space_index_all/1">space_index_all/1</A>
+<DT><A class="idx" href="#space_intersects/2">space_intersects/2</A>
+<DT><A class="idx" href="#space_intersects/3">space_intersects/3</A></DT>
+<DD>
+<A class="idx" href="#idx:spaceintersects3:9">4</A></DD>
+<DT><A class="idx" href="#space_load_url/1">space_load_url/1</A>
+<DT><A class="idx" href="#space_load_url/2">space_load_url/2</A>
+<DT><A class="idx" href="#space_nearest/2">space_nearest/2</A>
+<DT><A class="idx" href="#space_nearest/3">space_nearest/3</A></DT>
+<DD>
+<A class="idx" href="#idx:spacenearest3:10">4</A> <A class="idx" href="#idx:spacenearest3:12">4</A></DD>
+<DT>space_nearest_bounded/4</DT>
+<DD>
+<A class="idx" href="#idx:spacenearestbounded4:11">4</A></DD>
+<DT><A class="idx" href="#space_retract/2">space_retract/2</A>
+<DT><A class="idx" href="#space_retract/3">space_retract/3</A></DT>
+<DD>
+<A class="idx" href="#idx:spaceretract3:4">3</A></DD>
+<DT><A class="idx" href="#space_uncrawl_url/1">space_uncrawl_url/1</A>
+<DT><A class="idx" href="#space_uncrawl_url/2">space_uncrawl_url/2</A>
+<DT><A class="idx" href="#space_unload_url/1">space_unload_url/1</A>
+<DT><A class="idx" href="#space_unload_url/2">space_unload_url/2</A>
+<DT><STRONG>U</STRONG>
+<DT><A class="idx" href="#uri_shape/2">uri_shape/2</A></DT>
+<DD>
+<A class="idx" href="#idx:urishape2:1">2</A> <A class="idx" href="#idx:urishape2:2">2</A> <A class="idx" href="#idx:urishape2:7">3</A> <A class="idx" href="#idx:urishape2:17">7</A></DD>
+<DT><A class="idx" href="#uri_shape/3">uri_shape/3</A>
+<DT><STRONG>W</STRONG>
+<DT><A class="idx" href="#wgs84_candidate/2">wgs84_candidate/2</A>
+<DT><A class="idx" href="#wgs84_candidate/3">wgs84_candidate/3</A>
+<DT><A class="idx" href="#wkt_shape/2">wkt_shape/2</A></DT>
+<DD>
+<A class="idx" href="#idx:wktshape2:15">5</A></DD>
+</DL>
+
+</BODY></HTML>

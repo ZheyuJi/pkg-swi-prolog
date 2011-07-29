@@ -1,0 +1,405 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>SWI-Prolog 5.11.18 Reference Manual: Section A.12</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="gensym.html">
+<LINK REL=next HREF="nb_set.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+dt.multidef
+{ background-color: #c8ffc7;
+}
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #202020;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text { display: none; }
+sup.fn span {display: none;}
+sup:hover span
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="gensym.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="nb_set.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:A.12"><SPAN class="sec-nr">A.12</SPAN> <SPAN class="sec-title">library(lists): 
+List Manipulation</SPAN></A></H2>
+
+<P><A NAME="sec:lists"></A>
+
+<P>This library provides commonly accepted basic predicates for list 
+manipulation in the Prolog community. Some additional list manipulations 
+are built-in. See e.g., <A class="pred" href="builtinlist.html#memberchk/2">memberchk/2</A>, <A class="pred" href="builtinlist.html#length/2">length/2</A>.
+
+<P>The implementation of this library is copied from many places. These 
+include: "The Craft of Prolog", the DEC-10 Prolog library (LISTRO.PL) 
+and the YAP lists library.
+
+<DL class="latex">
+<DT class="pubdef"><A NAME="member/2"><STRONG>member</STRONG>(<VAR>?Elem, 
+?List</VAR>)</A></DT>
+<DD class="defbody">
+True if <VAR>Elem</VAR> is a member of <VAR>List</VAR>. The SWI-Prolog 
+definition differs from the classical one. Our definition avoids 
+unpacking each list element twice and provides determinism on the last 
+element. E.g. this is deterministic:
+
+<PRE class="code">
+    member(X, [One]).
+</PRE>
+
+<DL>
+<DT><B>author</B><DD> Gertjan van Noord
+</DL>
+
+</DD>
+<DT class="pubdef"><A NAME="append/3"><STRONG>append</STRONG>(<VAR>?List1, 
+?List2, ?List1AndList2</VAR>)</A></DT>
+<DD class="defbody">
+<VAR>List1AndList2</VAR> is the concatination of <VAR>List1</VAR> and <VAR>List2</VAR></DD>
+<DT class="pubdef"><A NAME="append/2"><STRONG>append</STRONG>(<VAR>+ListOfLists, 
+?List</VAR>)</A></DT>
+<DD class="defbody">
+Concatenate a list of lists. Is true if Lists is a list of lists, and <VAR>List</VAR> 
+is the concatenation of these lists.
+<TABLE class="paramlist">
+<TR VALIGN=top><TD><VAR>ListOfLists</VAR> </TD><TD>must be a list of 
+-possibly- partial lists </TD></TR>
+</TABLE>
+
+</DD>
+<DT class="pubdef"><A NAME="prefix/2"><STRONG>prefix</STRONG>(<VAR>?Part, 
+?Whole</VAR>)</A></DT>
+<DD class="defbody">
+True iff <VAR>Part</VAR> is a leading substring of <VAR>Whole</VAR>. 
+This is the same as append(<VAR>Part</VAR>, _, <VAR>Whole</VAR>).</DD>
+<DT class="pubdef"><A NAME="select/3"><STRONG>select</STRONG>(<VAR>?Elem, 
+?List1, ?List2</VAR>)</A></DT>
+<DD class="defbody">
+Is true when <VAR>List1</VAR>, with <VAR>Elem</VAR> removed results in <VAR>List2</VAR>.</DD>
+<DT class="pubdef"><span class="pred-tag">[semidet]</span><A NAME="selectchk/3"><STRONG>selectchk</STRONG>(<VAR>+Elem, 
++List, -Rest</VAR>)</A></DT>
+<DD class="defbody">
+Semi-deterministic removal of first element in <VAR>List</VAR> that 
+unifies
+<VAR>Elem</VAR>.</DD>
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="select/4"><STRONG>select</STRONG>(<VAR>?X, 
+?XList, ?Y, ?YList</VAR>)</A></DT>
+<DD class="defbody">
+Is true when select(<VAR>X</VAR>, <VAR>XList</VAR>) and select(<VAR>Y</VAR>, <VAR>YList</VAR>) 
+are true, <VAR>X</VAR> and <VAR>Y</VAR> appear in the same locations of 
+their respective lists and same_length(<VAR>XList</VAR>, <VAR>YList</VAR>) 
+is true. A typical use for this predicate is to <I>replace</I> an 
+element:
+
+<PRE class="code">
+?- select(b, [a,b,c], 2, X).
+X = [a, 2, c] ;
+X = [a, b, c].
+</PRE>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[semidet]</span><A NAME="selectchk/4"><STRONG>selectchk</STRONG>(<VAR>X, 
+XList, Y, YList</VAR>)</A></DT>
+<DD class="defbody">
+Semi-deterministic version of <A class="pred" href="lists.html#select/4">select/4</A>.</DD>
+<DT class="pubdef"><A NAME="nextto/3"><STRONG>nextto</STRONG>(<VAR>?X, 
+?Y, ?List</VAR>)</A></DT>
+<DD class="defbody">
+True of <VAR>Y</VAR> follows <VAR>X</VAR> in <VAR>List</VAR>.</DD>
+<DT class="pubdef"><A NAME="delete/3"><STRONG>delete</STRONG>(<VAR>?List1, 
+?Elem, ?List2</VAR>)</A></DT>
+<DD class="defbody">
+Is true when Lis1, with all occurences of <VAR>Elem</VAR> deleted 
+results in
+<VAR>List2</VAR>.
+
+<DL>
+<DT><B>See also</B><DD>
+<A class="pred" href="lists.html#select/3">select/3</A>, <A class="pred" href="lists.html#subtract/3">subtract/3</A>.
+<DT><B>deprecated</B><DD> There are too many ways in which one might 
+want to delete elements from a list to justify the name. Think of 
+matching (= vs. <CODE>==</CODE>), delete first/all, be deterministic or 
+not.
+</DL>
+
+</DD>
+<DT class="pubdef"><A NAME="nth0/3"><STRONG>nth0</STRONG>(<VAR>?Index, 
+?List, ?Elem</VAR>)</A></DT>
+<DD class="defbody">
+True if <VAR>Elem</VAR> is the <VAR>Index</VAR>'th element of <VAR>List</VAR>. 
+Counting starts at
+
+<P>
+<OL class="latex">
+<LI>This is a faster version of the original SWI-Prolog predicate.
+</OL>
+</DD>
+<DT class="pubdef"><A NAME="nth1/3"><STRONG>nth1</STRONG>(<VAR>?Index, 
+?List, ?Elem</VAR>)</A></DT>
+<DD class="defbody">
+Is true when <VAR>Elem</VAR> is the <VAR>Index</VAR>'th element of <VAR>List</VAR>. 
+Counting starts at 1. This is a faster version of the original 
+SWI-Prolog predicate.</DD>
+<DT class="pubdef"><A NAME="last/2"><STRONG>last</STRONG>(<VAR>?List, 
+?Last</VAR>)</A></DT>
+<DD class="defbody">
+Succeeds if `<VAR>Last</VAR>' unifies with the last element of `<VAR>List</VAR>'.
+
+<DL>
+<DT><B>Compatibility</B><DD> There is no de-facto standard for the 
+argument order of
+<A class="pred" href="lists.html#last/2">last/2</A>. Be careful when 
+porting code or use append(_, [<VAR>Last</VAR>], <VAR>List</VAR>) as a 
+portable alternative.
+</DL>
+
+</DD>
+<DT class="pubdef"><A NAME="reverse/2"><STRONG>reverse</STRONG>(<VAR>?List1, 
+?List2</VAR>)</A></DT>
+<DD class="defbody">
+Is true when the elements of <VAR>List2</VAR> are in reverse order 
+compared to
+<VAR>List1</VAR>.</DD>
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="permutation/2"><STRONG>permutation</STRONG>(<VAR>?Xs, 
+?Ys</VAR>)</A></DT>
+<DD class="defbody">
+permutation(<VAR>Xs</VAR>, <VAR>Ys</VAR>) is true when <VAR>Xs</VAR> is 
+a permutation of <VAR>Ys</VAR>. This can solve for <VAR>Ys</VAR> given <VAR>Xs</VAR> 
+or <VAR>Xs</VAR> given <VAR>Ys</VAR>, or even enumerate <VAR>Xs</VAR> 
+and <VAR>Ys</VAR> together.</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="flatten/2"><STRONG>flatten</STRONG>(<VAR>+List1, 
+?List2</VAR>)</A></DT>
+<DD class="defbody">
+Is true it <VAR>List2</VAR> is a non nested version of <VAR>List1</VAR>.
+
+<DL>
+<DT><B>See also</B><DD>
+<A class="pred" href="lists.html#append/2">append/2</A>
+<DT><B>deprecated</B><DD> Ending up needing <SPAN class="pred-ext">flatten/3</SPAN> 
+often indicates, like <A class="pred" href="lists.html#append/3">append/3</A> 
+for appending two lists, a bad design. Efficient code that generates 
+lists from generated small lists must use difference lists, often 
+possible through grammar rules for optimal readability.
+</DL>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="sumlist/2"><STRONG>sumlist</STRONG>(<VAR>+List, 
+-Sum</VAR>)</A></DT>
+<DD class="defbody">
+<VAR>Sum</VAR> is the result of adding all numbers in <VAR>List</VAR>.</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="max_list/2"><STRONG>max_list</STRONG>(<VAR>+List:list(number), 
+-Max:number</VAR>)</A></DT>
+<DD class="defbody">
+True if <VAR>Max</VAR> is the largest number in <VAR>List</VAR>.</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="min_list/2"><STRONG>min_list</STRONG>(<VAR>+List:list(number), 
+-Min:number</VAR>)</A></DT>
+<DD class="defbody">
+True if <VAR>Min</VAR> is the largest number in <VAR>List</VAR>.</DD>
+<DT class="pubdef"><span class="pred-tag">[semidet]</span><A NAME="numlist/3"><STRONG>numlist</STRONG>(<VAR>+Low, 
++High, -List</VAR>)</A></DT>
+<DD class="defbody">
+<VAR>List</VAR> is a list [<VAR>Low</VAR>, <VAR>Low</VAR>+1, ... <VAR>High</VAR>]. 
+Fails if <VAR>High</VAR> <VAR>&lt;</VAR> <VAR>Low</VAR>.
+
+<DL>
+<DT><B>Errors</B><DD>- type_error(integer, <VAR>Low</VAR>) <BR>
+- type_error(integer, <VAR>High</VAR>)
+</DL>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="is_set/1"><STRONG>is_set</STRONG>(<VAR>@Set</VAR>)</A></DT>
+<DD class="defbody">
+True if <VAR>Set</VAR> is a proper list without duplicates. Equivalence 
+is based on <A class="pred" href="compare.html#==/2">==/2</A>. The 
+implementation uses <A class="pred" href="builtinlist.html#sort/2">sort/2</A>, 
+which implies that the complexity is N*log(N) and the predicate may 
+cause a resource-error. There are no other error conditions.</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="list_to_set/2"><STRONG>list_to_set</STRONG>(<VAR>+List, 
+?Set</VAR>)</A></DT>
+<DD class="defbody">
+True when <VAR>Set</VAR> has the same element as <VAR>List</VAR> in the 
+same order. The left-most copy of the duplicate is retained. The 
+complexity of this operation is <CODE>|</CODE><VAR>List</VAR><CODE>|</CODE><CODE>^</CODE>2.
+
+<DL>
+<DT><B>See also</B><DD>
+<A class="pred" href="builtinlist.html#sort/2">sort/2</A>.
+</DL>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="intersection/3"><STRONG>intersection</STRONG>(<VAR>+Set1, 
++Set2, -Set3</VAR>)</A></DT>
+<DD class="defbody">
+True if <VAR>Set3</VAR> unifies with the intersection of <VAR>Set1</VAR> 
+and <VAR>Set2</VAR>. The complexity of this predicate is <CODE>|</CODE><VAR>Set1</VAR><CODE>|</CODE>*<CODE>|</CODE><VAR>Set2</VAR><CODE>|</CODE>
+
+<DL>
+<DT><B>See also</B><DD>
+<A class="pred" href="ordsets.html#ord_intersection/3">ord_intersection/3</A>.
+</DL>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="union/3"><STRONG>union</STRONG>(<VAR>+Set1, 
++Set2, -Set3</VAR>)</A></DT>
+<DD class="defbody">
+True if <VAR>Set3</VAR> unifies with the union of <VAR>Set1</VAR> and <VAR>Set2</VAR>. 
+The complexity of this predicate is <CODE>|</CODE><VAR>Set1</VAR><CODE>|</CODE>*<CODE>|</CODE><VAR>Set2</VAR><CODE>|</CODE>
+
+<DL>
+<DT><B>See also</B><DD>
+<A class="pred" href="ordsets.html#ord_union/3">ord_union/3</A>.
+</DL>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[semidet]</span><A NAME="subset/2"><STRONG>subset</STRONG>(<VAR>+SubSet, 
++Set</VAR>)</A></DT>
+<DD class="defbody">
+True if all elements of <VAR>SubSet</VAR> belong to <VAR>Set</VAR> as 
+well. Membership test is based on <A class="pred" href="builtinlist.html#memberchk/2">memberchk/2</A>. 
+The complexity is <CODE>|</CODE><VAR>SubSet</VAR><CODE>|</CODE>*<CODE>|</CODE><VAR>Set</VAR><CODE>|</CODE>.
+
+<DL>
+<DT><B>See also</B><DD>
+<A class="pred" href="ordsets.html#ord_subset/2">ord_subset/2</A>.
+</DL>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="subtract/3"><STRONG>subtract</STRONG>(<VAR>+Set, 
++Delete, -Result</VAR>)</A></DT>
+<DD class="defbody">
+<VAR>Delete</VAR> all elements from `<VAR>Set</VAR>' that occur in `<VAR>Delete</VAR>' 
+(a set) and unify the result with `<VAR>Result</VAR>'. Deletion is based 
+on unification using <A class="pred" href="builtinlist.html#memberchk/2">memberchk/2</A>. 
+The complexity is <CODE>|</CODE><VAR>Delete</VAR><CODE>|</CODE>*<CODE>|</CODE><VAR>Set</VAR><CODE>|</CODE>.
+
+<DL>
+<DT><B>See also</B><DD>
+<A class="pred" href="ordsets.html#ord_subtract/3">ord_subtract/3</A>.
+</DL>
+
+</DD>
+</DL>
+
+<P></BODY></HTML>
