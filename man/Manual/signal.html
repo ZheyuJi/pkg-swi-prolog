@@ -1,0 +1,257 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>SWI-Prolog 5.11.18 Reference Manual: Section 4.10</TITLE><LINK REL=home HREF="index.html">
+<LINK REL=contents HREF="Contents.html">
+<LINK REL=index HREF="DocIndex.html">
+<LINK REL=summary HREF="summary.html">
+<LINK REL=previous HREF="exception.html">
+<LINK REL=next HREF="DCG.html">
+<STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+dt.multidef
+{ background-color: #c8ffc7;
+}
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #202020;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text { display: none; }
+sup.fn span {display: none;}
+sup:hover span
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<DIV class="navigate"><A class="nav" href="index.html"><IMG SRC="home.gif" BORDER=0 ALT="Home"></A>
+<A class="nav" href="Contents.html"><IMG SRC="index.gif" BORDER=0 ALT="Contents"></A>
+<A class="nav" href="DocIndex.html"><IMG SRC="yellow_pages.gif" BORDER=0 ALT="Index"></A>
+<A class="nav" href="summary.html"><IMG SRC="info.gif" BORDER=0 ALT="Summary"></A>
+<A class="nav" href="exception.html"><IMG SRC="prev.gif" BORDER=0 ALT="Previous"></A>
+<A class="nav" href="DCG.html"><IMG SRC="next.gif" BORDER=0 ALT="Next"></A>
+</DIV>
+
+<H2><A NAME="sec:4.10"><SPAN class="sec-nr">4.10</SPAN> <SPAN class="sec-title">Handling 
+signals</SPAN></A></H2>
+
+<A NAME="sec:signal"></A>
+
+<P>As of version 3.1.0, SWI-Prolog is capable to handle software 
+interrupts (signals) in Prolog as well as in foreign (C) code (see <A class="sec" href="foreigninclude.html">section 
+9.4.13</A>).
+
+<P>Signals are used to handle internal errors (execution of a 
+non-existing CPU instruction, arithmetic domain errors, illegal memory 
+access, resource overflow, etc.), as well as for dealing asynchronous 
+inter-process communication.
+
+<P>Signals are defined by the POSIX standard and part of all Unix 
+machines. The MS-Windows Win32 provides a subset of the signal handling 
+routines, lacking the vital functionality to raise a signal in another 
+thread for achieving asynchronous inter-process (or inter-thread) 
+communication (Unix kill() function).
+
+<DL class="latex">
+<DT class="pubdef"><A NAME="on_signal/3"><STRONG>on_signal</STRONG>(<VAR>+Signal, 
+-Old, :New</VAR>)</A></DT>
+<DD class="defbody">
+Determines the reaction on <VAR>Signal</VAR>. <VAR>Old</VAR> is unified 
+with the old behaviour, while the behaviour is switched to <VAR>New</VAR>. 
+As with similar environment-control predicates, the current value is 
+retrieved using <CODE>on_signal(Signal, Current, Current)</CODE>.
+
+<P>The action description is an atom denoting the name of the predicate 
+that will be called if <VAR>Signal</VAR> arrives. <A NAME="idx:onsignal3:600"></A><A class="pred" href="signal.html#on_signal/3">on_signal/3</A> 
+is a meta-predicate, which implies that &lt;<VAR>Module</VAR>&gt;:&lt;<VAR>Name</VAR>&gt; 
+refers the &lt;<VAR>Name</VAR>&gt;/1 in the module &lt;<VAR>Module</VAR>&gt;. 
+The handler is called with a single argument: the name of the signal as 
+an atom. The Prolog names for signals is explained below.
+
+<P>Two predicate-names have special meaning. <CODE>throw</CODE> implies 
+Prolog will map the signal onto a Prolog exception as described in
+<A class="sec" href="exception.html">section 4.9</A>. <CODE>default</CODE> 
+resets the handler to the settings active before SWI-Prolog manipulated 
+the handler.
+
+<P>Signals bound to a foreign function through <A class="func" href="foreigninclude.html#PL_signal()">PL_signal()</A> 
+are reported using the term <CODE>$foreign_function(Address)</CODE>.
+
+<P>After receiving a signal mapped to <CODE>throw</CODE>, the exception 
+raised has the structure
+<BLOCKQUOTE><TT>error(signal(&lt;<VAR>SigName</VAR>&gt;, &lt;<VAR>SigNum</VAR>&gt;), &lt;<VAR>Context</VAR>&gt;)
+</TT></BLOCKQUOTE>
+
+<P>The signal names are defined by the POSIX standard as symbols of the 
+form <TT>SIG</TT>&lt;<VAR>SIGNAME</VAR>&gt;. The Prolog name for a 
+signal is the lowercase version of &lt;<VAR>SIGNAME</VAR>&gt;. The 
+predicate <A NAME="idx:currentsignal3:601"></A><A class="pred" href="signal.html#current_signal/3">current_signal/3</A> 
+may be used to map between names and signals.
+
+<P>Initially, some signals are mapped to <CODE>throw</CODE>, while all 
+other signals are <CODE>default</CODE>. The following signals throw an 
+exception:
+<CODE>fpe</CODE>, <CODE>alrm</CODE>, <CODE>xcpu</CODE>, <CODE>xfsz</CODE> 
+and <CODE>vtalrm</CODE>.</DD>
+<DT class="pubdef"><A NAME="current_signal/3"><STRONG>current_signal</STRONG>(<VAR>?Name, 
+?Id, ?Handler</VAR>)</A></DT>
+<DD class="defbody">
+Enumerate the currently defined signal handling. <VAR>Name</VAR> is the 
+signal name, <VAR>Id</VAR> is the numerical identifier and <VAR>Handler</VAR> 
+is the currently defined handler (see <A NAME="idx:onsignal3:602"></A><A class="pred" href="signal.html#on_signal/3">on_signal/3</A>).
+</DD>
+</DL>
+
+<H3><A NAME="sec:4.10.1"><SPAN class="sec-nr">4.10.1</SPAN> <SPAN class="sec-title">Notes 
+on signal handling</SPAN></A></H3>
+
+<P>Before deciding to deal with signals in your application, please 
+consider the following:
+
+<P>
+<UL class="latex">
+<LI><I>Portability</I><BR>
+On MS-Windows, the signal interface is severely limited. Different Unix 
+brands support different sets of signals, and the relation between 
+signal name and number may vary. Currently, the system only supports 
+signals numbered 1 to 32<SUP class="fn">34<SPAN class="fn-text">TBD: the 
+system should support the Unix realtime signals</SPAN></SUP>. Installing 
+a signal outside the limited set of supported signals in MS-Windows 
+crashes the application.
+
+<P>
+<LI><I>Safety</I><BR>
+Immediately delivered signals (see below) are unsafe. This implies that 
+foreign functions called from a handler cannot safely use the SWI-Prolog 
+API and cannot use C longjmp(). Handlers defined as <CODE>throw</CODE> 
+are unsafe. Handlers defined to call a predicate are safe. Note that the 
+predicate can call <A NAME="idx:throw1:603"></A><A class="pred" href="exception.html#throw/1">throw/1</A>, 
+but the delivery is delayed until Prolog is in a safe state.
+
+<P>The C-interface described in <A class="sec" href="foreigninclude.html">section 
+9.4.13</A> provides the option
+<CODE>PL_SIGSYNC</CODE> to select either safe synchronous or unsafe 
+asynchronous delivery.
+
+<P>
+<LI><I>Time of delivery</I><BR>
+Using <CODE>throw</CODE> or a foreign handler, signals are delivered 
+immediately (as defined by the OS). When using a Prolog predicate, 
+delivery is delayed to a safe moment. Blocking system calls or foreign 
+loops may cause long delays. Foreign code can improve on that by calling <A class="func" href="foreigninclude.html#PL_handle_signals()">PL_handle_signals()</A>.
+
+<P>Signals are blocked when the garbage collector is active.
+</UL>
+
+<P></BODY></HTML>

@@ -1,0 +1,536 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>SWI-Prolog interface to R</TITLE><STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+dt.multidef
+{ background-color: #c8ffc7;
+}
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #202020;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text { display: none; }
+sup.fn span {display: none;}
+sup:hover span
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white"> 
+
+<P>
+<DIV class="title">SWI-Prolog interface to R</DIV>
+<DIV class="author">Nicos Angelopoulos</DIV>
+<DIV class="abstract">
+<DIV class="abstract-title">Abstract</DIV> This article documents the 
+package R, a library to talk to R system for Statistical Computing.
+</DIV>
+
+<P>
+
+<H2><A NAME="sec:1"><SPAN class="sec-nr">1</SPAN> <SPAN class="sec-title">R.pl: 
+R session</SPAN></A></H2>
+
+<P><A NAME="sec:R"></A>
+
+<DL>
+<DT><B>author</B><DD> Nicos Angelopoulos
+<DT><B>version</B><DD> 0:0:7<DT><B>See also</B><DD>- 
+ensure_loaded(library('<CODE>../doc/packages/examples/R/r_demo.pl</CODE>')) <BR>
+- <A class="url" href="http://www.r-project.org/">http://www.r-project.org/</A>
+<DT><B>copyright</B><DD> Nicos Angelopoulos
+<DT><B>license</B><DD> YAP: Artistic
+</DL>
+
+<P>This library facilitates interaction with the R system for 
+statistical computing. It assumes an R executable in $PATH or can be 
+given a location to a functioning R executable (see <A class="pred" href="#r_bin/1">r_bin/1</A> 
+and <A class="pred" href="#r_open/1">r_open/1</A> for details on how R 
+is located). R is ran as a slave with Prolog writing on and reading from 
+the associated streams. Multiple sessions can be managed simultaneously. 
+Each has 3 main components: a name or alias, a term structure holding 
+the communicating streams and a number of associated data items.
+
+<P>The library attempts to ease the translation between prolog terms and 
+R inputs. Thus, Prolog term <CODE>x &lt;- c(1,2,3)</CODE> is translated 
+to atomic <CODE>'x &lt;- c(1,2,3)'</CODE> which is then passed on to R. 
+That is, <CODE>&lt;-</CODE> is a defined/recognised operator. <CODE>X &lt;- c(1,2,3)</CODE>, 
+where X is a variable, instantiates X to the list <CODE>[1,2,3]</CODE>. 
+Also 'Atom' <VAR>&lt;</VAR>- [x1,...,xn] translates to R code: Atom <VAR>&lt;</VAR>- 
+c(x1,...,xn). Currently vectors, matrices and (R)-lists are translated 
+in this fashion. The goal "A <VAR>&lt;</VAR>- B" translates to r_in( A <VAR>&lt;</VAR>- 
+B ).
+
+<P>Although the library is primarily meant to be used as a research 
+tool, it still provides access to many functions of the R system that 
+may render it useful to a wider audience. The library provides access to 
+R's plethora of vector and scalar functions. We adicipate that of 
+particular interest to Prolog programmers might be the fact that the 
+library can be used to create plots from Prolog objects. Notably 
+creating plots from lists of numbers.
+
+<P>There is a known issue with X11 when R is started without 
+--interactive. <CODE>R.pl</CODE> runs by default the --interactive flag 
+and try to surpress echo output. If you do get weird output, try giving 
+to r_open, option with(non_interactive). This is suboptimal for some 
+tasks, but might resolve other issues. There is a issue with Macs, where 
+--interactive doesnot work. On Macs, you should use 
+with(non_interactive). This can also be achieved using <A class="pred" href="#settings/2">settings/2</A>.
+
+<P>These capabilities are illustrated in the following example :
+
+<PRE class="code">
+rtest :-
+     r_open,
+     y &lt;- rnorm(50),
+     r_print( y ),
+     x &lt;- rnorm(y),
+     r_in( x11(width=5,height=3.5) ),
+     r_in( plot(x,y) ),
+     write( 'Press Return to continue...' ), nl,
+     read_line_to_codes( user_input, _ ),
+     r_print( 'dev.off()' ),
+     Y &lt;- y,
+     write( y(Y) ), nl,
+     findall( Zx, between(1,9,Zx), Z ),
+     z &lt;- Z,
+     r_print( z ),
+     cars &lt;- c(1, 3, 6, 4, 9),
+     r_in(pie(cars)),
+     write( 'Press Return to continue...' ), nl,
+     read_line_to_codes( user_input, _ ),
+     r_close.
+</PRE>
+
+<DL class="latex">
+<DT class="pubdef"><A NAME="r_bin/1"><STRONG>r_bin</STRONG>(<VAR>?Rbin</VAR>)</A></DT>
+<DD class="defbody">
+Register the default R location, +<VAR>Rbin</VAR>, or interrogate the 
+current location: -<VAR>Rbin</VAR>. When interrogating <VAR>Rbin</VAR> 
+is bound to the R binary that would be used by an <A class="pred" href="#r_open/0">r_open/0</A>. 
+The order of search is: registered location, environment variable 
+'R_BIN' and path defined. On unix systems path defined is the first R 
+executable in $PATH. On MS wins it is the latest Rterm.exe found by 
+expand_file_name( 'C:/Program Files/R/R-*/bin/Rterm.exe', Candidates ). 
+The value <VAR>Rbin</VAR> <CODE>==</CODE> <CODE>retract</CODE> retracts 
+the current registered location.
+<VAR>Rbin</VAR> <CODE>==</CODE> <CODE>test</CODE>, succeeds if an R 
+location has been registered.</DD>
+<DT class="pubdef"><A NAME="r_open/0"><STRONG>r_open</STRONG></A></DT>
+<DD class="defbody">
+Open a new R session. Same as r_open([]).</DD>
+<DT class="pubdef"><A NAME="r_start/0"><STRONG>r_start</STRONG></A></DT>
+<DD class="defbody">
+Only start and session via <A class="pred" href="#r_open/1">r_open/1</A>, 
+if no open session existss.</DD>
+<DT class="pubdef"><A NAME="r_open/1"><STRONG>r_open</STRONG>(<VAR>+Opts</VAR>)</A></DT>
+<DD class="defbody">
+Open a new R session with optional list of arguments. <VAR>Opts</VAR> 
+should be a list of the following
+
+<DL class="latex">
+<DT><STRONG>alias</STRONG>(<VAR>Alias</VAR>)</DT>
+<DD class="defbody">
+Name for the session. If absent or a variable an opaque term is 
+generated.
+</DD>
+<DT><STRONG>assert</STRONG>(<VAR>A</VAR>)</DT>
+<DD class="defbody">
+Assert token. By default session opened last is the default session (see <A class="pred" href="#default_r_session/1">default_r_session/1</A>). 
+Using A = <CODE>z</CODE> will push the session to the bottom of the 
+pile.
+</DD>
+<DT><STRONG>at_r_halt</STRONG>(<VAR>RHAction</VAR>)</DT>
+<DD class="defbody">
+R slaves used to halt when they encounter an error. This is no longer 
+the case but this option is still present in case it is useful in the 
+future. This option provides a handle to changing the behaviour of the 
+session when a halt of the R-slave occurs. RHAction should be one of <CODE>abort</CODE>, <CODE>fail</CODE>, <SPAN class="pred-ext">call/1</SPAN>,
+<SPAN class="pred-ext">call_ground/1</SPAN>, <CODE>reinstate</CODE> or <CODE>restart</CODE>. 
+Default is <CODE>fail</CODE>. When RHAction is <CODE>reinstate</CODE>, 
+the history of the session is used to roll-back all the commands sent so 
+far. At `restart' the session is restarted with same name and options, 
+but history is not replayed.
+</DD>
+<DT><STRONG>copy</STRONG>(<VAR>CopyTo, CopyWhat</VAR>)</DT>
+<DD class="defbody">
+Records interaction with R to a file/stream. CopyTo should be one of <CODE>null</CODE>, 
+stream(Stream), OpenStream, AtomicFile, once(File) or many(File). In the 
+case of many(File), file is opened and closed at each write operation. 
+CopyWhat should be one of <CODE>both</CODE>, <CODE>in</CODE>, <CODE>out</CODE> 
+or <CODE>none</CODE>. Default is no recording (CopyTo = <CODE>null</CODE>).
+</DD>
+<DT><STRONG>ssh</STRONG>(<VAR>Host</VAR>)
+<DT><STRONG>ssh</STRONG>(<VAR>Host, Dir</VAR>)</DT>
+<DD class="defbody">
+Run R on Host with start directory Dir. Dir defaults to /tmp. Not 
+supported on MS Windows.
+</DD>
+<DT><STRONG>rbin</STRONG>(<VAR>Rbin</VAR>)</DT>
+<DD class="defbody">
+R executable location to use for this open operation. If the option is 
+not present binary registered with <A class="pred" href="#r_bin/1">r_bin/1</A> 
+and environment variable R_BIN are examined for the full location of the 
+R binary. In MS windows Rbin should point to Rterm.exe. Also see <A class="pred" href="#r_bin/1">r_bin/1</A>.
+</DD>
+<DT><STRONG>with</STRONG>(<VAR>With</VAR>)</DT>
+<DD class="defbody">
+With is in [environ,non_interactive,restore,save]. The default behaviour 
+is to start the R executable with flags <CODE>interactive --no-environ --no-restore --no-save</CODE>. 
+For each With value found in <VAR>Opts</VAR> the corresponding
+<CODE>--no-</CODE> flag is removed. In the case of non_interactive, it 
+removes the default --interactive. This makes the connection more 
+robust, and allows proper x11 plots in linux. However you get alot all 
+the echos of what you pipe in, back from R.
+</DD>
+</DL>
+
+<DT class="pubdef"><A NAME="r_close/0"><STRONG>r_close</STRONG></A></DT>
+<DD class="defbody">
+Close the default R session.</DD>
+<DT class="pubdef"><A NAME="r_close/1"><STRONG>r_close</STRONG>(<VAR>+R</VAR>)</A></DT>
+<DD class="defbody">
+Close the named <VAR>R</VAR> session.</DD>
+<DT class="pubdef"><A NAME="r_in/1"><STRONG>r_in</STRONG>(<VAR>+Rcmd</VAR>)</A></DT>
+<DD class="defbody">
+Push <VAR>Rcmd</VAR> to the default R session. Output and Errors will be 
+printed to the terminal.</DD>
+<DT class="pubdef"><A NAME="r_in/2"><STRONG>r_in</STRONG>(<VAR>+R, +Rcmd</VAR>)</A></DT>
+<DD class="defbody">
+As <A class="pred" href="#r_in/1">r_in/1</A> but for session <VAR>R</VAR>.</DD>
+<DT class="pubdef"><A NAME="r_push/1"><STRONG>r_push</STRONG>(<VAR>+Rcmd</VAR>)</A></DT>
+<DD class="defbody">
+As <A class="pred" href="#r_in/1">r_in/1</A> but does not consume error 
+or output streams.</DD>
+<DT class="pubdef"><A NAME="r_push/2"><STRONG>r_push</STRONG>(<VAR>+R, 
++Rcmd</VAR>)</A></DT>
+<DD class="defbody">
+As <A class="pred" href="#r_push/1">r_push/1</A> but for named session.</DD>
+<DT class="pubdef"><A NAME="r_out/2"><STRONG>r_out</STRONG>(<VAR>+Rcmd, 
+-Lines</VAR>)</A></DT>
+<DD class="defbody">
+Push <VAR>Rcmd</VAR> to default R session and grab output lines <VAR>Lines</VAR> 
+as a list of code lists.</DD>
+<DT class="pubdef"><A NAME="r_out/3"><STRONG>r_out</STRONG>(<VAR>+R, 
++Rcmd, -Lines</VAR>)</A></DT>
+<DD class="defbody">
+As <A class="pred" href="#r_out/2">r_out/2</A> but for named session <VAR>R</VAR>.</DD>
+<DT class="pubdef"><A NAME="r_err/3"><STRONG>r_err</STRONG>(<VAR>+Rcmd, 
+-Lines, -ErrLines</VAR>)</A></DT>
+<DD class="defbody">
+Push <VAR>Rcmd</VAR> to default R session and grab output lines <VAR>Lines</VAR> 
+as a list of code lists. Error lines are in <VAR>ErrLines</VAR>.</DD>
+<DT class="pubdef"><A NAME="r_err/4"><STRONG>r_err</STRONG>(<VAR>+R, 
++Rcmd, -Lines, -ErrLines</VAR>)</A></DT>
+<DD class="defbody">
+As <A class="pred" href="#r_err/3">r_err/3</A> but for named session <VAR>R</VAR>.</DD>
+<DT class="pubdef"><A NAME="r_print/1"><STRONG>r_print</STRONG>(<VAR>+X</VAR>)</A></DT>
+<DD class="defbody">
+A shortcut for r_in( print(<VAR>X</VAR>) ).</DD>
+<DT class="pubdef"><A NAME="r_print/2"><STRONG>r_print</STRONG>(<VAR>+R, 
++X</VAR>)</A></DT>
+<DD class="defbody">
+As <A class="pred" href="#r_print/1">r_print/1</A> but for named session <VAR>R</VAR>.</DD>
+<DT class="pubdef"><A NAME="r_lines_print/1"><STRONG>r_lines_print</STRONG>(<VAR>+Lines</VAR>)</A></DT>
+<DD class="defbody">
+Print a list of code lists (<VAR>Lines</VAR>) to the user_output.
+<VAR>Lines</VAR> would normally be read of an R stream.</DD>
+<DT class="pubdef"><A NAME="r_lines_print/2"><STRONG>r_lines_print</STRONG>(<VAR>+Lines, 
++Type</VAR>)</A></DT>
+<DD class="defbody">
+As <A class="pred" href="#r_lines_print/1">r_lines_print/1</A> but <VAR>Type</VAR> 
+declares whether to treat lines as output or error response. In the 
+latter case they are written on user_error and prefixed with '!'.</DD>
+<DT class="pubdef"><A NAME="r_lines_print/3"><STRONG>r_lines_print</STRONG>(<VAR>+Lines, 
++Type, +Stream</VAR>)</A></DT>
+<DD class="defbody">
+As <A class="pred" href="#r_lines_print/3">r_lines_print/3</A> but <VAR>Lines</VAR> 
+are written on <VAR>Stream</VAR>.</DD>
+<DT class="pubdef"><A NAME="r_lib/1"><STRONG>r_lib</STRONG>(<VAR>+L</VAR>)</A></DT>
+<DD class="defbody">
+A shortcut for r_in( library(X) ).</DD>
+<DT class="pubdef"><A NAME="r_lib/2"><STRONG>r_lib</STRONG>(<VAR>+R, +L</VAR>)</A></DT>
+<DD class="defbody">
+As <A class="pred" href="#r_lib/1">r_lib/1</A> but for named session <VAR>R</VAR>.</DD>
+<DT class="pubdef"><A NAME="r_flush/0"><STRONG>r_flush</STRONG></A></DT>
+<DD class="defbody">
+Flush default R's output and error on to the terminal.</DD>
+<DT class="pubdef"><A NAME="r_flush/1"><STRONG>r_flush</STRONG>(<VAR>+R</VAR>)</A></DT>
+<DD class="defbody">
+As <A class="pred" href="#r_flush/0">r_flush/0</A> but for session <VAR>R</VAR>.</DD>
+<DT class="pubdef"><A NAME="r_flush_onto/2"><STRONG>r_flush_onto</STRONG>(<VAR>+SAliases, 
+-Onto</VAR>)</A></DT>
+<DD class="defbody">
+Flush stream aliases to code lists <VAR>Onto</VAR>. <VAR>SAliases</VAR> 
+should be one of, or a list of, [output,error].</DD>
+<DT class="pubdef"><A NAME="r_flush_onto/3"><STRONG>r_flush_onto</STRONG>(<VAR>+R, 
++SAliases, -Onto</VAR>)</A></DT>
+<DD class="defbody">
+As <A class="pred" href="#r_flush_onto/2">r_flush_onto/2</A> for 
+specified session <VAR>R</VAR>.</DD>
+<DT class="pubdef"><A NAME="current_r_session/1"><STRONG>current_r_session</STRONG>(<VAR>?R</VAR>)</A></DT>
+<DD class="defbody">
+True if <VAR>R</VAR> is the name of current <VAR>R</VAR> session. Can be 
+used to enumerate all open sessions.</DD>
+<DT class="pubdef"><A NAME="current_r_session/3"><STRONG>current_r_session</STRONG>(<VAR>?R, 
+?S, ?D</VAR>)</A></DT>
+<DD class="defbody">
+True if <VAR>R</VAR> is an open session with streams <VAR>S</VAR> and 
+data <VAR>D</VAR> (see introduction to the library).</DD>
+<DT class="pubdef"><A NAME="default_r_session/1"><STRONG>default_r_session</STRONG>(<VAR>?R</VAR>)</A></DT>
+<DD class="defbody">
+True if <VAR>R</VAR> is the default session.</DD>
+<DT class="pubdef"><A NAME="r_streams_data/3"><STRONG>r_streams_data</STRONG>(<VAR>+SId, 
++Streams, -S</VAR>)</A></DT>
+<DD class="defbody">
+True if <VAR>Streams</VAR> is an R session streams structure and <VAR>S</VAR> 
+is its stream corresponding to identifier <VAR>SId</VAR>, which should 
+be one of [input,output,error].</DD>
+<DT class="pubdef"><A NAME="r_session_data/3"><STRONG>r_session_data</STRONG>(<VAR>+DId, 
++Data, -Datum</VAR>)</A></DT>
+<DD class="defbody">
+True if <VAR>Data</VAR> is a structure representing R session associated 
+data and <VAR>Datum</VAR> is its data item corresponding to data 
+identifier
+<VAR>DId</VAR>. <VAR>DId</VAR> should be in 
+[at_r_halt,copy_to,copy_this,interactive,version,opts].</DD>
+<DT class="pubdef"><A NAME="r_history/0"><STRONG>r_history</STRONG></A></DT>
+<DD class="defbody">
+Print on user_output the history of the default session.</DD>
+<DT class="pubdef"><A NAME="r_history/1"><STRONG>r_history</STRONG>(<VAR>-H</VAR>)</A></DT>
+<DD class="defbody">
+<VAR>H</VAR> unifies to the history list of the Rcmds fed into the 
+default session. Most recent command appears at the head of the list.</DD>
+<DT class="pubdef"><A NAME="r_history/2"><STRONG>r_history</STRONG>(<VAR>?R, 
+-H</VAR>)</A></DT>
+<DD class="defbody">
+As <A class="pred" href="#r_history/1">r_history/1</A> but for named 
+session <VAR>R</VAR>. It can be used to enumerate all histories. It 
+fails when no session is open.</DD>
+<DT class="pubdef"><A NAME="r_session_version/1"><STRONG>r_session_version</STRONG>(<VAR>-Version</VAR>)</A></DT>
+<DD class="defbody">
+Installed version. <VAR>Version</VAR> is of the form Major:Minor:Fix, 
+where all three are integers.</DD>
+<DT class="pubdef"><A NAME="r_verbosity/1"><STRONG>r_verbosity</STRONG>(<VAR>?Level</VAR>)</A></DT>
+<DD class="defbody">
+Set, +<VAR>Level</VAR>, or interrogate, -<VAR>Level</VAR>, the verbosity 
+level. +<VAR>Level</VAR> could be
+<CODE>false</CODE> (=0), <CODE>true</CODE> (=3) or an integer in {0,1,2,3}. 
+3 being the most verbose. The default is 0. -<VAR>Level</VAR> will 
+instantiate to the current verbosity level, an integer in {0,1,2,3}.</DD>
+<DT class="pubdef"><A NAME="r_bin_version/1"><STRONG>r_bin_version</STRONG>(<VAR>-Version</VAR>)</A></DT>
+<DD class="defbody">
+Get the version of R binary identified by <A class="pred" href="#r_bin/1">r_bin/1</A>. <VAR>Version</VAR> 
+will have the same structure as in <A class="pred" href="#r_session_version/1">r_session_version/1</A> 
+ie M:N:F.</DD>
+<DT class="pubdef"><A NAME="r_bin_version/2"><STRONG>r_bin_version</STRONG>(<VAR>+Rbin, 
+-Version</VAR>)</A></DT>
+<DD class="defbody">
+Get the version of R binary identified by +<VAR>Rbin</VAR>. <VAR>Version</VAR> 
+will have the same structure as in <A class="pred" href="#r_session_version/1">r_session_version/1</A> 
+ie M:N:F.</DD>
+<DT class="multidef"><span class="pred-tag">[multifile]</span><A NAME="settings/2"><STRONG>settings</STRONG>(<VAR>+Setting, 
++Value</VAR>)</A></DT>
+<DD class="defbody">
+Multifile hook-predicate that allows for user settings to sip through. 
+Currently the following are recognised:
+
+<DL class="latex">
+<DT><STRONG>r_open_opt</STRONG></DT>
+<DD class="defbody">
+</DD>
+</DL>
+
+<BLOCKQUOTE> These come after any options given explicitly to <A class="pred" href="#r_open/1">r_open/1</A>. 
+For example on a Mac to avoid issue with --interactive use the following 
+before querring <A class="pred" href="#r_open/0">r_open/0</A>,1.
+</BLOCKQUOTE>
+
+<PRE class="code">
+   :- multifile settings/2.
+   r_session:settings(r_open_opt,with(non_interactive)).
+</PRE>
+
+<P>
+<UL class="latex">
+<LI>atom_is_r_function expands atoms such as x11 to r function calls 
+x11()
+<LI><SPAN class="pred-ext">r_function_def/1</SPAN>
+
+<P>
+<CENTER>
+where the argument is an R function. This hook allows default argument 
+values to R functions. Only Arg=<VAR>Value</VAR> pairs are allowed.
+</CENTER>
+</UL>
+
+<PRE class="code">
+:- multifile settings/2.
+r_session:settings(r_function_def(x11),width=5).
+</PRE>
+
+<P></DD>
+</DL>
+
+<H1><A NAME="document-index">Index</A></H1>
+
+<DL>
+<DT><STRONG>C</STRONG>
+<DT><A class="idx" href="#current_r_session/1">current_r_session/1</A>
+<DT><A class="idx" href="#current_r_session/3">current_r_session/3</A>
+<DT><STRONG>D</STRONG>
+<DT><A class="idx" href="#default_r_session/1">default_r_session/1</A>
+<DT><STRONG>R</STRONG>
+<DT><A class="idx" href="#r_bin/1">r_bin/1</A>
+<DT><A class="idx" href="#r_bin_version/1">r_bin_version/1</A>
+<DT><A class="idx" href="#r_bin_version/2">r_bin_version/2</A>
+<DT><A class="idx" href="#r_close/0">r_close/0</A>
+<DT><A class="idx" href="#r_close/1">r_close/1</A>
+<DT><A class="idx" href="#r_err/3">r_err/3</A>
+<DT><A class="idx" href="#r_err/4">r_err/4</A>
+<DT><A class="idx" href="#r_flush/0">r_flush/0</A>
+<DT><A class="idx" href="#r_flush/1">r_flush/1</A>
+<DT><A class="idx" href="#r_flush_onto/2">r_flush_onto/2</A>
+<DT><A class="idx" href="#r_flush_onto/3">r_flush_onto/3</A>
+<DT><A class="idx" href="#r_history/0">r_history/0</A>
+<DT><A class="idx" href="#r_history/1">r_history/1</A>
+<DT><A class="idx" href="#r_history/2">r_history/2</A>
+<DT><A class="idx" href="#r_in/1">r_in/1</A>
+<DT><A class="idx" href="#r_in/2">r_in/2</A>
+<DT><A class="idx" href="#r_lib/1">r_lib/1</A>
+<DT><A class="idx" href="#r_lib/2">r_lib/2</A>
+<DT><A class="idx" href="#r_lines_print/1">r_lines_print/1</A>
+<DT><A class="idx" href="#r_lines_print/2">r_lines_print/2</A>
+<DT><A class="idx" href="#r_lines_print/3">r_lines_print/3</A>
+<DT><A class="idx" href="#r_open/0">r_open/0</A>
+<DT><A class="idx" href="#r_open/1">r_open/1</A>
+<DT><A class="idx" href="#r_out/2">r_out/2</A>
+<DT><A class="idx" href="#r_out/3">r_out/3</A>
+<DT><A class="idx" href="#r_print/1">r_print/1</A>
+<DT><A class="idx" href="#r_print/2">r_print/2</A>
+<DT><A class="idx" href="#r_push/1">r_push/1</A>
+<DT><A class="idx" href="#r_push/2">r_push/2</A>
+<DT><A class="idx" href="#r_session_data/3">r_session_data/3</A>
+<DT><A class="idx" href="#r_session_version/1">r_session_version/1</A>
+<DT><A class="idx" href="#r_start/0">r_start/0</A>
+<DT><A class="idx" href="#r_streams_data/3">r_streams_data/3</A>
+<DT><A class="idx" href="#r_verbosity/1">r_verbosity/1</A>
+<DT><STRONG>S</STRONG>
+<DT><A class="idx" href="#settings/2">settings/2</A></DT>
+<DD>
+</DD>
+</DL>
+
+</BODY></HTML>

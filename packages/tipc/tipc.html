@@ -1,0 +1,1647 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<HTML>
+<HEAD>
+<TITLE>Transparent Inter-Process Communications (TIPC) libraries</TITLE><STYLE type="text/css">
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef
+{ background-color: #c5e1ff;
+}
+
+dt.multidef
+{ background-color: #c8ffc7;
+}
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #202020;
+}
+
+/* Footnotes */
+
+sup.fn { color: blue; text-decoration: underline; }
+span.fn-text { display: none; }
+sup.fn span {display: none;}
+sup:hover span
+{ display: block !important;
+position: absolute; top: auto; left: auto; width: 80%;
+color: #000; background: white;
+border: 2px solid;
+padding: 5px; margin: 10px; z-index: 100;
+font-size: smaller;
+}
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white"> 
+
+<P>
+<DIV class="title">Transparent Inter-Process Communications (TIPC) 
+libraries</DIV>
+<DIV class="author">Jeffrey Rosenwald <BR>
+E-mail: <A class="url" href="mailto:JeffRose@acm.org">JeffRose@acm.org</A></DIV>
+<DIV class="abstract">
+<DIV class="abstract-title">Abstract</DIV> TIPC provides a framework for 
+cooperation between federations of trusted peers that are operating as a 
+unit. It was developed by Ericsson AB, as a means to provide for 
+communications between Common Control Systems processes and Network 
+Elements in telephone switching systems, sometimes operating at arm's 
+length on different line cards or mainframes. Delegation of 
+responsibility in this way is one of the fundamental precepts of the 
+Erlang programming system, also developed at Ericsson. TIPC represents a 
+more generalized version of the same behavioral design pattern.
+</DIV>
+
+<H1><A NAME="document-contents">Table of Contents</A></H1>
+
+<DIV class="toc">
+<DIV class="toc-h2"><A class="sec" href="#sec:1"><SPAN class="sec-nr">1</SPAN> <SPAN class="sec-title">Transparent 
+Inter-Process Communications (TIPC)</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="#sec:1.1"><SPAN class="sec-nr">1.1</SPAN> <SPAN class="sec-title">Overview</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="#sec:1.2"><SPAN class="sec-nr">1.2</SPAN> <SPAN class="sec-title">TIPC 
+Address Structures</SPAN></A></DIV>
+<DIV class="toc-h2"><A class="sec" href="#sec:2"><SPAN class="sec-nr">2</SPAN> <SPAN class="sec-title"> 
+The TIPC libraries: <CODE>library(tipc/...)</CODE></SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="#sec:2.1"><SPAN class="sec-nr">2.1</SPAN> <SPAN class="sec-title">tipc.pl: 
+TIPC Sockets</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="#sec:2.2"><SPAN class="sec-nr">2.2</SPAN> <SPAN class="sec-title">tipc_broadcast.pl: 
+A TIPC Broadcast Bridge</SPAN></A></DIV>
+<DIV class="toc-h4"><A class="sec" href="#sec:2.2.1"><SPAN class="sec-nr">2.2.1</SPAN> <SPAN class="sec-title">Caveats:</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="#sec:2.3"><SPAN class="sec-nr">2.3</SPAN> <SPAN class="sec-title">tipc_paxos.pl: 
+A Replicated Data Store</SPAN></A></DIV>
+<DIV class="toc-h3"><A class="sec" href="#sec:2.4"><SPAN class="sec-nr">2.4</SPAN> <SPAN class="sec-title">tipc_linda.pl: 
+A Process Communication Interface</SPAN></A></DIV>
+<DIV class="toc-h4"><A class="sec" href="#sec:2.4.1"><SPAN class="sec-nr">2.4.1</SPAN> <SPAN class="sec-title">Servers</SPAN></A></DIV>
+<DIV class="toc-h4"><A class="sec" href="#sec:2.4.2"><SPAN class="sec-nr">2.4.2</SPAN> <SPAN class="sec-title">Clients</SPAN></A></DIV>
+</DIV>
+
+<P>
+
+<H2><A NAME="sec:1"><SPAN class="sec-nr">1</SPAN> <SPAN class="sec-title">Transparent 
+Inter-Process Communications (TIPC)</SPAN></A></H2>
+
+<P>These pages are not intended as a comprehensive tutorial in the use 
+of TIPC services. The TIPC Programmer's Guide,
+<A class="url" href="http://tipc.sf.net/doc/Programmers_Guide.txt">http://tipc.sf.net/doc/Programmers_Guide.txt</A>, 
+provides assistance to developers who are creating applications that 
+utilize TIPC services. The TIPC User's Guide, <A class="url" href="http://tipc.sf.net/doc/Users_Guide.txt">http://tipc.sf.net/doc/Users_Guide.txt</A>, 
+provides an administrator of a TIPC cluster with the information needed 
+to operate one. A TIPC server loadable module, that may be used to make 
+a host available as a TIPC enabled node, has been a part of the Linux 
+kernel since 2.6.16. Please see: <A class="url" href="http://tipc.sf.net">http://tipc.sf.net</A>
+
+<H3><A NAME="sec:1.1"><SPAN class="sec-nr">1.1</SPAN> <SPAN class="sec-title">Overview</SPAN></A></H3>
+
+<P>In a TIPC network, a Node is comprised of a collection of lightweight 
+threads of execution operating in the same process, or heavyweight 
+processes operating on the same machine. A Cluster is a collection of 
+Nodes operating on different machines, and operating indirectly by way 
+of a local Ethernet or other networking medium. Clusters may be further 
+aggregated into Zones, and Zones into Networks. The address space of two 
+TIPC networks is completely disjoint. Zones on different networks may 
+coexist on the same LAN but they may not communicate directly with one 
+another.
+
+<P>TIPC provides connectionless, connection-oriented, reliable, and 
+unreliable forwarding strategies for both stream and message oriented 
+applications. But not all strategies can be used in every application. 
+For example, there is no such thing as a multicast byte stream. The 
+strategy is selected by the user for the application when the socket is 
+instantiated.
+
+<P>TIPC is not TCP/IP based. Consequently, it cannot signal beyond a 
+local network span without some kind of tunneling mechanism. TIPC is 
+designed to facilitate deployment of distributed applications, where 
+certain aspects of the application may be segregated, and then delegated 
+and/or duplicated over several machines on the same LAN. The application 
+is unaware of the topology of the network on which it is running. It 
+could be a few threads operating in the same process, several processes 
+operating on the same machine, or it could be dozens or even hundreds of 
+machines operating on the same LAN, all operating as a unit. TIPC 
+manages all of this complexity so that the programmer doesn't have to.
+
+<P>Unlike TCP/IP, TIPC does not assign network addresses to network 
+interfaces; it assigns addresses (e.g. port-ids) to sockets when they 
+are instantiated. The address is unique and persists only as long as the 
+socket persists. A single Node therefore, may typically have many TIPC 
+addresses active at any one time, each assigned to an active socket. 
+TIPC also provides a means that a process can use to bind a socket to a 
+well-known address (e.g. a service). Several peers may bind to the same 
+well-known address, thereby enabling multi-server topologies. And server 
+members may exist anywhere in the Zone. TIPC manages the distribution of 
+client requests among the membership of the server group. A server 
+instance responds to two addresses: its public well-known address that 
+it is bound to, and that a client may use to establish a communication 
+with a service, and its private address that the server instance may use 
+to directly interact with a client instance.
+
+<P>TIPC also enables multicast and "publish and subscribe" regimes that 
+applications may use to facilitate asynchronous exchange of datagrams 
+with a number of anonymous sources that may come and go over time. One 
+such regime is implemented as a naming service managed by a distributed 
+topology server. The topology server provides surveillance on the 
+comings and goings of publishers, with advice to interested subscribers 
+in the form of event notifications, emitted when a publisher's status 
+changes. For example, when a server application binds to a TIPC address 
+, that address is automatically associated with that server instance in 
+topology server's name table. This has the side effect of causing a 
+"published" event to be emitted to all interested subscribers. 
+Conversely, when the server's socket is closed or when one of its 
+addresses is released using the "no-scope" option of <A class="pred" href="#tipc_bind/3">tipc_bind/3</A>, 
+a "withdrawn" event is emitted. See <A class="pred" href="#tipc_service_port_monitor/2">tipc_service_port_monitor/2</A>.
+
+<P>A client application may connect to the topology server in order to 
+interrogate the name table to determine whether or not a service is 
+present before actually committing to access it. See
+<A class="pred" href="#tipc_service_exists/2">tipc_service_exists/2</A> 
+and <A class="pred" href="#tipc_service_probe/2">tipc_service_probe/2</A>. 
+Another way that the topology server can be applied is exemplified in 
+Erlang's "worker/supervisor" behavioral pattern. A supervisor thread has 
+no other purpose than to monitor a collection of worker threads in order 
+to ensure that a service is available and able to serve a common goal. 
+When a worker under the supervisor's care dies, the supervisor receives 
+the worker's "withdrawn" event, and takes some action to instantiate a 
+replacement. The predicate, <A class="pred" href="#tipc_service_port_monitor/2">tipc_service_port_monitor/2</A>, 
+is provided specifically for this purpose. Using the service is 
+optional. It has applications in distributed, high-availability, 
+fault-tolerant, and non-stop systems.
+
+<P>Adding capacity to a cluster becomes an administrative function 
+whereby new server hardware is added to a TIPC network, then the desired 
+application is launched on the new server. The application binds to its 
+well-known address, thereby joining in the Cluster. TIPC will 
+automatically begin sending work to it. An administrator has tools for 
+gracefully removing a server from a Cluster, without effecting the 
+traffic moving on the Cluster.
+
+<P>An administrator may configure a Node to have two or more network 
+interfaces. Provided that each interface is invisible to the other, TIPC 
+will manage them as a redundant group, thus enabling high-reliability 
+network features such as automatic link fail-over and hot-swap.
+
+<H3><A NAME="sec:1.2"><SPAN class="sec-nr">1.2</SPAN> <SPAN class="sec-title">TIPC 
+Address Structures</SPAN></A></H3>
+
+<DL class="latex">
+<DT><STRONG>name</STRONG>(<VAR>+Type, +Instance, +Domain</VAR>)</DT>
+<DD class="defbody">
+A TIPC name address is used by servers to advertise themselves as 
+services in unicast applications, and is used by clients to connect to 
+unicast services. Type, Instance, and Domain are positive integers that 
+are unique to a service.
+</DD>
+<DT><STRONG>name_seq</STRONG>(<VAR>+Type, +Lower, +Upper</VAR>)</DT>
+<DD class="defbody">
+A TIPC name-sequence address is used by servers to advertise themselves 
+as services in multicast and "publish and subscribe" applications. Lower 
+and Upper represent a range of instance addresses. Each server will 
+receive exactly one datagram from a client that sends a name-sequence 
+address that matches the server's Type, and where its Lower and Upper 
+instance range intersects the Lower and Upper instance range bound to 
+the server. Clients may send a datagram to any and all interested 
+servers by providing an appropriate name-sequence address to <A class="pred" href="#tipc_send/4">tipc_send/4</A>.
+</DD>
+<DT><STRONG>port_id</STRONG>(<VAR>+Ref, +Node</VAR>)</DT>
+<DD class="defbody">
+A TIPC port-id is the socket's private address. It is ephemeral in 
+nature. It persists only as long as the socket instance persists. Port 
+ids are generally provided to applications via <A class="pred" href="#tipc_receive/4">tipc_receive/4</A>. 
+An application may discover its own port_id for a socket using
+<A class="pred" href="#tipc_get_name/2">tipc_get_name/2</A>. Generally, 
+others cannot discover the port-id of a socket, except by receiving 
+messages originated from it. A server responds to a client by providing 
+the received port-id as the sender address in a reply message. The 
+client will receive the server's port-id via his own <A class="pred" href="#tipc_receive/4">tipc_receive/4</A>. 
+The client can then interact with a specific server instance without 
+having to perform any additional address resolution. The client simply 
+sends all subsequent messages related to a specific transaction to the 
+server instance using the port-id received from the server in its 
+replies.
+
+<P>Sometimes the socket's port-id alone is enough to establish an ad-hoc 
+session anonymously between parent and child processes. The parent 
+instantiates a socket, then forks into two processes. The child 
+retrieves the port-id of the parent from the socket inherited from the 
+parent using <A class="pred" href="#tipc_get_name/2">tipc_get_name/2</A>, 
+then closes the socket and instantiates a socket of its own. The child 
+sends a message to the parent, on its own socket, using the parent's 
+port-id as the destination address. The port-id received by the parent 
+is unique to a specific instance of child. The handshake is complete; 
+each side knows who the other is, and two-way communication may now 
+proceed. A one-way communication (e.g. a message oriented pipe or 
+mailbox) is also possible using only the socket inherited from the 
+parent, provided that there is exactly one sender and one receiver on 
+the socket. Both parent and child use the socket's own port-id, one side 
+adopts the role of sender, and the other of receiver.
+</DD>
+</DL>
+
+<H2><A NAME="sec:2"><SPAN class="sec-nr">2</SPAN> <SPAN class="sec-title"> 
+The TIPC libraries: <CODE>library(tipc/...)</CODE></SPAN></A></H2>
+
+<H3><A NAME="sec:2.1"><SPAN class="sec-nr">2.1</SPAN> <SPAN class="sec-title">tipc.pl: 
+TIPC Sockets</SPAN></A></H3>
+
+<P><A NAME="sec:tipc"></A>
+
+<DL>
+<DT><B>author</B><DD> Jeffrey Rosenwald (JeffRose@acm.org)
+<DT><B>See also</B><DD>
+<A class="url" href="http://tipc.sf.net">http://tipc.sf.net</A>, <A class="url" href="http://www.erlang.org">http://www.erlang.org</A>
+<DT><B>Compatibility</B><DD> Linux only
+<DT><B>license</B><DD> LGPL
+</DL>
+
+<P>Transparent Inter-Process Communication (TIPC) provides a flexible, 
+reliable, fault-tolerant, high-speed, and low-overhead framework for 
+inter-process communication between federations of trusted peers, 
+operating as a unit. It was developed by Ericsson AB, as a means to 
+provide for communications between Common Control Systems processes and 
+Network Element peers in telephone switching systems, sometimes 
+operating at arm's length on different line cards or mainframes. 
+Delegation of responsibility in this way is one of the fundamental 
+precepts of the Erlang programming system, also developed at Ericsson. 
+TIPC represents a more generalized version of the same behavioral design 
+pattern. For an overview, please see: <CODE>tipc_overview.txt</CODE>.
+
+<DL class="latex">
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="tipc_socket/2"><STRONG>tipc_socket</STRONG>(<VAR>-SocketId, 
++SocketType</VAR>)</A></DT>
+<DD class="defbody">
+Creates a TIPC-domain socket of the type specified by
+<VAR>SocketType</VAR>, and unifies it to an identifier, <VAR>SocketId</VAR>.
+<TABLE class="paramlist">
+<TR VALIGN=top><TD><VAR>SocketType</VAR> </TD><TD>is one of the 
+following atoms:
+
+<P>
+<UL class="latex">
+<LI>rdm - unnumbered, reliable datagram service,
+<LI>dgram - unnumbered, unreliable datagram service,
+<LI>seqpacket - numbered, reliable datagram service, and
+<LI>stream - reliable, connection-oriented byte-stream service
+</UL>
+
+<P></TD></TR>
+</TABLE>
+
+<DL>
+<DT><B>Errors</B><DD> socket_error('Address family not supported by 
+protocol') is thrown if a TIPC server is not available on the current 
+host.
+</DL>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="tipc_close_socket/1"><STRONG>tipc_close_socket</STRONG>(<VAR>+SocketId</VAR>)</A></DT>
+<DD class="defbody">
+Closes the indicated socket, making <VAR>SocketId</VAR> invalid. In 
+stream applications, sockets are closed by closing both stream handles 
+returned by <A class="pred" href="#tipc_open_socket/3">tipc_open_socket/3</A>. 
+There are two cases where
+<A class="pred" href="#tipc_close_socket/1">tipc_close_socket/1</A> is 
+used because there are no stream-handles:
+
+<P>
+<UL class="latex">
+<LI>After <A class="pred" href="#tipc_accept/3">tipc_accept/3</A>, the 
+server does a <SPAN class="pred-ext">fork/1</SPAN> to handle the client 
+in a sub-process. In this case the accepted socket is not longer needed 
+from the main server and must be discarded using <A class="pred" href="#tipc_close_socket/1">tipc_close_socket/1</A>.
+<LI>If, after discovering the connecting client with
+<A class="pred" href="#tipc_accept/3">tipc_accept/3</A>, the server does 
+not want to accept the connection, it should discard the accepted socket 
+immediately using <A class="pred" href="#tipc_close_socket/1">tipc_close_socket/1</A>.
+</UL>
+<TABLE class="paramlist">
+<TR VALIGN=top><TD><VAR>SocketId</VAR> </TD><TD>the socket identifier 
+returned by <A class="pred" href="#tipc_socket/2">tipc_socket/2</A> or <A class="pred" href="#tipc_accept/3">tipc_accept/3</A>. </TD></TR>
+</TABLE>
+
+<DL>
+<DT><B>Errors</B><DD> socket_error('Invalid argument) is thrown if an 
+attempt is made to close a socket identifier that has already been 
+closed.
+</DL>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="tipc_open_socket/3"><STRONG>tipc_open_socket</STRONG>(<VAR>+SocketId, 
+-InStream, -OutStream</VAR>)</A></DT>
+<DD class="defbody">
+Opens two SWI-Prolog I/O-streams, one to deal with input from the socket 
+and one with output to the socket. If <A class="pred" href="#tipc_bind/3">tipc_bind/3</A> 
+has been called on the socket, <VAR>OutStream</VAR> is useless and will 
+not be created. After closing both <VAR>InStream</VAR> and <VAR>OutStream</VAR>, 
+the socket itself is discarded.</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="tipc_bind/3"><STRONG>tipc_bind</STRONG>(<VAR>+Socket, 
++Address, +ScopingOption</VAR>)</A></DT>
+<DD class="defbody">
+Associates/disassociates a socket with the <SPAN class="pred-ext">name/3</SPAN> 
+or <SPAN class="pred-ext">name_seq/3</SPAN> address specified in <VAR>Address</VAR>. 
+It also registers/unregisters it in the topology server name table. This 
+makes the address visible/invisible to the rest of the network according 
+to the scope specified in <VAR>ScopingOption</VAR>. <VAR>ScopingOption</VAR> 
+is a grounded term that is one of:
+
+<DL class="latex">
+<DT><B>scope(Scope)</B></DT>
+<DD>
+where Scope is one of: <CODE>zone</CODE>, <CODE>cluster</CODE>, or
+<CODE>node</CODE>. Servers may bind to more than one address by making 
+successive calls to <A class="pred" href="#tipc_bind/3">tipc_bind/3</A>, 
+one for each address that it wishes to advertise. The server will 
+receive traffic for all of them. A server may, for example, register one 
+address with node scope, another with cluster scope, and a third with 
+zone scope. A client may then limit the scope of its transmission by 
+specifying the appropriate address.
+</DD>
+<DT><B>no_scope(Scope)</B></DT>
+<DD>
+where Scope is as defined above. An application may target a specific 
+address for removal from its collection of addresses by specifying the 
+address and its scope. The scoping option, <CODE>no_scope(all)</CODE>, 
+may be used to unbind the socket from all of its registered addresses. 
+This feature allows an application to gracefully exit from service. 
+Because the socket remains open, the application may continue to service 
+current transactions to completion. TIPC however, will not schedule any 
+new work for the server instance. If no other servers are available, the 
+work will be rejected or dropped according to the socket options 
+specified by the client.
+</DD>
+</DL>
+
+<P>Connection-oriented, byte-stream services are implemented with this 
+predicate combined with <A class="pred" href="#tipc_listen/2">tipc_listen/2</A> 
+and <A class="pred" href="#tipc_accept/3">tipc_accept/3</A>. 
+Connectionless, datagram services may be implemented using
+<A class="pred" href="#tipc_receive/4">tipc_receive/4</A>.
+
+<P>Note that clients do not need to bind to any address. Its port-id is 
+sufficient for this role. And server sockets (e.g. those that are bound 
+to <SPAN class="pred-ext">name/3</SPAN> or <SPAN class="pred-ext">name_seq/3</SPAN>, 
+addresses) may not act as clients. That is, they may not originate 
+connections from the socket using <A class="pred" href="#tipc_connect/2">tipc_connect/2</A>. 
+Servers however, may originate datagrams from bound sockets using <A class="pred" href="#tipc_send/4">tipc_send/4</A>. 
+Please see the TIPC programmers's guide for other restrictions.</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="tipc_listen/2"><STRONG>tipc_listen</STRONG>(<VAR>+Socket, 
++Backlog</VAR>)</A></DT>
+<DD class="defbody">
+Listens for incoming requests for connections. <VAR>Backlog</VAR> 
+indicates how many pending connection requests are allowed. Pending 
+requests are requests that are not yet acknowledged using <A class="pred" href="#tipc_accept/3">tipc_accept/3</A>. 
+If the indicated number is exceeded, the requesting client will be 
+signalled that the service is currently not available. A suggested 
+default value is 5.</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="tipc_accept/3"><STRONG>tipc_accept</STRONG>(<VAR>+Socket, 
+-Slave, -Peer</VAR>)</A></DT>
+<DD class="defbody">
+Blocks on a server socket and waits for connection requests from 
+clients. On success, it creates a new socket for the client and binds 
+the identifier to <VAR>Slave</VAR>. <VAR>Peer</VAR> is bound to the TIPC 
+address, <SPAN class="pred-ext">port_id/2</SPAN>, of the client.</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="tipc_connect/2"><STRONG>tipc_connect</STRONG>(<VAR>+Socket, 
++TIPC_address</VAR>)</A></DT>
+<DD class="defbody">
+Provides a connection-oriented, client-interface to connect a socket to 
+a given <VAR>TIPC_address</VAR>. After successful completion,
+<A class="pred" href="#tipc_open_socket/3">tipc_open_socket/3</A> may be 
+used to create I/O-Streams to the remote socket.
+
+<DL>
+<DT><B>throws</B><DD>- socket_error('Connection refused'), if there are 
+no servers bound to the specified address. <BR>
+- socket_error('Connection timed out'), if no server that is bound to 
+the specified address accepts the connect request within the specified 
+time limit. See also
+<A class="pred" href="#tipc_setopt/2">tipc_setopt/2</A>.
+</DL>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="tipc_get_name/2"><STRONG>tipc_get_name</STRONG>(<VAR>+Socket, 
+-TIPC_address</VAR>)</A></DT>
+<DD class="defbody">
+Unifies <VAR>TIPC_address</VAR> with the port-id assigned to the socket.</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="tipc_get_peer_name/2"><STRONG>tipc_get_peer_name</STRONG>(<VAR>+Socket, 
+-TIPC_address</VAR>)</A></DT>
+<DD class="defbody">
+Unifies <VAR>TIPC_address</VAR> with the port-id assigned to the socket 
+that this socket is connected to.
+
+<DL>
+<DT><B>throws</B><DD> socket_error('Transport endpoint is not 
+connected'), if an attempt is made to obtain a peer's name of an 
+unconnected socket.
+</DL>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="tipc_setopt/2"><STRONG>tipc_setopt</STRONG>(<VAR>+Socket, 
++Option</VAR>)</A></DT>
+<DD class="defbody">
+Sets options on the socket. Defined options are:
+
+<DL class="latex">
+<DT><B>importance(+Priority)</B></DT>
+<DD>
+Allow sockets to assign a priority to their traffic. Priority is one of 
+: <CODE>low</CODE> (default), <CODE>medium</CODE>, <CODE>high</CODE>, or <CODE>critical</CODE>.
+</DD>
+<DT><B>src_droppable(+Boolean)</B></DT>
+<DD>
+Allow TIPC to silently discard packets in congested situations, rather 
+than queuing them for later transmission.
+</DD>
+<DT><B>dest_droppable(+Boolean)</B></DT>
+<DD>
+Allow TIPC to silently discard packets in congested situations, rather 
+than returning them to the sender as undeliverable.
+</DD>
+<DT><B>conn_timeout(+Seconds)</B></DT>
+<DD>
+Specifies the time interval that <A class="pred" href="#tipc_connect/2">tipc_connect/2</A> 
+will use before abandoning a connection attempt. Default: 8.000 sec.
+</DD>
+</DL>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="tipc_receive/4"><STRONG>tipc_receive</STRONG>(<VAR>+Socket, 
+-Data, -From, +OptionList</VAR>)</A></DT>
+<DD class="defbody">
+Waits for, and returns the next datagram. Like its UDP counterpart, the 
+data are returned as a Prolog string object (see <SPAN class="pred-ext">string_to_list/2</SPAN>). <VAR>From</VAR> 
+is an address structure of the form <SPAN class="pred-ext">port_id/2</SPAN>, 
+indicating the sender of the message.
+
+<P>Defined options are:
+
+<DL class="latex">
+<DT><STRONG>as</STRONG>(<VAR>+Type</VAR>)</DT>
+<DD class="defbody">
+Defines the returned term-type. Type is one of atom, codes or string 
+(default).
+</DD>
+<DT><STRONG>nonblock</STRONG></DT>
+<DD class="defbody">
+Poll the socket and return immediately. If a message is present, it is 
+returned. If not, then an exception, error(socket_error('Resource 
+temporarily unavailable'), _), will be thrown. Users are cautioned not 
+to "spin" unnecessarily on non-blocking receives as they may prevent the 
+system from servicing other background activities such as XPCE event 
+dispatching.
+</DD>
+</DL>
+
+<P>The typical sequence to receive a connectionless TIPC datagram is:
+
+<PRE class="code">
+receive :-
+        tipc_socket(S, dgram),
+        tipc_bind(S, name(18888, 10, 0), scope(zone)),
+        repeat,
+            tipc_receive(Socket, Data, From, [as(atom)]),
+            format('Got ~q from ~q~n', [Data, From]),
+            Data == quit,
+        !, tipc_close_socket(S).
+</PRE>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="tipc_send/4"><STRONG>tipc_send</STRONG>(<VAR>+Socket, 
++Data, +To, +Options</VAR>)</A></DT>
+<DD class="defbody">
+sends a TIPC datagram to one or more destinations. Like its UDP 
+counterpart, <VAR>Data</VAR> is a string, atom or code-list providing 
+the data to be sent. <VAR>To</VAR> is a <SPAN class="pred-ext">name/3</SPAN>, <SPAN class="pred-ext">name_seq/3</SPAN>, 
+or <SPAN class="pred-ext">port_id/2</SPAN> address structure. See <CODE>tipc_overview.txt</CODE>, 
+for more information on TIPC Address Structures. <VAR>Options</VAR> is 
+currently unused.
+
+<P>A simple example to send a connectionless TIPC datagram is:
+
+<PRE class="code">
+send(Message) :-
+        tipc_socket(S, dgram),
+        tipc_send(S, Message, name(18888, 10,0), []),
+        tipc_close_socket(S).
+</PRE>
+
+<P>Messages are delivered silently unless some form of congestion was 
+encountered and the <CODE>dest_droppable(false)</CODE> option was issued 
+on the sender's socket. In this case, the send succeeds but a 
+notification in the form of an empty message is returned to the sender 
+from the receiver, indicating some kind of delivery failure. The port-id 
+of the receiver is returned in congestion conditions. A <CODE>port_id(0,0)</CODE>, 
+is returned if the destination address was invalid. Senders and 
+receivers should beware of this possibility.</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="tipc_canonical_address/2"><STRONG>tipc_canonical_address</STRONG>(<VAR>-CanonicalAddress, 
++PortId</VAR>)</A></DT>
+<DD class="defbody">
+Translates a <SPAN class="pred-ext">port_id/2</SPAN> address into 
+canonical TIPC form:
+
+<DL class="latex">
+<DT><STRONG>tipc_address</STRONG>(<VAR>Zone, Cluster, Node, Reference</VAR>)</DT>
+<DD class="defbody">
+It is provided for debugging an printing purposes only. The canonical 
+address is not used for any other purpose.
+</DD>
+</DL>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[semidet]</span><A NAME="tipc_service_exists/2"><STRONG>tipc_service_exists</STRONG>(<VAR>+Address, 
++Timeout</VAR>)</A></DT>
+<DT class="pubdef"><span class="pred-tag">[semidet]</span><A NAME="tipc_service_exists/1"><STRONG>tipc_service_exists</STRONG>(<VAR>+Address</VAR>)</A></DT>
+<DD class="defbody">
+Interrogates the TIPC topology server to see if a service is available 
+at an advertised <VAR>Address</VAR>.
+<TABLE class="paramlist">
+<TR VALIGN=top><TD><VAR>Address</VAR> </TD><TD>is one of: <CODE>name(Type, Instance, Domain)</CODE> 
+or
+<CODE>name_seq(Type, Lower, Upper)</CODE>. A <SPAN class="pred-ext">name/3</SPAN>, 
+address is translated to a <SPAN class="pred-ext">name_seq/3</SPAN>, 
+following, where Lower and Upper are assigned the value of Instance. 
+Domain is unused and must be zero. A <CODE>name_seq(Type, Lower, Upper)</CODE> 
+is a multi-cast address. This predicate succeeds if there is at least 
+one service that would answer according to multi-cast addressing rules. </TD></TR>
+<TR VALIGN=top><TD><VAR>Timeout</VAR> </TD><TD>is optional. It is a 
+non-negative real number that specifies the amount of time in seconds to 
+block and wait for a service to become available. Fractions of a second 
+are also permissible. </TD></TR>
+</TABLE>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="tipc_service_probe/1"><STRONG>tipc_service_probe</STRONG>(<VAR>?Address</VAR>)</A></DT>
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="tipc_service_probe/2"><STRONG>tipc_service_probe</STRONG>(<VAR>?Address, 
+?PortId</VAR>)</A></DT>
+<DD class="defbody">
+Allows a user to discover the instance ranges and/or port-ids for a 
+particular service.
+<TABLE class="paramlist">
+<TR VALIGN=top><TD><VAR>Address</VAR> </TD><TD>is a <SPAN class="pred-ext">name_seq/3</SPAN> 
+address. The address type must be grounded. </TD></TR>
+<TR VALIGN=top><TD><VAR>PortId</VAR> </TD><TD>is unified with the 
+port-id for a specific name_sequence address. </TD></TR>
+</TABLE>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="tipc_service_port_monitor/2"><STRONG>tipc_service_port_monitor</STRONG>(<VAR>+Addresses, 
+:Goal</VAR>)</A></DT>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="tipc_service_port_monitor/3"><STRONG>tipc_service_port_monitor</STRONG>(<VAR>+Addresses, 
+:Goal, ?Timeout</VAR>)</A></DT>
+<DD class="defbody">
+Monitors a collection of worker threads that are bound to a list of <VAR>Addresses</VAR>. 
+A single port monitor may be used to provide surveillance over workers 
+that are providing a number of different services. For a given address 
+type, discontiguous port ranges may be specified, but overlapping port 
+ranges may not. <VAR>Goal</VAR> for example, may simply choose to 
+broadcast the notification, thus delegating the notification event 
+handling to others.
+<TABLE class="paramlist">
+<TR VALIGN=top><TD><VAR>Addresses</VAR> </TD><TD>is a list of <SPAN class="pred-ext">name/3</SPAN> 
+or <SPAN class="pred-ext">name_seq/3</SPAN> addresses for the services 
+to be monitored. </TD></TR>
+<TR VALIGN=top><TD><VAR>Goal</VAR> </TD><TD>is a predicate that will be 
+called when a worker's publication status changes. The <VAR>Goal</VAR> 
+is called exactly once per event with its the last argument unified with 
+the structure:
+
+<DL class="latex">
+<DT><B>published(-NameSeq, -PortId)</B></DT>
+<DD>
+when the worker binds its socket to the address.
+</DD>
+<DT><B>withdrawn(-NameSeq, -PortId)</B></DT>
+<DD>
+when the worker unbinds its socket from the address.
+</DD>
+</DL>
+
+<P></TD></TR>
+<TR VALIGN=top><TD><VAR>Timeout</VAR> </TD><TD>is optional. It is one 
+of:
+
+<DL class="latex">
+<DT><B><VAR>Timeout</VAR></B></DT>
+<DD>
+a non-negative real number that specifies the number of seconds that 
+surveillance is to be continued.
+</DD>
+<DT><B>infinite</B></DT>
+<DD>
+causes the monitor to run forever in the current thread (e.g. never 
+returns).
+</DD>
+<DT><B>detached(-ThreadId)</B></DT>
+<DD>
+causes the monitor to run forever as a separate thread. ThreadId is 
+unified with the thread identifier of the monitor thread. This is useful 
+when the monitor is required to provide continuous surveillance, while 
+operating in the background.
+</DD>
+</DL>
+
+<P></TD></TR>
+</TABLE>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[semidet]</span><A NAME="tipc_initialize/0"><STRONG>tipc_initialize</STRONG></A></DT>
+<DD class="defbody">
+causes the TIPC service and the TIPC stack to be initialized and made 
+ready for service. An application must call this predicate as part of 
+its initialization prior to any use of TIPC predicates. <I>Please note 
+the change of the API.</I>
+
+<DL>
+<DT><B>throws</B><DD> socket_error('Address family not supported by 
+protocol') if a TIPC server is not available on the current host.
+</DL>
+
+</DD>
+</DL>
+
+<H3><A NAME="sec:2.2"><SPAN class="sec-nr">2.2</SPAN> <SPAN class="sec-title">tipc_broadcast.pl: 
+A TIPC Broadcast Bridge</SPAN></A></H3>
+
+<P><A NAME="sec:tipcbroadcast"></A>
+
+<DL>
+<DT><B>author</B><DD> Jeffrey Rosenwald (JeffRose@acm.org)
+<DT><B>See also</B><DD>
+<CODE>tipc.pl</CODE>
+<DT><B>Compatibility</B><DD> Linux only
+<DT><B>license</B><DD> LGPL
+</DL>
+
+<P>SWI-Prolog's broadcast library provides a means that may be used to 
+facilitate publish and subscribe communication regimes between anonymous 
+members of a community of interest. The members of the community are 
+however, necessarily limited to a single instance of Prolog. The TIPC 
+broadcast library removes that restriction. With this library loaded, 
+any member of a TIPC network that also has this library loaded may hear 
+and respond to your broadcasts. Using TIPC Broadcast, it becomes a 
+nearly trivial matter to build an instance of supercomputer that 
+researchers within the High Performance Computer community refer to as 
+"Beowulf Class Cluster Computers."
+
+<P>This module has no public predicates. When this module is 
+initialized, it does three things:
+
+<P>
+<UL class="latex">
+<LI>It starts a listener daemon thread that listens for broadcasts from 
+others, received as TIPC datagrams, and
+<LI>It registers three listeners: <SPAN class="pred-ext">tipc_node/1</SPAN>, <SPAN class="pred-ext">tipc_cluster/1</SPAN>, 
+and
+<SPAN class="pred-ext">tipc_zone/1</SPAN>, and
+<LI>It registers three listeners: <SPAN class="pred-ext">tipc_node/2</SPAN>, <SPAN class="pred-ext">tipc_cluster/2</SPAN>, 
+and
+<SPAN class="pred-ext">tipc_zone/2</SPAN>.
+</UL>
+
+<P>A <SPAN class="pred-ext">broadcast/1</SPAN> or <SPAN class="pred-ext">broadcast_request/1</SPAN> 
+that is not directed to one of the six listeners above, behaves as usual 
+and is confined to the instance of Prolog that originated it. But when 
+so directed, the broadcast will be sent to all participating systems, 
+including itself, by way of TIPC's multicast addressing facility. A TIPC 
+broadcast or broadcast request takes the typical form: <CODE>broadcast(tipc_node(+Term, +Timeout))</CODE>. 
+The principal functors <CODE>tipc_node</CODE>, <CODE>tipc_cluster</CODE>, 
+and
+<CODE>tipc_zone</CODE>, specify the scope of the broadcast. The functor
+<CODE>tipc_node</CODE>, specifies that the broadcast is to be confined 
+to members of a present TIPC node. Likewise, <CODE>tipc_cluster</CODE> 
+and <CODE>tipc_zone</CODE>, specify that the traffic should be confined 
+to members of a present TIPC cluster and zone, respectively. To prevent 
+the potential for feedback loops, the scope qualifier is stripped from 
+the message before transmission. The timeout is optional. It specifies 
+the amount to time to wait for replies to arrive in response to a 
+broadcast_request. The default period is 0.250 seconds. The timeout is 
+ignored for broadcasts.
+
+<P>An example of three separate processes cooperating on the same Node:
+
+<PRE class="code">
+Process A:
+
+   ?- listen(number(X), between(1, 5, X)).
+   true.
+
+   ?-
+
+Process B:
+
+   ?- listen(number(X), between(7, 9, X)).
+   true.
+
+   ?-
+
+Process C:
+
+   ?- findall(X, broadcast_request(tipc_node(number(X))), Xs).
+   Xs = [1, 2, 3, 4, 5, 7, 8, 9].
+
+   ?-
+</PRE>
+
+<P>It is also possible to carry on a private dialog with a single 
+responder. To do this, you supply a compound of the form, Term:PortId, 
+to a TIPC scoped <SPAN class="pred-ext">broadcast/1</SPAN> or <SPAN class="pred-ext">broadcast_request/1</SPAN>, 
+where PortId is the port-id of the intended listener. If you supply an 
+unbound variable, PortId, to broadcast_request, it will be unified with 
+the address of the listener that responds to Term. You may send a 
+directed broadcast to a specific member by simply providing this address 
+in a similarly structured compound to a TIPC scoped <SPAN class="pred-ext">broadcast/1</SPAN>. 
+The message is sent via unicast to that member only by way of the 
+member's broadcast listener. It is received by the listener just as any 
+other broadcast would be. The listener does not know the difference.
+
+<P>Although this capability is needed under some circumstances, it has a 
+tendency to compromise the resilience of the broadcast model. You should 
+not rely on it too heavily, or fault tolerance will suffer.
+
+<P>For example, in order to discover who responded with a particular 
+value:
+
+<PRE class="code">
+Process A:
+
+   ?- listen(number(X), between(1, 3, X)).
+   true.
+
+   ?-
+
+Process B:
+
+   ?- listen(number(X), between(7, 9, X)).
+   true.
+
+   ?-
+
+Process C:
+
+   ?- broadcast_request(tipc_node(number(X):From)).
+   X = 7,
+   From = port_id('&lt;1.1.1:3971170279&gt;') ;
+   X = 8,
+   From = port_id('&lt;1.1.1:3971170279&gt;') ;
+   X = 9,
+   From = port_id('&lt;1.1.1:3971170279&gt;') ;
+   X = 1,
+   From = port_id('&lt;1.1.1:3971170280&gt;') ;
+   X = 2,
+   From = port_id('&lt;1.1.1:3971170280&gt;') ;
+   X = 3,
+   From = port_id('&lt;1.1.1:3971170280&gt;') ;
+   false.
+
+?-
+</PRE>
+
+<H4><A NAME="sec:2.2.1"><SPAN class="sec-nr">2.2.1</SPAN> <SPAN class="sec-title">Caveats:</SPAN></A></H4>
+
+<P>While the implementation is mostly transparent, there are some 
+important and subtle differences that must be taken into consideration:
+
+<P>
+<UL class="latex">
+<LI>TIPC broadcast now requires an initialization step in order to 
+launch the broadcast listener daemon. See <A class="pred" href="#tipc_initialize/0">tipc_initialize/0</A>.
+<LI>Prolog's <SPAN class="pred-ext">broadcast_request/1</SPAN> is 
+nondet. It sends the request, then evaluates the replies synchronously, 
+backtracking as needed until a satisfactory reply is received. The 
+remaining potential replies are not evaluated. This is not so when TIPC 
+is involved.
+<LI>A TIPC <SPAN class="pred-ext">broadcast/1</SPAN> is completely 
+asynchronous.
+<LI>A TIPC <SPAN class="pred-ext">broadcast_request/1</SPAN> is 
+partially synchronous. A
+<SPAN class="pred-ext">broadcast_request/1</SPAN> is sent, then the 
+sender balks for a period of time (default: 250 ms) while the replies 
+are collected. Any reply that is received after this period is silently 
+discarded. An optional second argument is provided so that a sender may 
+specify more (or less) time for replies.
+<LI>Replies are <I>no longer</I> collected using <SPAN class="pred-ext">findall/3</SPAN>. 
+Replies are presented to the user as a choice point on arrival, until 
+the broadcast request timer finally expires. This change allows traffic 
+to propagate through the system faster and provides the requestor with 
+the opportunity to terminate a broadcast request early if desired, by 
+simply cutting choice points.
+<LI>Please beware that broadcast request transactions will now remain 
+active and resources consumed until broadcast_request finally fails on 
+backtracking, an uncaught exception occurs, or until choice points are 
+cut. Failure to properly manage this will likely result in chronic 
+exhaustion of TIPC sockets.
+<LI>If a listener is connected to a generator that always succeeds (e.g. 
+a random number generator), then the broadcast request will never 
+terminate and trouble is bound to ensue.
+<LI><SPAN class="pred-ext">broadcast_request/1</SPAN> with TIPC scope is <I>not</I> 
+reentrant (at least, not now anyway). If a listener performs a <SPAN class="pred-ext">broadcast_request/1</SPAN> 
+with TIPC scope recursively, then disaster looms certain. This caveat 
+does not apply to a TIPC scoped <SPAN class="pred-ext">broadcast/1</SPAN>, 
+which can safely be performed from a listener context.
+<LI>TIPC's capacity is not infinite. While TIPC can tolerate substantial 
+bursts of activity, it is designed for short bursts of small messages. 
+It can tolerate several thousand replies in response to a <SPAN class="pred-ext">broadcast_request/1</SPAN> 
+without trouble, but it will begin to encounter congestion beyond that. 
+And in congested conditions, things will start to become unreliable as 
+TIPC begins prioritizing and/or discarding traffic.
+<LI>A TIPC <SPAN class="pred-ext">broadcast_request/1</SPAN> term that 
+is grounded is considered to be a broadcast only. No replies are 
+collected unless the there is at least one unbound variable to unify.
+<LI>A TIPC <SPAN class="pred-ext">broadcast/1</SPAN> always succeeds, 
+even if there are no listeners.
+<LI>A TIPC <SPAN class="pred-ext">broadcast_request/1</SPAN> that 
+receives no replies will fail.
+<LI>Replies may be coming from many different places in the network (or 
+none at all). No ordering of replies is implied.
+<LI>Prolog terms are sent to others after first converting them to atoms 
+using <SPAN class="pred-ext">term_to_atom/2</SPAN>. Passing real numbers 
+this way may result in a substantial truncation of precision. See prolog 
+flag option, 'float_format', of <SPAN class="pred-ext">current_prolog_flag/2</SPAN>.
+</UL>
+
+<DL class="latex">
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="tipc_host_to_address/2"><STRONG>tipc_host_to_address</STRONG>(<VAR>?Service, 
+?Address</VAR>)</A></DT>
+<DD class="defbody">
+locates a TIPC service by name. <VAR>Service</VAR> is an atom or 
+grounded term representing the common name of the service. <VAR>Address</VAR> 
+is a TIPC address structure. A server may advertise its services by name 
+by including the fact, tipc:host_to_address(+<VAR>Service</VAR>, +<VAR>Address</VAR>), 
+somewhere in its source. This predicate can also be used to perform 
+reverse searches. That is it will also resolve an <VAR>Address</VAR> to 
+a
+<VAR>Service</VAR> name. The search is zone-wide. Locating a service 
+however, does not imply that the service is actually reachable from any 
+particular node within the zone.</DD>
+<DT class="pubdef"><span class="pred-tag">[semidet]</span><A NAME="tipc_initialize/0"><STRONG>tipc_initialize</STRONG></A></DT>
+<DD class="defbody">
+See <SPAN class="pred-ext">tipc:tipc_initialize/0</SPAN>
+</DD>
+</DL>
+
+<H3><A NAME="sec:2.3"><SPAN class="sec-nr">2.3</SPAN> <SPAN class="sec-title">tipc_paxos.pl: 
+A Replicated Data Store</SPAN></A></H3>
+
+<P><A NAME="sec:tipcpaxos"></A>
+
+<DL>
+<DT><B>author</B><DD> Jeffrey Rosenwald (JeffRose@acm.org)
+<DT><B>See also</B><DD>
+<CODE>tipc_broadcast.pl</CODE>
+<DT><B>Compatibility</B><DD> Linux only, tipc_broadcast
+<DT><B>license</B><DD> LGPL
+</DL>
+
+<P>This module provides a replicated data store that is coordinated 
+using a variation on Lamport's Paxos concensus protocol. The original 
+method is described in his paper entitled, "The Part-time Parliament", 
+which was published in 1998. The algorithm is tolerant of non-Byzantine 
+failure. That is late or lost delivery or reply, but not senseless 
+delivery or reply. The present algorithm takes advantage of the 
+convenience offered by multicast to the quorum's membership, who can 
+remain anonymous and who can come and go as they please without 
+effecting Liveness or Safety properties.
+
+<P>Paxos' quorum is a set of one or more attentive members, whose 
+processes respond to queries within some known time limit (<VAR>&lt;</VAR> 
+20ms), which includes roundtrip delivery delay. This property is easy to 
+satisfy given that every coordinator is necessarily a member of the 
+quorum as well, and a quorum of one is permitted. An inattentive member 
+(e.g. one whose actions are late or lost) is deemed to be "not-present" 
+for the purposes of the present transaction and consistency cannot be 
+assured for that member. As long as there is at least one attentive 
+member of the quorum, then persistence of the database is assured.
+
+<P>Each member maintains a ledger of terms along with information about 
+when they were originally recorded. The member's ledger is 
+deterministic. That is to say that there can only be one entry per 
+functor/arity combination. No member will accept a new term proposal 
+that has a line number that is equal-to or lower-than the one that is 
+already recorded in the ledger.
+
+<P>Paxos is a three-phase protocol:
+<BLOCKQUOTE> 1: A coordinator first prepares the quorum for a new 
+proposal by broadcasting a proposed term. The quorum responds by 
+returning the last known line number for that functor/arity combination 
+that is recorded in their respective ledgers.
+</BLOCKQUOTE>
+<BLOCKQUOTE> 2: The coordinator selects the highest line number it 
+receives, increments it by one, and then asks the quorum to finally 
+accept the new term with the new line number. The quorum checks their 
+respective ledgers once again and if there is still no other ledger 
+entry for that functor/arity combination that is equal-to or higher than 
+the specified line, then each member records the term in the ledger at 
+the specified line. The member indicates consent by returning the 
+specified line number back to the coordinator. If consent is withheld by 
+a member, then the member returns a <CODE>nack</CODE> instead. The 
+coordinator requires unanimous consent. If it isn't achieved then the 
+proposal fails and the coordinator must start over from the beginning.
+</BLOCKQUOTE>
+<BLOCKQUOTE> 3: Finally, the coordinator concludes the successful 
+negotiation by broadcasting the agreement to the quorum in the form of a
+<CODE>paxos_changed(Term)</CODE> event. This is the only event that 
+should be of interest to user programs.
+</BLOCKQUOTE>
+
+<P>For practical reasons, we rely on the partially synchronous behavior 
+(e.g. limited upper time bound for replies) of <SPAN class="pred-ext">broadcast_request/1</SPAN> 
+over TIPC to ensure Progress. Perhaps more importantly, we rely on the 
+fact that the TIPC broadcast listener state machine guarantees the 
+atomicity of <SPAN class="pred-ext">broadcast_request/1</SPAN> at the 
+process level, thus obviating the need for external mutual exclusion 
+mechanisms.
+
+<P><I>Note that this algorithm does not guarantee the rightness of the 
+value proposed. It only guarantees that if successful, the value 
+proposed is identical for all attentive members of the quorum.</I>
+
+<P><I>Note also that tipc_paxos now requires an initialization step. See <A class="pred" href="#tipc_initialize/0">tipc_initialize/0</A>.</I>
+
+<DL class="latex">
+<DT class="pubdef"><span class="pred-tag">[semidet]</span><A NAME="tipc_paxos_set/1"><STRONG>tipc_paxos_set</STRONG>(<VAR>?Term</VAR>)</A></DT>
+<DT class="pubdef"><span class="pred-tag">[semidet]</span><A NAME="tipc_paxos_set/2"><STRONG>tipc_paxos_set</STRONG>(<VAR>?Term, 
++Retries</VAR>)</A></DT>
+<DD class="defbody">
+negotiates to have <VAR>Term</VAR> recorded in the ledger for each of 
+the quorum's members. This predicate succeeds if the quorum unanimously 
+accepts the proposed term. If no such entry exists in the Paxon's 
+ledger, then one is silently created. <A class="pred" href="#tipc_paxos_set/1">tipc_paxos_set/1</A> 
+will retry the transaction several times (default: 20) before failing. 
+Failure is rare and is usually the result of a collision of two or more 
+writers writing to the same term at precisely the same time. On failure, 
+it may be useful to wait some random period of time, and then retry the 
+transaction. By specifying a retry count of zero, <A class="pred" href="#tipc_paxos_set/2">tipc_paxos_set/2</A> 
+will succeed iff the first ballot succeeds.
+
+<P>On success, <A class="pred" href="#tipc_paxos_set/1">tipc_paxos_set/1</A> 
+will also broadcast the term
+<CODE>paxos_changed(Term)</CODE>, to the quorum.
+<TABLE class="paramlist">
+<TR VALIGN=top><TD><VAR>Term</VAR> </TD><TD>is a compound that may have 
+unbound variables. </TD></TR>
+<TR VALIGN=top><TD><VAR>Retries</VAR> </TD><TD>(optional) is a 
+non-negative integer specifying the number of retries that will be 
+performed before a set is abandoned. </TD></TR>
+</TABLE>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[semidet]</span><A NAME="tipc_paxos_get/1"><STRONG>tipc_paxos_get</STRONG>(<VAR>?Term</VAR>)</A></DT>
+<DD class="defbody">
+unifies <VAR>Term</VAR> with the entry retrieved from the Paxon's 
+ledger. If no such entry exists in the member's local cache, then the 
+quorum is asked to provide a value, which is verified for consistency. 
+An implied <A class="pred" href="#tipc_paxos_set/1">tipc_paxos_set/1</A> 
+follows. This predicate succeeds if a term with the same functor and 
+arity exists in the Paxon's ledger, and fails otherwise.
+<TABLE class="paramlist">
+<TR VALIGN=top><TD><VAR>Term</VAR> </TD><TD>is a compound. Any unbound 
+variables are unified with those provided in the ledger entry. </TD></TR>
+</TABLE>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="tipc_paxos_replicate/1"><STRONG>tipc_paxos_replicate</STRONG>(<VAR>?Term</VAR>)</A></DT>
+<DD class="defbody">
+declares that <VAR>Term</VAR> is to be automatically replicated to the 
+quorum each time it becomes grounded. It uses the behavior afforded by
+<SPAN class="pred-ext">when/2</SPAN>.
+<TABLE class="paramlist">
+<TR VALIGN=top><TD><VAR>Term</VAR> </TD><TD>is an ungrounded <VAR>Term</VAR> </TD></TR>
+</TABLE>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="tipc_paxos_on_change/2"><STRONG>tipc_paxos_on_change</STRONG>(<VAR>?Term, 
+:Goal</VAR>)</A></DT>
+<DD class="defbody">
+executes the specified <VAR>Goal</VAR> when <VAR>Term</VAR> changes. <A class="pred" href="#tipc_paxos_on_change/2">tipc_paxos_on_change/2</A> 
+listens for <SPAN class="pred-ext">paxos_changed/1</SPAN> notifications 
+for <VAR>Term</VAR>, which are emitted as the result of successful <A class="pred" href="#tipc_paxos_set/1">tipc_paxos_set/1</A> 
+transactions. When one is received for <VAR>Term</VAR>, then <VAR>Goal</VAR> 
+is executed in a separate thread of execution.
+<TABLE class="paramlist">
+<TR VALIGN=top><TD><VAR>Term</VAR> </TD><TD>is a compound, identical to 
+that used for
+<A class="pred" href="#tipc_paxos_get/1">tipc_paxos_get/1</A>. </TD></TR>
+<TR VALIGN=top><TD><VAR>Goal</VAR> </TD><TD>is one of:
+
+<P>
+<UL class="latex">
+<LI>a callable atom or term, or
+<LI>the atom <CODE>ignore</CODE>, which causes monitoring for <VAR>Term</VAR> 
+to be discontinued.
+</UL>
+
+<P></TD></TR>
+</TABLE>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[semidet]</span><A NAME="tipc_initialize/0"><STRONG>tipc_initialize</STRONG></A></DT>
+<DD class="defbody">
+See <SPAN class="pred-ext">tipc:tipc_initialize/0</SPAN>.
+</DD>
+</DL>
+
+<H3><A NAME="sec:2.4"><SPAN class="sec-nr">2.4</SPAN> <SPAN class="sec-title">tipc_linda.pl: 
+A Process Communication Interface</SPAN></A></H3>
+
+<P><A NAME="sec:tipclinda"></A>
+
+<DL>
+<DT><B>author</B><DD> Jeffrey A. Rosenwald
+<DT><B>See also</B><DD> Nicholas Carriero and David Gelernter. <I>How to 
+Write Parallel Programs: A First Course.</I> The MIT Press, Cambridge, 
+MA, 1990.<DT><B>Compatibility</B><DD>- SWI-Prolog for Linux only <BR>
+- tipc_broadcast library
+</DL>
+
+<P>Linda is a framework for building systems that are composed of 
+programs that cooperate among themselves in order to realize a larger 
+goal. A Linda application is composed of two or more processes acting in 
+concert. One process acts as a server and the others act as clients. 
+Fine-grained communications between client and server is provided by way 
+of message passing over sockets and support networks, TIPC sockets in 
+this case. Clients interact indirectly by way of the server. The server 
+is in principle an eraseable blackboard that clients can use to write (<A class="pred" href="#out/1">out/1</A>), 
+read (<A class="pred" href="#rd/1">rd/1</A>) and remove (<A class="pred" href="#in/1">in/1</A>) 
+messages called <I>tuples.</I> Some predicates will fail if a requested 
+tuple is not present on the blackboard. Others will block until a tuple 
+instance becomes available. Tuple instances are made available to 
+clients by writing them on the blackboard using <A class="pred" href="#out/1">out/1</A>.
+
+<P>In TIPC Linda, there is a subtle difference between the <CODE>in</CODE> 
+and the
+<CODE>rd</CODE> predicates that is worth noting. The <CODE>in</CODE> 
+predicates succeed exactly once for each tuple placed in the tuple 
+space. The tuple is provided to exactly one requesting client. Clients 
+can contend for tuples in this way, thus enabling multi-server 
+operations. The <CODE>rd</CODE> predicates succeed nondeterministically, 
+providing all matching tuples in the tuple space at a given time to the 
+requesting client as a choice point without disturbing them.
+
+<P>TIPC Linda is inspired by and adapted from the SICStus Prolog API. 
+But unlike SICStus TCP Linda, TIPC Linda is connectionless. There is no 
+specific session between client and server. The server receives and 
+responds to datagrams originated by clients in an epiperiodic manner.
+
+<P>Example: A simple producer-consumer.
+
+<P>In client 1:
+
+<PRE class="code">
+init_producer :-
+       linda_client(global),
+       producer.
+
+producer :-
+       produce(X),
+       out(p(X)),
+       producer.
+
+produce(X) :- .....
+</PRE>
+
+<P>In client 2:
+
+<PRE class="code">
+init_consumer :-
+        linda_client(global),
+        consumer.
+
+consumer :-
+       in(p(A)),
+       consume(A),
+       consumer.
+
+consume(A) :- .....
+</PRE>
+
+<P>Example: Synchronization
+
+<PRE class="code">
+       ...,
+       in(ready),  %Waits here until someone does out(ready)
+       ...,
+</PRE>
+
+<P>Example: A critical region
+
+<PRE class="code">
+       ...,
+       in(region_free),  % wait for region to be free
+       critical_part,
+       out(region_free), % let next one in
+       ...,
+</PRE>
+
+<P>Example: Reading global data
+
+<PRE class="code">
+       ...,
+       rd(data(Data)),
+       ...,
+</PRE>
+
+<P>or, without blocking:
+
+<PRE class="code">
+       ...,
+       (rd_noblock(data(Data)) -&gt;
+             do_something(Data)
+       ;     write('Data not available!'),nl
+       ),
+       ...,
+</PRE>
+
+<P>Example: Waiting for any one of several events
+
+<PRE class="code">
+       ...,
+       in([e(1),e(2),...,e(n)], E),
+%  Here is E instantiated to the first tuple that became available
+       ...,
+</PRE>
+
+<P>Example: Producers and Consumers in the same process using <CODE>linda_eval</CODE> 
+threads and/or <CODE>tuple</CODE> predicates
+
+<PRE class="code">
+  consumer1 :-
+        repeat,
+        in([p(_), quit], Y),
+        (   Y = p(Z) -&gt; writeln(consuming(Z)); !),
+        fail.
+
+  producer1 :-
+        forall(between(1,40, X), out(p(X))).
+
+  producer_consumer1 :-
+        linda_eval(consumer1),
+        call_cleanup(producer1, out(quit)), !.
+%
+%
+  consumer2 :-
+       between(1,4,_),
+       in_noblock(p(X)), !,
+       writeln(consuming(X)),
+       consumer2.
+
+  producer2 :-
+        linda_eval(p(X), between(1,40, X)).
+
+  producer_consumer2 :-
+        producer2,
+        linda_eval(consumer2), !.
+%
+%
+  consumer3 :-
+        forall(rd_noblock(p(X)), writeln(consuming(X))).
+
+  producer3 :-
+        tuple(p(X), between(1,40, X)).
+
+  producer_consumer3 :-
+        producer3,
+        linda_eval(done, consumer3),
+        in(done), !.
+</PRE>
+
+<H4><A NAME="sec:2.4.1"><SPAN class="sec-nr">2.4.1</SPAN> <SPAN class="sec-title">Servers</SPAN></A></H4>
+
+<BLOCKQUOTE> The server is the process running the "blackboard process". 
+It is part of TIPC Linda. It is a collection of predicates that are 
+registered as tipc_broadcast listeners. The server process can be run on 
+a separate machine if necessary.
+</BLOCKQUOTE>
+
+<P>To load the package, enter the query:
+
+<PRE class="code">
+?- use_module(library(tipc/tipc_linda)).
+
+?- linda.
+   TIPC Linda server now listening at: port_id('&lt;1.1.1:3200515722&gt;')
+   true.
+</PRE>
+
+<H4><A NAME="sec:2.4.2"><SPAN class="sec-nr">2.4.2</SPAN> <SPAN class="sec-title">Clients</SPAN></A></H4>
+
+<BLOCKQUOTE> The clients are one or more Prolog processes that have 
+connection(s) to the server.
+</BLOCKQUOTE>
+
+<P>To load the package, enter the query:
+
+<PRE class="code">
+?- use_module(library(tipc/tipc_linda)).
+
+?- linda_client(global).
+   TIPC Linda server listening at: port_id('&lt;1.1.1:3200515722&gt;')
+   true.
+</PRE>
+
+<DL class="latex">
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="linda/0"><STRONG>linda</STRONG></A></DT>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="linda/1"><STRONG>linda</STRONG>(<VAR>:Goal</VAR>)</A></DT>
+<DD class="defbody">
+Starts a Linda-server in this process. The network address is written to 
+current output stream as a TIPC
+<SPAN class="pred-ext">port_id/2</SPAN> reference (e.g. port_id('<VAR>&lt;</VAR>1.1.1:3200515722<VAR>&gt;</VAR>') 
+). This predicates looks to see if a server is already listening on the 
+cluster. If so, it reports the address of the existing server. 
+Otherwise, it registers a new server and reports its address.
+
+<PRE class="code">
+?- linda.
+   TIPC Linda server now listening at: port_id('&lt;1.1.1:3200515722&gt;')
+   true.
+
+?- linda.
+   TIPC Linda server still listening at: port_id('&lt;1.1.1:3200515722&gt;')
+   true.
+</PRE>
+
+<P>The following will call <SPAN class="pred-ext">my_init/0</SPAN> in 
+the current module after the server is successfully started or is found 
+already listening.
+<SPAN class="pred-ext">my_init/0</SPAN> could start client-processes, 
+initialize the tuple space, etc.
+
+<PRE class="code">
+?- linda(my_init).
+</PRE>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[semidet]</span><A NAME="linda_client/1"><STRONG>linda_client</STRONG>(<VAR>+Domain</VAR>)</A></DT>
+<DD class="defbody">
+Establishes a connection to a Linda-server providing a named tuple 
+space. <VAR>Domain</VAR> is an atom specifying a particular tuple-space, 
+selected from a universe of tuple-spaces. At present however, only one 
+tuple-space, <CODE>global</CODE>, is supported. A client may interact 
+with any server reachable on the TIPC cluster. This predicate will fail 
+if no server is reachable for that tuple space.</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="close_client/0"><STRONG>close_client</STRONG></A></DT>
+<DD class="defbody">
+Closes the connection to the Linda-server. Causes the server to release 
+resources associated with this client.</DD>
+<DT class="pubdef"><span class="pred-tag">[semidet]</span><A NAME="linda_timeout/2"><STRONG>linda_timeout</STRONG>(<VAR>?OldTime, 
+?NewTime</VAR>)</A></DT>
+<DD class="defbody">
+Controls Linda's message-passing timeout. It specifies the time window 
+where clients will accept server replies in response to <CODE>in</CODE> 
+and <CODE>rd</CODE> requests. Replies arriving outside of this window 
+are silently ignored. <VAR>OldTime</VAR> is unified with the old timeout 
+and then timeout is set to <VAR>NewTime</VAR>. <VAR>NewTime</VAR> is of 
+the form Seconds:Milliseconds. A non-negative real number, seconds, is 
+also recognized. The default is 0.250 seconds. This timeout is thread 
+local and is <I>not</I> inherited from its parent. New threads are 
+initialized to the default.
+
+<P><B>Note:</B> The synchronous behavior afforded by <A class="pred" href="#in/1">in/1</A> 
+and <A class="pred" href="#rd/1">rd/1</A> is implemented by periodically 
+polling the server. The poll rate is set according to this timeout. 
+Setting the timeout too small may result in substantial network traffic 
+that is of little value.
+
+<DL>
+<DT><B>throws</B><DD> error(feature_not_supported). SICStus Linda can 
+disable the timeout by specifying <CODE>off</CODE> as <VAR>NewTime</VAR>. 
+This feature does not exist for safety reasons.
+</DL>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[semidet]</span><A NAME="linda_timeout/1"><STRONG>linda_timeout</STRONG>(<VAR>+NewTime</VAR>)</A></DT>
+<DD class="defbody">
+Temporarily sets Linda's timeout. Internally, the original timeout is 
+saved and then the timeout is set to <VAR>NewTime</VAR>. <VAR>NewTime</VAR> 
+is as described in <A class="pred" href="#linda_timeout/2">linda_timeout/2</A>. 
+The original timeout is restored automatically on cut of choice points, 
+failure on backtracking, or uncaught exception.</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="out/1"><STRONG>out</STRONG>(<VAR>+Tuple</VAR>)</A></DT>
+<DD class="defbody">
+Places a <VAR>Tuple</VAR> in Linda's tuple-space.</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="in/1"><STRONG>in</STRONG>(<VAR>?Tuple</VAR>)</A></DT>
+<DD class="defbody">
+Atomically removes the tuple <VAR>Tuple</VAR> from Linda's tuple-space 
+if it is there. The tuple will be returned to exactly one requestor. If 
+no tuple is available, the predicate blocks until it is available (that 
+is, someone performs an <A class="pred" href="#out/1">out/1</A>).</DD>
+<DT class="pubdef"><span class="pred-tag">[semidet]</span><A NAME="in_noblock/1"><STRONG>in_noblock</STRONG>(<VAR>?Tuple</VAR>)</A></DT>
+<DD class="defbody">
+Atomically removes the tuple <VAR>Tuple</VAR> from Linda's tuple-space 
+if it is there. If not, the predicate fails. This predicate can fail due 
+to a timeout.</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="in/2"><STRONG>in</STRONG>(<VAR>+TupleList, 
+-Tuple</VAR>)</A></DT>
+<DD class="defbody">
+As <A class="pred" href="#in/1">in/1</A> but succeeds when any one of 
+the tuples in <VAR>TupleList</VAR> is available. <VAR>Tuple</VAR> is 
+unified with the fetched tuple.</DD>
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="rd/1"><STRONG>rd</STRONG>(<VAR>?Tuple</VAR>)</A></DT>
+<DD class="defbody">
+Succeeds nondeterministically if <VAR>Tuple</VAR> is available in the 
+tuple-space, suspends otherwise until it is available. Compare this with <A class="pred" href="#in/1">in/1</A>: 
+the tuple is not removed.</DD>
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="rd_noblock/1"><STRONG>rd_noblock</STRONG>(<VAR>?Tuple</VAR>)</A></DT>
+<DD class="defbody">
+Succeeds nondeterministically if <VAR>Tuple</VAR> is available in the 
+tuple-space, fails otherwise. This predicate can fail due to a timeout.</DD>
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="rd/2"><STRONG>rd</STRONG>(<VAR>?TupleList, 
+-Tuple</VAR>)</A></DT>
+<DD class="defbody">
+As <A class="pred" href="#in/2">in/2</A> but provides a choice point 
+that does not remove any tuples.</DD>
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="bagof_in_noblock/3"><STRONG>bagof_in_noblock</STRONG>(<VAR>?Template, 
+?Tuple, -Bag</VAR>)</A></DT>
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="bagof_rd_noblock/3"><STRONG>bagof_rd_noblock</STRONG>(<VAR>?Template, 
+?Tuple, -Bag</VAR>)</A></DT>
+<DD class="defbody">
+<VAR>Bag</VAR> is the list of all instances of <VAR>Template</VAR> such 
+that <VAR>Tuple</VAR> exists in the tuple-space. The behavior of 
+variables in <VAR>Tuple</VAR> and <VAR>Template</VAR> is as in <SPAN class="pred-ext">bagof/3</SPAN>. 
+The variables could be existentially quantified with <SPAN class="pred-ext">^/2</SPAN> 
+as in <SPAN class="pred-ext">bagof/3</SPAN>. The operation is performed 
+as an atomic operation. This predicate can fail due to a timeout. 
+Example: Assume that only one client is connected to the server and that 
+the tuple-space initially is empty.
+
+<PRE class="code">
+  ?- out(x(a,3)), out(x(a,4)), out(x(b,3)), out(x(c,3)).
+
+  true.
+  ?- bagof_rd_noblock(C-N, x(C,N), L).
+
+  L = [a-3,a-4,b-3,c-3] .
+
+  true.
+  ?- bagof_rd_noblock(C, N^x(C,N), L).
+
+  L = [a,a,b,c] .
+
+  true.
+</PRE>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="linda_eval/1"><STRONG>linda_eval</STRONG>(<VAR>:Goal</VAR>)</A></DT>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="linda_eval/2"><STRONG>linda_eval</STRONG>(<VAR>?Head, 
+:Goal</VAR>)</A></DT>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="linda_eval_detached/1"><STRONG>linda_eval_detached</STRONG>(<VAR>:Goal</VAR>)</A></DT>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="linda_eval_detached/2"><STRONG>linda_eval_detached</STRONG>(<VAR>?Head, 
+:Goal</VAR>)</A></DT>
+<DD class="defbody">
+Causes <VAR>Goal</VAR> to be evaluated in parallel with a parent 
+predicate. The child thread is a full-fledged client, possessing the 
+same capabilities as the parent. Upon successful completion of <VAR>Goal</VAR>, 
+unbound variables are unified and the result is sent to the Linda server 
+via <A class="pred" href="#out/1">out/1</A>, where it is made available 
+to others. <A class="pred" href="#linda_eval/2">linda_eval/2</A> 
+evaluates <VAR>Goal</VAR>, then unifies the result with <VAR>Head</VAR>, 
+providing a means of customizing the resulting output structure. In <A class="pred" href="#linda_eval/1">linda_eval/1</A>, <VAR>Head</VAR>, 
+and
+<VAR>Goal</VAR> are identical, except that the module name for <VAR>Head</VAR> 
+is stripped before output. If the child fails or receives an uncaught 
+exception, no such output occurs.
+
+<P><B>Joining Threads:</B> Threads created using linda_eval/(1-2) are 
+not allowed to linger. They are joined (blocking the parent, if 
+necessary) under three conditions: backtracking on failure into an 
+linda_eval/(1-2), receipt of an uncaught exception, and cut of 
+choice-points. Goals are evaluated using <SPAN class="pred-ext">forall/2</SPAN>. 
+They are expected to provide nondeterministic behavior. That is they may 
+succeed zero or more times on backtracking. They must however, 
+eventually fail or succeed deterministically. Otherwise, the thread will 
+hang, which will eventually hang the parent thread. Cutting choice 
+points in the parent's body has the effect of joining all children 
+created by the parent. This provides a barrier that guarantees that all 
+child instances of <VAR>Goal</VAR> have run to completion before the 
+parent proceeds. Detached threads behave as above, except that they 
+operate independently and cannot be joined. They will continue to run 
+while the host process continues to run.
+
+<P>Here is an example of a parallel quicksort:
+
+<PRE class="code">
+qksort([], []).
+
+qksort([X | List], Sorted) :-
+      partition(@&gt;(X), List, Less, More),
+      linda_eval(qksort(More, SortedMore)),
+      qksort(Less, SortedLess), !,
+      in_noblock(qksort(More, SortedMore)),
+      append(SortedLess, [X | SortedMore], Sorted).
+</PRE>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="tuple/1"><STRONG>tuple</STRONG>(<VAR>:Goal</VAR>)</A></DT>
+<DT class="pubdef"><span class="pred-tag">[det]</span><A NAME="tuple/2"><STRONG>tuple</STRONG>(<VAR>?Head, 
+:Goal</VAR>)</A></DT>
+<DD class="defbody">
+registers <VAR>Head</VAR> as a virtual tuple in TIPC Linda's tuple 
+space. On success, any client on the cluster may reference the tuple, <VAR>Head</VAR>, 
+using <A class="pred" href="#rd/1">rd/1</A> or <A class="pred" href="#rd_noblock/1">rd_noblock/1</A>. 
+On reference, <VAR>Goal</VAR> is executed by a separate thread of 
+execution in the host client's Prolog process. The result is unified 
+with <VAR>Head</VAR>, which is then returned to the guest client. As in 
+linda_eval/(1-2) above, <VAR>Goal</VAR> is evaluated using <SPAN class="pred-ext">forall/2</SPAN>. 
+The virtual tuple is unregistered on backtracking into a tuple/(1-2), 
+receipt of uncaught exception, or cut of choice-points. In <A class="pred" href="#tuple/1">tuple/1</A>,
+<VAR>Head</VAR> and <VAR>Goal</VAR> are identical, except that the 
+module name is stripped from <VAR>Head</VAR>.
+
+<P><B>Note:</B> A virtual tuple is an extension of the server. Even 
+though it is operating in the client's Prolog environment, it is 
+restricted in the server operations that it may perform. It is generally 
+safe for tuple predicates to perform <A class="pred" href="#out/1">out/1</A> 
+operations, but it is unsafe for them to perform any variant of <CODE>in</CODE> 
+or <CODE>rd</CODE>, either directly or indirectly. This restriction is 
+however, relaxed if the server and client are operating in separate 
+heavyweight processes (not threads) on the node or cluster. This is most 
+easily achieved by starting a stand-alone Linda server somewhere on the 
+cluster. See
+<A class="pred" href="#tipc_linda_server/0">tipc_linda_server/0</A>, 
+below.</DD>
+<DT class="pubdef"><span class="pred-tag">[nondet]</span><A NAME="tipc_linda_server/0"><STRONG>tipc_linda_server</STRONG></A></DT>
+<DD class="defbody">
+Acts as a stand-alone Linda server. This predicate initializes the TIPC 
+stack and then starts a Linda server in the current thread. If a client 
+performs an <CODE>out(server_quit)</CODE>, the server's Prolog process 
+will exit via <SPAN class="pred-ext">halt/1</SPAN>. It is intended for 
+use in scripting as follows:
+
+<PRE class="code">
+swipl -q -g 'use_module(library(tipc/tipc_linda)),
+       tipc_linda_server' -t 'halt(1)'
+</PRE>
+
+<P>See also manual section 2.10.2.1 Using PrologScript.
+
+<P><B>Note:</B> Prolog will return a non-zero exit status if this 
+predicate is executed on a cluster that already has an active server. An 
+exit status of zero is returned on graceful shutdown.
+
+<DL>
+<DT><B>throws</B><DD> error(permission_error(halt,thread,2),context(<SPAN class="pred-ext">halt/1</SPAN>,Only 
+from thread 'main')), if this predicate is executed in a thread other 
+than <CODE>main</CODE>.
+</DL>
+
+</DD>
+<DT class="pubdef"><span class="pred-tag">[semidet]</span><A NAME="tipc_initialize/0"><STRONG>tipc_initialize</STRONG></A></DT>
+<DD class="defbody">
+See <SPAN class="pred-ext">tipc:tipc_initialize/0</SPAN>.
+</DD>
+</DL>
+
+<H1><A NAME="document-index">Index</A></H1>
+
+<DL>
+<DT><STRONG>B</STRONG>
+<DT><A class="idx" href="#bagof_in_noblock/3">bagof_in_noblock/3</A>
+<DT><A class="idx" href="#bagof_rd_noblock/3">bagof_rd_noblock/3</A>
+<DT><STRONG>C</STRONG>
+<DT><A class="idx" href="#close_client/0">close_client/0</A>
+<DT><STRONG>I</STRONG>
+<DT><A class="idx" href="#in/1">in/1</A>
+<DT><A class="idx" href="#in/2">in/2</A>
+<DT><A class="idx" href="#in_noblock/1">in_noblock/1</A>
+<DT><STRONG>L</STRONG>
+<DT><A class="idx" href="#linda/0">linda/0</A>
+<DT><A class="idx" href="#linda/1">linda/1</A>
+<DT><A class="idx" href="#linda_client/1">linda_client/1</A>
+<DT><A class="idx" href="#linda_eval/1">linda_eval/1</A>
+<DT><A class="idx" href="#linda_eval/2">linda_eval/2</A>
+<DT><A class="idx" href="#linda_eval_detached/1">linda_eval_detached/1</A>
+<DT><A class="idx" href="#linda_eval_detached/2">linda_eval_detached/2</A>
+<DT><A class="idx" href="#linda_timeout/1">linda_timeout/1</A>
+<DT><A class="idx" href="#linda_timeout/2">linda_timeout/2</A>
+<DT><STRONG>O</STRONG>
+<DT><A class="idx" href="#out/1">out/1</A>
+<DT><STRONG>R</STRONG>
+<DT><A class="idx" href="#rd/1">rd/1</A>
+<DT><A class="idx" href="#rd/2">rd/2</A>
+<DT><A class="idx" href="#rd_noblock/1">rd_noblock/1</A>
+<DT><STRONG>T</STRONG>
+<DT><A class="idx" href="#tipc_accept/3">tipc_accept/3</A>
+<DT><A class="idx" href="#tipc_bind/3">tipc_bind/3</A>
+<DT><A class="idx" href="#tipc_canonical_address/2">tipc_canonical_address/2</A>
+<DT><A class="idx" href="#tipc_close_socket/1">tipc_close_socket/1</A>
+<DT><A class="idx" href="#tipc_connect/2">tipc_connect/2</A>
+<DT><A class="idx" href="#tipc_get_name/2">tipc_get_name/2</A>
+<DT><A class="idx" href="#tipc_get_peer_name/2">tipc_get_peer_name/2</A>
+<DT><A class="idx" href="#tipc_host_to_address/2">tipc_host_to_address/2</A>
+<DT><A class="idx" href="#tipc_initialize/0">tipc_initialize/0</A>
+<DT><A class="idx" href="#tipc_linda_server/0">tipc_linda_server/0</A>
+<DT><A class="idx" href="#tipc_listen/2">tipc_listen/2</A>
+<DT><A class="idx" href="#tipc_open_socket/3">tipc_open_socket/3</A>
+<DT><A class="idx" href="#tipc_paxos_get/1">tipc_paxos_get/1</A>
+<DT><A class="idx" href="#tipc_paxos_on_change/2">tipc_paxos_on_change/2</A>
+<DT><A class="idx" href="#tipc_paxos_replicate/1">tipc_paxos_replicate/1</A>
+<DT><A class="idx" href="#tipc_paxos_set/1">tipc_paxos_set/1</A>
+<DT><A class="idx" href="#tipc_paxos_set/2">tipc_paxos_set/2</A>
+<DT><A class="idx" href="#tipc_receive/4">tipc_receive/4</A>
+<DT><A class="idx" href="#tipc_send/4">tipc_send/4</A>
+<DT><A class="idx" href="#tipc_service_exists/1">tipc_service_exists/1</A>
+<DT><A class="idx" href="#tipc_service_exists/2">tipc_service_exists/2</A>
+<DT><A class="idx" href="#tipc_service_port_monitor/2">tipc_service_port_monitor/2</A>
+<DT><A class="idx" href="#tipc_service_port_monitor/3">tipc_service_port_monitor/3</A>
+<DT><A class="idx" href="#tipc_service_probe/1">tipc_service_probe/1</A>
+<DT><A class="idx" href="#tipc_service_probe/2">tipc_service_probe/2</A>
+<DT><A class="idx" href="#tipc_setopt/2">tipc_setopt/2</A>
+<DT><A class="idx" href="#tipc_socket/2">tipc_socket/2</A>
+<DT><A class="idx" href="#tuple/1">tuple/1</A>
+<DT><A class="idx" href="#tuple/2">tuple/2</A></DT>
+<DD>
+</DD>
+</DL>
+
+</BODY></HTML>
