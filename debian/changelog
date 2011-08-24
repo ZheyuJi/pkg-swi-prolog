@@ -2,6 +2,7 @@ swi-prolog (5.10.4-2) UNRELEASED; urgency=low
 
   * Add missing RDF library. Thanks to "A. N. Other"
     <a.n.other.debian@gmail.com>. (Closes: #639103)
+  * Prevent similar issues with library paths with set -e.
 
  -- Chris Lamb <lamby@debian.org>  Wed, 24 Aug 2011 22:16:09 +0100
 

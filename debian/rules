@@ -100,7 +100,7 @@ install: build
 	cd debian/swi-prolog-tmp && find * -type f > ../swi-prolog-nox.install
 	cd debian/swi-prolog-tmp && find * -type l >> ../swi-prolog-nox.install
 
-	for i in "clib     swi-prolog-nox"   \
+	set -e; for i in "clib     swi-prolog-nox"   \
 		 "jpl      swi-prolog-java"    \
 		 "http     swi-prolog-nox"   \
 		 "semweb   swi-prolog-nox" \
