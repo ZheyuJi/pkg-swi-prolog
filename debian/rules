@@ -104,8 +104,7 @@ install: build
 		 "jpl      swi-prolog-java"    \
 		 "http     swi-prolog-nox"   \
 		 "semweb   swi-prolog-nox" \
-		 "sgml     swi-prolog-nox"   \
-		 "sgml/RDF swi-prolog-nox"   \
+		 "RDF      swi-prolog-nox"   \
 		 "table    swi-prolog-nox"  \
 		 "odbc     swi-prolog-odbc"   \
 		 "xpce     swi-prolog-tmp"    \
