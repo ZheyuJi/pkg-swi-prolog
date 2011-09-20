@@ -1,3 +1,10 @@
+swi-prolog (5.10.4-3) UNRELEASED; urgency=low
+
+  * Install sgml package into swi-prolog-nox. Thanks to Sami Kiviharju
+    <sami.kiviharju@gmail.com>. (Closes: #642214)
+
+ -- Chris Lamb <lamby@debian.org>  Tue, 20 Sep 2011 14:22:49 +0100
+
 swi-prolog (5.10.4-2) unstable; urgency=low
 
   * Add missing RDF library. Thanks to "A. N. Other"
